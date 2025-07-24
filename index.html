@@ -667,25 +667,25 @@
     <script>
         // Configuration de l'équipe
         const team = [
-            'Eric Forster',
-            'Marie Khaltaev', 
-            'Alien Barcellini',
-            'Anne Caillault-Pesquer',
-            'Margaux Azimov',
-            'Marie-Anne Pereira Dias',
-            'Isabelle Muse',
-            'Leila Khatchadourian',
-            'Wafa Baccouche',
-            'Isabelle Meynet'
+            'Référent 1',
+            'Référent 2', 
+            'Référent 3',
+            'Référent 4',
+            'Référent 5',
+            'Référent 6',
+            'Référent 7',
+            'Référent 8',
+            'Référent 9',
+            'Référent 10'
         ];
 
         // Binômes prédéfinis
         const predefinedBinomes = [
-            ['Eric Forster', 'Marie Khaltaev', 'Isabelle Meynet'],
-            ['Alien Barcellini', 'Anne Caillault-Pesquer', 'Eric Forster'],
-            ['Margaux Azimov', 'Marie-Anne Pereira Dias', 'Marie Khaltaev'],
-            ['Isabelle Muse', 'Leila Khatchadourian', 'Alien Barcellini'],
-            ['Wafa Baccouche', 'Isabelle Meynet', 'Margaux Azimov']
+            ['Référent 1', 'Référent 2', 'Référent 10'],
+            ['Référent 3', 'Référent 4', 'Référent 1'],
+            ['Référent 5', 'Référent 6', 'Référent 2'],
+            ['Référent 7', 'Référent 8', 'Référent 3'],
+            ['Référent 9', 'Référent 10', 'Référent 5']
         ];
 
         let currentYear = 2025;
@@ -1685,9 +1685,9 @@
             // Test d'assignation directe
             const testKey = `${currentYear}-W1`;
             assignments[testKey] = {
-                member1: 'Eric Forster',
-                member2: 'Marie Khaltaev', 
-                backup: 'Isabelle Meynet'
+                member1: 'Référent 1',
+                member2: 'Référent 2', 
+                backup: 'Référent 10'
             };
             
             console.log('Test assignment créée:', testKey);
