@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning Manager - Équipe Référents Permis S</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .year-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .year-selector button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: #6c757d;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .year-selector button:hover {
+            background: #495057;
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 15px;
+        }
+
+        .month-column {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 400px;
+        }
+
+        .month-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .week-item {
+            background: white;
+            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .week-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .week-item.assigned {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #d5f4e6, #ffffff);
+        }
+
+        .week-item.vacation {
+            border-left-color: #f39c12;
+            background: linear-gradient(135deg, #fef5e7, #ffffff);
+        }
+
+        .week-item.conflict {
+            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, #fadbd8, #ffffff);
+        }
+
+        .week-date {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .week-assignment {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .team-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .team-member {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .team-member:hover {
+            border-color: #3498db;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .member-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .member-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #3498db;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .vacation-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #e74c3c;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .binome-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .legend-color.assigned { background: #27ae60; }
+        .legend-color.vacation { background: #f39c12; }
+        .legend-color.conflict { background: #e74c3c; }
+        .legend-color.unassigned { background: #dee2e6; }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* Vue année sur mobile - 2 colonnes */
+            .calendar-grid[style*="repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .toolbar-group {
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Vue année sur très petit écran - 1 colonne */
+            .calendar-grid[style*="repeat(4, 1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .export-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #dee2e6;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗓️ Planning Manager</h1>
+            <p>Gestion des équipes référents Permis S - BAL Collective</p>
+        </div>
+
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <div class="year-selector">
+                    <button onclick="changeYear(-1)">‹</button>
+                    <span id="currentYear">2025</span>
+                    <button onclick="changeYear(1)">›</button>
+                </div>
+            </div>
+            
+            <div class="toolbar-group">
+                <button class="btn btn-primary" onclick="showAssignmentModal()">
+                    ➕ Assigner Semaine
+                </button>
+                <button class="btn btn-warning" onclick="showVacationModal()">
+                    🏖️ Gérer Vacances
+                </button>
+                <button class="btn btn-success" onclick="autoAssign()">
+                    🤖 Attribution Auto
+                </button>
+                <button class="btn btn-danger" onclick="exportToExcelComplete()">
+                    📊 Export Excel
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Statistiques -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalWeeks">52</h3>
+                    <p>Semaines Total</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="assignedWeeks">0</h3>
+                    <p>Semaines Assignées</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="conflictWeeks">0</h3>
+                    <p>Conflits Détectés</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="progressPercent">0%</h3>
+                    <p>Avancement</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="equityScore">-</h3>
+                    <p>Équité (/10)</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="vacationWeeks">0</h3>
+                    <p>Périodes Vacances</p>
+                </div>
+            </div>
+
+            <!-- Légende -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color assigned"></div>
+                    <span>Assignée</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color vacation"></div>
+                    <span>Vacances</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color conflict"></div>
+                    <span>Conflit</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color unassigned"></div>
+                    <span>Non assignée</span>
+                </div>
+            </div>
+
+            <!-- Calendrier -->
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2>Planning Annuel <span id="displayYear">2025</span></h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Généré par JavaScript -->
+                </div>
+            </div>
+
+            <!-- Équipe -->
+            <div class="team-panel">
+                <h2 style="margin-bottom: 25px; color: #2c3e50;">📊 Statistiques d'Équipe</h2>
+                <div class="team-grid" id="teamGrid">
+                    <!-- Généré par JavaScript -->
+                </div>
+            </div>
+
+            <!-- Export -->
+            <div class="export-section">
+                <h3>📋 Actions de Gestion</h3>
+                <p>Exportez votre planning ou sauvegardez vos données</p>
+                <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="saveData()">💾 Sauvegarder</button>
+                    <button class="btn btn-success" onclick="loadData()">📂 Charger</button>
+                    <button class="btn btn-warning" onclick="resetPlanning()">🔄 Reset</button>
+                    <button class="btn btn-primary" onclick="debugAssignments()">🔍 Debug</button>
+                </div>
+                <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="exportAllCalendars()">📅 Export Calendriers Individuels</button>
+                    <button class="btn btn-primary" onclick="toggleYearView()">🗓️ <span id="yearViewToggle">Vue Année Complète</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="assignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Assigner une Semaine</h2>
+                <span class="close" onclick="closeModal('assignmentModal')">&times;</span>
+            </div>
+            <form id="assignmentForm">
+                <div class="form-group">
+                    <label>Semaine :</label>
+                    <input type="week" id="weekInput" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Binôme :</label>
+                    <div class="binome-selector">
+                        <select id="member1" required>
+                            <option value="">Sélectionner...</option>
+                        </select>
+                        <select id="member2" required>
+                            <option value="">Sélectionner...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Backup :</label>
+                    <select id="backupMember" required>
+                        <option value="">Sélectionner...</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 25px;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('assignmentModal')">Annuler</button>
+                    <button type="submit" class="btn btn-success">Assigner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="vacationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🏖️ Gérer les Vacances</h2>
+                <span class="close" onclick="closeModal('vacationModal')">&times;</span>
+            </div>
+            <form id="vacationForm">
+                <div class="form-group">
+                    <label>Membre de l'équipe :</label>
+                    <select id="vacationMember" required>
+                        <option value="">Sélectionner...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Date de début :</label>
+                    <input type="date" id="vacationStart" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Date de fin :</label>
+                    <input type="date" id="vacationEnd" required>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 25px;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('vacationModal')">Annuler</button>
+                    <button type="submit" class="btn btn-success">Ajouter Vacances</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configuration de l'équipe
+        const team = [
+            'Eric Forster',
+            'Marie Khaltaev', 
+            'Alien Barcellini',
+            'Anne Caillault-Pesquer',
+            'Margaux Azimov',
+            'Marie-Anne Pereira Dias',
+            'Isabelle Muse',
+            'Leila Khatchadourian',
+            'Wafa Baccouche',
+            'Isabelle Meynet'
+        ];
+
+        // Binômes prédéfinis
+        const predefinedBinomes = [
+            ['Eric Forster', 'Marie Khaltaev', 'Isabelle Meynet'],
+            ['Alien Barcellini', 'Anne Caillault-Pesquer', 'Eric Forster'],
+            ['Margaux Azimov', 'Marie-Anne Pereira Dias', 'Marie Khaltaev'],
+            ['Isabelle Muse', 'Leila Khatchadourian', 'Alien Barcellini'],
+            ['Wafa Baccouche', 'Isabelle Meynet', 'Margaux Azimov']
+        ];
+
+        let currentYear = 2025;
+        let assignments = {};
+        let vacations = {};
+        let isYearView = false;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            initializeSelects();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+        });
+
+        function initializeSelects() {
+            const selects = ['member1', 'member2', 'backupMember', 'vacationMember'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Sélectionner...</option>';
+                team.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member;
+                    option.textContent = member;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = 'repeat(12, 1fr)'; // Remettre 12 colonnes pour vue mensuelle
+            
+            const months = [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+            ];
+            
+            months.forEach((month, monthIndex) => {
+                const monthColumn = document.createElement('div');
+                monthColumn.className = 'month-column';
+                
+                const header = document.createElement('div');
+                header.className = 'month-header';
+                header.textContent = month;
+                monthColumn.appendChild(header);
+                
+                // Générer les semaines du mois
+                const weeks = getWeeksInMonth(currentYear, monthIndex);
+                weeks.forEach(week => {
+                    const weekItem = document.createElement('div');
+                    weekItem.className = 'week-item';
+                    
+                    const weekKey = `${currentYear}-W${week.week}`;
+                    const assignment = assignments[weekKey];
+                    const hasVacation = checkVacationConflict(week.start);
+                    
+                    // Debug: afficher la clé et l'assignment
+                    console.log(`Week ${week.week}: Key=${weekKey}, Assignment=`, assignment);
+                    
+                    if (assignment) {
+                        weekItem.classList.add(hasVacation ? 'conflict' : 'assigned');
+                    } else if (hasVacation) {
+                        weekItem.classList.add('vacation');
+                    }
+                    
+                    weekItem.innerHTML = `
+                        <div class="week-date">Semaine ${week.week} (${formatDate(week.start)} - ${formatDate(week.end)})</div>
+                        <div class="week-assignment">${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}</div>
+                        ${assignment ? `<div style="font-size: 0.8em; color: #6c757d;">Backup: ${assignment.backup}</div>` : ''}
+                        <div style="font-size: 0.7em; color: #999;">Key: ${weekKey}</div>
+                    `;
+                    
+                    weekItem.onclick = () => selectWeek(weekKey, week);
+                    monthColumn.appendChild(weekItem);
+                });
+                
+                grid.appendChild(monthColumn);
+            });
+            
+            document.getElementById('currentYear').textContent = currentYear;
+            document.getElementById('displayYear').textContent = currentYear;
+        }
+
+        function getWeeksInMonth(year, month) {
+            const weeks = [];
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Trouver le lundi de la première semaine
+            let current = new Date(firstDay);
+            while (current.getDay() !== 1) {
+                current.setDate(current.getDate() - 1);
+            }
+            
+            while (current <= lastDay || current.getMonth() === month) {
+                const weekStart = new Date(current);
+                const weekEnd = new Date(current);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                const weekNumber = getWeekNumber(weekStart);
+                
+                weeks.push({
+                    week: weekNumber,
+                    start: new Date(weekStart),
+                    end: new Date(weekEnd)
+                });
+                
+                current.setDate(current.getDate() + 7);
+                
+                if (current.getMonth() > month && weeks.length > 0) {
+                    break;
+                }
+            }
+            
+            return weeks;
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+        }
+
+        function generateTeamGrid() {
+            const grid = document.getElementById('teamGrid');
+            grid.innerHTML = '';
+            
+            team.forEach(member => {
+                const stats = getTeamMemberStats(member);
+                
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'team-member';
+                
+                // Colorer selon la charge de travail
+                let borderColor = '#dee2e6';
+                if (stats.workload > 125) borderColor = '#e74c3c'; // Surcharge
+                else if (stats.workload < 75) borderColor = '#f39c12'; // Sous-charge
+                else borderColor = '#27ae60'; // Équilibré
+                
+                memberDiv.style.borderLeft = `4px solid ${borderColor}`;
+                
+                memberDiv.innerHTML = `
+                    <div class="member-name">${member}</div>
+                    <div class="member-stats">
+                        <div class="stat">
+                            <div class="stat-value">${stats.assigned}</div>
+                            <div class="stat-label">Assigné</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${stats.backup}</div>
+                            <div class="stat-label">Backup</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${stats.vacationDays}</div>
+                            <div class="stat-label">Congés (j)</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <div style="font-size: 0.9em; color: #6c757d;">
+                            Charge: ${stats.workload}%
+                        </div>
+                        <div style="font-size: 0.8em; padding: 4px 8px; border-radius: 12px; background: ${borderColor}; color: white;">
+                            ${stats.status}
+                        </div>
+                    </div>
+                    ${stats.nextAssignment ? `<div style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">Prochaine: Semaine ${stats.nextAssignment}</div>` : ''}
+                `;
+                
+                grid.appendChild(memberDiv);
+            });
+        }
+
+        function getTeamMemberStats(member) {
+            let assigned = 0;
+            let backup = 0;
+            let vacationDays = 0;
+            let nextAssignment = null;
+            
+            // Compter les assignations et trouver la prochaine
+            const currentWeek = getCurrentWeek();
+            Object.entries(assignments).forEach(([weekKey, assignment]) => {
+                const weekNum = parseInt(weekKey.split('-W')[1]);
+                
+                if (assignment.member1 === member || assignment.member2 === member) {
+                    assigned++;
+                    if (weekNum > currentWeek && !nextAssignment) {
+                        nextAssignment = weekNum;
+                    }
+                }
+                if (assignment.backup === member) {
+                    backup++;
+                }
+            });
+            
+            // Compter les jours de congés
+            if (vacations[member]) {
+                vacations[member].forEach(vacation => {
+                    const start = new Date(vacation.start);
+                    const end = new Date(vacation.end);
+                    const diffTime = Math.abs(end - start);
+                    vacationDays += Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                });
+            }
+            
+            const totalWeeks = Object.keys(assignments).length || 52;
+            const expectedShare = totalWeeks / team.length; // Part équitable
+            const workload = Math.round((assigned / expectedShare) * 100);
+            
+            // Déterminer le statut
+            let status = 'Équilibré';
+            if (workload > 125) status = 'Surcharge';
+            else if (workload < 75) status = 'Sous-charge';
+            
+            return { assigned, backup, vacationDays, workload, status, nextAssignment };
+        }
+
+        function getCurrentWeek() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 1);
+            const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
+            return Math.ceil((days + start.getDay() + 1) / 7);
+        }
+
+        function showAssignmentModal() {
+            document.getElementById('assignmentModal').style.display = 'block';
+        }
+
+        function showVacationModal() {
+            document.getElementById('vacationModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function selectWeek(weekKey, week) {
+            console.log('SelectWeek called with:', weekKey, week); // Debug
+            
+            const weekInput = document.getElementById('weekInput');
+            const weekNumber = week.week.toString().padStart(2, '0');
+            weekInput.value = `${currentYear}-W${weekNumber}`;
+            
+            console.log('Set input value to:', weekInput.value); // Debug
+            
+            // Pré-remplir avec l'assignment existant si il y en a un
+            const existingAssignment = assignments[weekKey];
+            console.log('Existing assignment for', weekKey, ':', existingAssignment); // Debug
+            
+            if (existingAssignment) {
+                document.getElementById('member1').value = existingAssignment.member1;
+                document.getElementById('member2').value = existingAssignment.member2;
+                document.getElementById('backupMember').value = existingAssignment.backup;
+            } else {
+                // Reset form si pas d'assignment existant
+                document.getElementById('member1').value = '';
+                document.getElementById('member2').value = '';
+                document.getElementById('backupMember').value = '';
+            }
+            
+            showAssignmentModal();
+        }
+
+        // Gestion des formulaires
+        document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const weekValue = document.getElementById('weekInput').value;
+            const member1 = document.getElementById('member1').value;
+            const member2 = document.getElementById('member2').value;
+            const backup = document.getElementById('backupMember').value;
+            
+            console.log('Form values:', { weekValue, member1, member2, backup }); // Debug
+            
+            if (member1 === member2) {
+                alert('Les deux membres du binôme ne peuvent pas être identiques !');
+                return;
+            }
+            
+            if (!member1 || !member2 || !backup) {
+                alert('Veuillez remplir tous les champs !');
+                return;
+            }
+            
+            // Extraire l'année et la semaine du format HTML (2025-W01)
+            const matches = weekValue.match(/(\d{4})-W(\d+)/);
+            if (!matches) {
+                alert('Format de semaine invalide !');
+                return;
+            }
+            
+            const year = matches[1];
+            const weekNum = parseInt(matches[2]); // Convertir en nombre pour enlever le zéro
+            const weekKey = `${year}-W${weekNum}`;
+            
+            console.log('Generated key:', weekKey); // Debug
+            console.log('All assignments before:', assignments); // Debug
+            
+            assignments[weekKey] = { member1, member2, backup };
+            
+            console.log('All assignments after:', assignments); // Debug
+            
+            saveToStorage();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+            closeModal('assignmentModal');
+            
+            // Reset form
+            document.getElementById('assignmentForm').reset();
+        });
+
+        document.getElementById('vacationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const member = document.getElementById('vacationMember').value;
+            const start = document.getElementById('vacationStart').value;
+            const end = document.getElementById('vacationEnd').value;
+            
+            if (!vacations[member]) {
+                vacations[member] = [];
+            }
+            
+            vacations[member].push({ start, end });
+            
+            saveToStorage();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+            closeModal('vacationModal');
+            
+            // Reset form
+            document.getElementById('vacationForm').reset();
+        });
+
+        function checkVacationConflict(weekStart) {
+            for (const member of team) {
+                if (vacations[member]) {
+                    for (const vacation of vacations[member]) {
+                        const vacStart = new Date(vacation.start);
+                        const vacEnd = new Date(vacation.end);
+                        
+                        if (weekStart >= vacStart && weekStart <= vacEnd) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function autoAssign() {
+            if (!confirm('Cela va écraser les assignations existantes. Continuer ?')) {
+                return;
+            }
+            
+            assignments = {};
+            let binomeIndex = 0;
+            
+            for (let week = 1; week <= 52; week++) {
+                const weekKey = `${currentYear}-W${week}`;
+                const weekStart = getDateFromWeek(currentYear, week);
+                
+                // Vérifier les conflits de vacances
+                let availableBinomes = predefinedBinomes.filter(binome => {
+                    return !vacations[binome[0]] || !vacations[binome[0]].some(vacation => {
+                        const vacStart = new Date(vacation.start);
+                        const vacEnd = new Date(vacation.end);
+                        return weekStart >= vacStart && weekStart <= vacEnd;
+                    }) && (!vacations[binome[1]] || !vacations[binome[1]].some(vacation => {
+                        const vacStart = new Date(vacation.start);
+                        const vacEnd = new Date(vacation.end);
+                        return weekStart >= vacStart && weekStart <= vacEnd;
+                    }));
+                });
+                
+                if (availableBinomes.length === 0) {
+                    availableBinomes = predefinedBinomes; // Fallback
+                }
+                
+                const binome = availableBinomes[binomeIndex % availableBinomes.length];
+                assignments[weekKey] = {
+                    member1: binome[0],
+                    member2: binome[1],
+                    backup: binome[2]
+                };
+                
+                binomeIndex++;
+            }
+            
+            saveToStorage();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+            alert('Attribution automatique terminée !');
+        }
+
+        function getDateFromWeek(year, week) {
+            const jan1 = new Date(year, 0, 1);
+            const days = (week - 1) * 7;
+            return new Date(jan1.getTime() + days * 24 * 60 * 60 * 1000);
+        }
+
+        function updateStats() {
+            const totalWeeks = 52;
+            const assignedWeeks = Object.keys(assignments).length;
+            let conflictWeeks = 0;
+            
+            // Compter les conflits (vacances vs assignations)
+            Object.keys(assignments).forEach(weekKey => {
+                const weekNum = parseInt(weekKey.split('-W')[1]);
+                const weekStart = getDateFromWeek(currentYear, weekNum);
+                if (checkVacationConflict(weekStart)) {
+                    conflictWeeks++;
+                }
+            });
+            
+            const vacationWeeksCount = Object.values(vacations).reduce((total, memberVacations) => {
+                return total + memberVacations.length;
+            }, 0);
+            
+            const progress = Math.round((assignedWeeks / totalWeeks) * 100);
+            
+            // Calculer le score d'équité (répartition équilibrée)
+            const equityScore = calculateEquityScore();
+            
+            document.getElementById('totalWeeks').textContent = totalWeeks;
+            document.getElementById('assignedWeeks').textContent = assignedWeeks;
+            document.getElementById('conflictWeeks').textContent = conflictWeeks;
+            document.getElementById('progressPercent').textContent = progress + '%';
+            document.getElementById('equityScore').textContent = equityScore + '/10';
+            document.getElementById('vacationWeeks').textContent = vacationWeeksCount;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Colorer le score d'équité
+            const equityElement = document.getElementById('equityScore');
+            const equityCard = equityElement.closest('.stat-card');
+            if (equityScore >= 8) {
+                equityCard.style.background = 'linear-gradient(135deg, #27ae60, #229954)';
+            } else if (equityScore >= 6) {
+                equityCard.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+            } else {
+                equityCard.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+            }
+            
+            // Colorer les conflits
+            const conflictElement = document.getElementById('conflictWeeks');
+            const conflictCard = conflictElement.closest('.stat-card');
+            if (conflictWeeks === 0) {
+                conflictCard.style.background = 'linear-gradient(135deg, #27ae60, #229954)';
+            } else if (conflictWeeks <= 2) {
+                conflictCard.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+            } else {
+                conflictCard.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+            }
+        }
+
+        function calculateEquityScore() {
+            if (Object.keys(assignments).length === 0) return 0;
+            
+            // Compter les assignations par membre
+            const memberCounts = {};
+            team.forEach(member => {
+                memberCounts[member] = 0;
+            });
+            
+            Object.values(assignments).forEach(assignment => {
+                memberCounts[assignment.member1]++;
+                memberCounts[assignment.member2]++;
+            });
+            
+            const counts = Object.values(memberCounts);
+            const average = counts.reduce((sum, count) => sum + count, 0) / counts.length;
+            
+            // Calculer l'écart type
+            const variance = counts.reduce((sum, count) => sum + Math.pow(count - average, 2), 0) / counts.length;
+            const standardDeviation = Math.sqrt(variance);
+            
+            // Score d'équité : plus l'écart type est faible, plus le score est élevé
+            // Score max (10) quand écart type = 0, décroît avec l'écart type
+            const maxScore = 10;
+            const score = Math.max(0, Math.round(maxScore - (standardDeviation * 2)));
+            
+            return Math.min(maxScore, score);
+        }
+
+        function changeYear(delta) {
+            currentYear += delta;
+            generateCalendar();
+            updateStats();
+        }
+
+        function exportToExcelCollective() {
+            const data = [];
+            
+            // En-têtes
+            data.push(['Semaine', 'Dates', 'Membre 1', 'Membre 2', 'Backup', 'Statut', 'Conflits']);
+            
+            // Générer toutes les semaines de l'année
+            for (let week = 1; week <= 52; week++) {
+                const weekKey = `${currentYear}-W${week}`;
+                const assignment = assignments[weekKey];
+                const weekStart = getDateFromWeek(currentYear, week);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                const dateRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+                const hasVacation = checkVacationConflict(weekStart);
+                
+                let statut = 'Non assignée';
+                let conflits = '';
+                
+                if (assignment) {
+                    statut = 'Assignée';
+                    if (hasVacation) {
+                        statut = 'Conflit vacances';
+                        conflits = 'Vacances en cours';
+                    }
+                }
+                
+                data.push([
+                    `Semaine ${week}`,
+                    dateRange,
+                    assignment ? assignment.member1 : '',
+                    assignment ? assignment.member2 : '',
+                    assignment ? assignment.backup : '',
+                    statut,
+                    conflits
+                ]);
+            }
+            
+            downloadCSV(data, `planning-collectif-${currentYear}.csv`);
+        }
+
+        function exportToExcelIndividual() {
+            // Créer un fichier pour chaque membre
+            team.forEach(member => {
+                const data = [];
+                const stats = getTeamMemberStats(member);
+                
+                // En-têtes avec stats
+                data.push([`Planning individuel - ${member} (${currentYear})`]);
+                data.push([`Semaines assignées: ${stats.assigned}`, `Semaines backup: ${stats.backup}`, `Jours de congés: ${stats.vacationDays}`]);
+                data.push([]); // Ligne vide
+                
+                // En-têtes du tableau
+                data.push(['Semaine', 'Dates', 'Rôle', 'Binôme', 'Backup', 'Vacances']);
+                
+                // Parcourir toutes les semaines
+                for (let week = 1; week <= 52; week++) {
+                    const weekKey = `${currentYear}-W${week}`;
+                    const assignment = assignments[weekKey];
+                    const weekStart = getDateFromWeek(currentYear, week);
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekEnd.getDate() + 6);
+                    const dateRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+                    
+                    let role = '';
+                    let binome = '';
+                    let backup = '';
+                    let vacances = '';
+                    
+                    // Vérifier les vacances
+                    if (vacations[member]) {
+                        const inVacation = vacations[member].some(vacation => {
+                            const vacStart = new Date(vacation.start);
+                            const vacEnd = new Date(vacation.end);
+                            return weekStart >= vacStart && weekStart <= vacEnd;
+                        });
+                        if (inVacation) vacances = 'En congés';
+                    }
+                    
+                    // Vérifier le rôle dans l'assignation
+                    if (assignment) {
+                        if (assignment.member1 === member) {
+                            role = 'Titulaire 1';
+                            binome = assignment.member2;
+                            backup = assignment.backup;
+                        } else if (assignment.member2 === member) {
+                            role = 'Titulaire 2';
+                            binome = assignment.member1;
+                            backup = assignment.backup;
+                        } else if (assignment.backup === member) {
+                            role = 'Backup';
+                            binome = `${assignment.member1} + ${assignment.member2}`;
+                        }
+                    }
+                    
+                    // N'ajouter que les semaines où la personne est impliquée
+                    if (role || vacances) {
+                        data.push([
+                            `Semaine ${week}`,
+                            dateRange,
+                            role,
+                            binome,
+                            backup,
+                            vacances
+                        ]);
+                    }
+                }
+                
+                downloadCSV(data, `planning-${member.replace(/\s+/g, '-')}-${currentYear}.csv`);
+            });
+            
+            alert(`${team.length} fichiers Excel individuels générés !`);
+        }
+
+        function exportToExcelComplete() {
+            // Créer un export combiné avec statistiques détaillées
+            const data = [];
+            
+            // Section 1: Résumé exécutif
+            data.push(['PLANNING ÉQUIPE RÉFÉRENTS PERMIS S', `ANNÉE ${currentYear}`]);
+            data.push([]);
+            data.push(['STATISTIQUES GÉNÉRALES']);
+            
+            const totalWeeks = 52;
+            const assignedWeeks = Object.keys(assignments).length;
+            const vacationWeeksCount = Object.values(vacations).reduce((total, memberVacations) => {
+                return total + memberVacations.length;
+            }, 0);
+            const progress = Math.round((assignedWeeks / totalWeeks) * 100);
+            
+            data.push(['Semaines totales', totalWeeks]);
+            data.push(['Semaines assignées', assignedWeeks]);
+            data.push(['Périodes de vacances', vacationWeeksCount]);
+            data.push(['Avancement', `${progress}%`]);
+            data.push([]);
+            
+            // Section 2: Statistiques par membre
+            data.push(['RÉPARTITION PAR MEMBRE']);
+            data.push(['Nom', 'Semaines assignées', 'Semaines backup', 'Jours congés', 'Charge %']);
+            
+            team.forEach(member => {
+                const stats = getTeamMemberStats(member);
+                data.push([
+                    member,
+                    stats.assigned,
+                    stats.backup,
+                    stats.vacationDays,
+                    `${stats.workload}%`
+                ]);
+            });
+            
+            data.push([]);
+            
+            // Section 3: Planning détaillé
+            data.push(['PLANNING DÉTAILLÉ']);
+            data.push(['Semaine', 'Dates', 'Membre 1', 'Membre 2', 'Backup', 'Statut']);
+            
+            for (let week = 1; week <= 52; week++) {
+                const weekKey = `${currentYear}-W${week}`;
+                const assignment = assignments[weekKey];
+                const weekStart = getDateFromWeek(currentYear, week);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                const dateRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+                const hasVacation = checkVacationConflict(weekStart);
+                
+                let statut = 'Non assignée';
+                if (assignment) {
+                    statut = hasVacation ? 'Conflit vacances' : 'Assignée';
+                }
+                
+                data.push([
+                    `Semaine ${week}`,
+                    dateRange,
+                    assignment ? assignment.member1 : '',
+                    assignment ? assignment.member2 : '',
+                    assignment ? assignment.backup : '',
+                    statut
+                ]);
+            }
+            
+            data.push([]);
+            
+            // Section 4: Calendrier des vacances
+            data.push(['CALENDRIER DES VACANCES']);
+            data.push(['Membre', 'Date début', 'Date fin', 'Durée (jours)']);
+            
+            team.forEach(member => {
+                if (vacations[member]) {
+                    vacations[member].forEach(vacation => {
+                        const start = new Date(vacation.start);
+                        const end = new Date(vacation.end);
+                        const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                        
+                        data.push([
+                            member,
+                            start.toLocaleDateString('fr-FR'),
+                            end.toLocaleDateString('fr-FR'),
+                            duration
+                        ]);
+                    });
+                }
+            });
+            
+            downloadCSV(data, `planning-complet-${currentYear}.csv`);
+        }
+
+        function downloadCSV(data, filename) {
+            // Convertir les données en CSV
+            const csvContent = data.map(row => 
+                row.map(cell => {
+                    // Échapper les guillemets et entourer de guillemets si nécessaire
+                    const cellStr = String(cell || '');
+                    if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                        return '"' + cellStr.replace(/"/g, '""') + '"';
+                    }
+                    return cellStr;
+                }).join(',')
+            ).join('\n');
+            
+            // Ajouter BOM pour l'encodage UTF-8 (support des accents dans Excel)
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            
+            // Télécharger le fichier
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function saveData() {
+            const data = {
+                year: currentYear,
+                assignments: assignments,
+                vacations: vacations
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `planning-backup-${currentYear}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('Données sauvegardées !');
+        }
+
+        function loadData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            currentYear = data.year || currentYear;
+                            assignments = data.assignments || {};
+                            vacations = data.vacations || {};
+                            
+                            saveToStorage();
+                            generateCalendar();
+                            generateTeamGrid();
+                            updateStats();
+                            
+                            alert('Données chargées avec succès !');
+                        } catch (error) {
+                            alert('Erreur lors du chargement du fichier !');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            
+            input.click();
+        }
+
+        function exportAllCalendars() {
+            let exportedCount = 0;
+            
+            team.forEach(member => {
+                const icsContent = generateICSForMember(member);
+                if (icsContent) {
+                    downloadICS(icsContent, `BAL-Permis-S-${member.replace(/\s+/g, '-')}-${currentYear}.ics`);
+                    exportedCount++;
+                }
+            });
+            
+            alert(`🎉 ${exportedCount} calendriers générés !\n\nChaque référent peut maintenant importer son fichier .ics dans Outlook, Google Calendar, Apple Calendar, etc.\n\n✅ Import automatique de toutes ses permanences BAL`);
+        }
+
+        function generateICSForMember(member) {
+            let events = [];
+            
+            // Parcourir toutes les semaines assignées au membre
+            Object.entries(assignments).forEach(([weekKey, assignment]) => {
+                const weekNum = parseInt(weekKey.split('-W')[1]);
+                const weekStart = getDateFromWeek(currentYear, weekNum);
+                
+                let eventTitle = '';
+                let eventDescription = '';
+                
+                // Vérifier le rôle du membre
+                if (assignment.member1 === member || assignment.member2 === member) {
+                    const partner = assignment.member1 === member ? assignment.member2 : assignment.member1;
+                    eventTitle = `🔗 BAL Permis S - Binôme (Semaine ${weekNum})`;
+                    eventDescription = `Responsabilité BAL collective Permis S\\n\\nBinôme: ${partner}\\nBackup: ${assignment.backup}\\n\\nContact: oce-orp-permiss@etat.ge.ch\\nHG: permis_s@hospicegeneral.ch\\n\\nConsultation: 2x/jour (9h et 15h)\\nRéponse: <24h`;
+                } else if (assignment.backup === member) {
+                    eventTitle = `🛡️ BAL Permis S - Backup (Semaine ${weekNum})`;
+                    eventDescription = `Backup BAL collective Permis S\\n\\nBinôme titulaire: ${assignment.member1} + ${assignment.member2}\\n\\nActivation si nécessaire\\nContact: oce-orp-permiss@etat.ge.ch`;
+                }
+                
+                if (eventTitle) {
+                    // Événement de 5 jours (lundi à vendredi)
+                    const eventStart = new Date(weekStart);
+                    const eventEnd = new Date(weekStart);
+                    eventEnd.setDate(eventEnd.getDate() + 4); // Vendredi
+                    
+                    events.push({
+                        title: eventTitle,
+                        start: eventStart,
+                        end: eventEnd,
+                        description: eventDescription,
+                        isAllDay: true
+                    });
+                }
+            });
+            
+            // Ajouter les périodes de vacances
+            if (vacations[member]) {
+                vacations[member].forEach(vacation => {
+                    const vacStart = new Date(vacation.start);
+                    const vacEnd = new Date(vacation.end);
+                    
+                    events.push({
+                        title: `🏖️ Congés - Indisponible BAL Permis S`,
+                        start: vacStart,
+                        end: vacEnd,
+                        description: `Période de congés\\n\\nIndisponible pour BAL collective\\nRemplacé par binôme ou backup`,
+                        isAllDay: true,
+                        category: 'VACATION'
+                    });
+                });
+            }
+            
+            if (events.length === 0) return null;
+            
+            // Générer le contenu ICS
+            let icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Planning Manager//BAL Permis S//FR',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
+                `X-WR-CALNAME:BAL Permis S - ${member} (${currentYear})`,
+                'X-WR-CALDESC:Planning des permanences BAL collective Permis S',
+                'X-WR-TIMEZONE:Europe/Zurich'
+            ];
+            
+            events.forEach((event, index) => {
+                const uid = `bal-permis-s-${currentYear}-${index}-${member.replace(/\s+/g, '')}@etat.ge.ch`;
+                const dtstart = formatICSDate(event.start, event.isAllDay);
+                const dtend = formatICSDate(event.end, event.isAllDay);
+                const dtstamp = formatICSDate(new Date(), false);
+                
+                icsContent.push(
+                    'BEGIN:VEVENT',
+                    `UID:${uid}`,
+                    `DTSTAMP:${dtstamp}`,
+                    `DTSTART${event.isAllDay ? ';VALUE=DATE' : ''}:${dtstart}`,
+                    `DTEND${event.isAllDay ? ';VALUE=DATE' : ''}:${dtend}`,
+                    `SUMMARY:${event.title}`,
+                    `DESCRIPTION:${event.description}`,
+                    'STATUS:CONFIRMED',
+                    'TRANSP:OPAQUE',
+                    event.category === 'VACATION' ? 'CATEGORIES:VACATION' : 'CATEGORIES:WORK',
+                    'END:VEVENT'
+                );
+            });
+            
+            icsContent.push('END:VCALENDAR');
+            
+            return icsContent.join('\r\n');
+        }
+
+        function formatICSDate(date, isAllDay) {
+            if (isAllDay) {
+                return date.toISOString().slice(0, 10).replace(/-/g, '');
+            } else {
+                return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+            }
+        }
+
+        function downloadICS(content, filename) {
+            const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function toggleYearView() {
+            isYearView = !isYearView;
+            const button = document.getElementById('yearViewToggle');
+            
+            if (isYearView) {
+                button.textContent = 'Vue Mensuelle';
+                generateYearView();
+            } else {
+                button.textContent = 'Vue Année Complète';
+                generateCalendar();
+            }
+        }
+
+        function generateYearView() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)'; // 4 colonnes pour les trimestres
+            
+            const quarters = [
+                { name: 'T1 - Jan-Mar', months: [0, 1, 2] },
+                { name: 'T2 - Avr-Juin', months: [3, 4, 5] },
+                { name: 'T3 - Juil-Sept', months: [6, 7, 8] },
+                { name: 'T4 - Oct-Déc', months: [9, 10, 11] }
+            ];
+            
+            quarters.forEach(quarter => {
+                const quarterColumn = document.createElement('div');
+                quarterColumn.className = 'month-column';
+                quarterColumn.style.minHeight = '600px';
+                
+                const header = document.createElement('div');
+                header.className = 'month-header';
+                header.textContent = quarter.name;
+                quarterColumn.appendChild(header);
+                
+                // Toutes les semaines du trimestre
+                quarter.months.forEach(monthIndex => {
+                    const weeks = getWeeksInMonth(currentYear, monthIndex);
+                    weeks.forEach(week => {
+                        const weekItem = document.createElement('div');
+                        weekItem.className = 'week-item';
+                        weekItem.style.marginBottom = '4px';
+                        weekItem.style.padding = '8px';
+                        weekItem.style.fontSize = '0.85em';
+                        
+                        const weekKey = `${currentYear}-W${week.week}`;
+                        const assignment = assignments[weekKey];
+                        const hasVacation = checkVacationConflict(week.start);
+                        
+                        if (assignment) {
+                            weekItem.classList.add(hasVacation ? 'conflict' : 'assigned');
+                        } else if (hasVacation) {
+                            weekItem.classList.add('vacation');
+                        }
+                        
+                        weekItem.innerHTML = `
+                            <div style="font-weight: bold; margin-bottom: 2px;">S${week.week}</div>
+                            <div style="font-size: 0.8em;">${formatDate(week.start)}-${formatDate(week.end)}</div>
+                            <div style="font-size: 0.8em; margin-top: 2px;">
+                                ${assignment ? `${assignment.member1.split(' ')[0]} + ${assignment.member2.split(' ')[0]}` : 'Libre'}
+                            </div>
+                        `;
+                        
+                        weekItem.onclick = () => selectWeek(weekKey, week);
+                        quarterColumn.appendChild(weekItem);
+                    });
+                });
+                
+                grid.appendChild(quarterColumn);
+            });
+        }
+
+        function debugAssignments() {
+            console.log('=== DEBUG ASSIGNMENTS ===');
+            console.log('Current Year:', currentYear);
+            console.log('Total assignments:', Object.keys(assignments).length);
+            console.log('All assignments:', assignments);
+            console.log('Vacations:', vacations);
+            
+            // Test d'assignation directe
+            const testKey = `${currentYear}-W1`;
+            assignments[testKey] = {
+                member1: 'Eric Forster',
+                member2: 'Marie Khaltaev', 
+                backup: 'Isabelle Meynet'
+            };
+            
+            console.log('Test assignment créée:', testKey);
+            generateCalendar();
+            updateStats();
+            
+            alert(`Assignments: ${Object.keys(assignments).length}\nTest ajouté pour semaine 1\nVoir la console pour les détails`);
+        }
+
+        function resetPlanning() {
+            if (confirm('Êtes-vous sûr de vouloir effacer tout le planning ?')) {
+                assignments = {};
+                vacations = {};
+                saveToStorage();
+                generateCalendar();
+                generateTeamGrid();
+                updateStats();
+                alert('Planning remis à zéro !');
+            }
+        }
+
+        function saveToStorage() {
+            try {
+                const data = {
+                    year: currentYear,
+                    assignments: assignments,
+                    vacations: vacations
+                };
+                localStorage.setItem('permis-s-planning', JSON.stringify(data));
+            } catch (e) {
+                console.warn('Impossible de sauvegarder dans localStorage');
+            }
+        }
+
+        function loadFromStorage() {
+            try {
+                const data = localStorage.getItem('permis-s-planning');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    currentYear = parsed.year || currentYear;
+                    assignments = parsed.assignments || {};
+                    vacations = parsed.vacations || {};
+                }
+            } catch (e) {
+                console.warn('Impossible de charger depuis localStorage');
+            }
+        }
+
+        // Fermer les modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
