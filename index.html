@@ -25,6 +25,31 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
+            position: relative;
+        }
+
+        .connection-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .connection-status.connected {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .connection-status.disconnected {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
         }
 
         .header {
@@ -131,7 +156,7 @@
         }
 
         .sidebar {
-            width: 250px;
+            width: 300px;
             flex-shrink: 0;
             background: white;
             border-radius: 15px;
@@ -181,6 +206,76 @@
         .quick-stat-value {
             font-weight: bold;
             color: #3498db;
+        }
+
+        /* Styles pour le chat IA */
+        .ai-chat-container {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .ai-chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+
+        .user-message {
+            background: #e3f2fd;
+            border-left: 3px solid #2196f3;
+        }
+
+        .ai-message {
+            background: #e8f5e8;
+            border-left: 3px solid #4caf50;
+        }
+
+        .loading-message {
+            animation: pulse 1.5s infinite;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 0.8em;
+        }
+
+        .message-author {
+            color: #2c3e50;
+        }
+
+        .message-time {
+            color: #6c757d;
+        }
+
+        .message-content {
+            color: #2c3e50;
+        }
+
+        .ai-chat-input {
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .ai-chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.85em;
         }
 
         .calendar-container {
@@ -319,14 +414,6 @@
             font-size: 1.1em;
         }
 
-        .calendar-container {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -334,19 +421,6 @@
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 2px solid #f1f3f4;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 15px;
-        }
-
-        .month-column {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            min-height: 400px;
         }
 
         .month-header {
@@ -475,114 +549,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f1f3f4;
-        }
-
-        .close {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #e74c3c;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .form-group input, 
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .binome-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 15px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        .legend-color.assigned { background: #27ae60; }
-        .legend-color.vacation { background: #f39c12; }
-        .legend-color.conflict { background: #e74c3c; }
-        .legend-color.unassigned { background: #dee2e6; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
             backdrop-filter: blur(8px);
             animation: fadeIn 0.3s ease-out;
         }
@@ -681,6 +647,71 @@
             gap: 16px;
         }
 
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .legend-color.assigned { background: #27ae60; }
+        .legend-color.vacation { background: #f39c12; }
+        .legend-color.conflict { background: #e74c3c; }
+        .legend-color.unassigned { background: #dee2e6; }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -703,97 +734,9 @@
                 min-width: 3360px;
             }
             
-            .calendar-grid.year-view {
-                grid-template-columns: repeat(4, 300px);
-                min-width: 1200px;
-            }
-            
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 20px;
-            }
-            
-            .toolbar-group {
-                justify-content: center;
-            }
-            
-            .header {
-                padding: 20px;
-                text-align: center;
-            }
-            
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .container {
-                margin: 10px;
-                border-radius: 16px;
-            }
-
-            .legend {
-                gap: 16px;
-            }
-
-            .navigation-buttons {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .calendar-grid {
-                grid-template-columns: repeat(12, 240px);
-                min-width: 2880px;
-            }
-            
-            .calendar-grid.year-view {
-                grid-template-columns: repeat(2, 260px);
-                min-width: 520px;
-            }
-            
-            .btn {
-                font-size: 12px;
-                padding: 8px 12px;
-            }
-
-            .sidebar {
-                padding: 20px;
-            }
-
-            .main-content {
-                padding: 16px;
-            }
-
-            .calendar-container {
-                padding: 20px;
-            }
-
-            .team-panel {
-                padding: 20px;
-            }
-
             .binome-selector {
                 grid-template-columns: 1fr;
             }
-        }
-
-        /* Animations d'entrée en séquence */
-        .week-item:nth-child(1) { animation-delay: 0.1s; }
-        .week-item:nth-child(2) { animation-delay: 0.15s; }
-        .week-item:nth-child(3) { animation-delay: 0.2s; }
-        .week-item:nth-child(4) { animation-delay: 0.25s; }
-        .week-item:nth-child(5) { animation-delay: 0.3s; }
-
-        .team-member:nth-child(1) { animation-delay: 0.1s; }
-        .team-member:nth-child(2) { animation-delay: 0.2s; }
-        .team-member:nth-child(3) { animation-delay: 0.3s; }
-        .team-member:nth-child(4) { animation-delay: 0.4s; }
-        .team-member:nth-child(5) { animation-delay: 0.5s; }
-
-        /* Animations pour les stats qui se mettent à jour */
-        .updating {
-            animation: pulse 0.5s ease-in-out;
         }
 
         /* Scroll bar stylé */
@@ -815,38 +758,29 @@
             background: linear-gradient(90deg, #5a67d8 0%, #68d391 100%);
         }
 
-        /* Effet de focus states pour l'accessibilité */
-        button:focus,
-        .btn:focus {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 10000;
         }
 
-        /* Animations de succès */
-        @keyframes success {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); background: rgba(16, 185, 129, 0.1); }
-            100% { transform: scale(1); }
-        }
+        .notification.success { background: #27ae60; }
+        .notification.error { background: #e74c3c; }
+        .notification.info { background: #3498db; }
+        .notification.warning { background: #f39c12; }
 
-        .success-animation {
-            animation: success 0.6s ease-out;
+        .notification.show {
+            transform: translateX(0);
         }
-
-        /* Loading states */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading {
-            animation: spin 1s linear infinite;
-        }
-
-        /* Hover effect pour les boutons de navigation */
-        .nav-btn:nth-child(1):hover { box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); }
-        .nav-btn:nth-child(2):hover { box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-        .nav-btn:nth-child(3):hover { box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); }
-        .nav-btn:nth-child(4):hover { box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
 
         /* Effets de particules subtils */
         .container::before {
@@ -866,6 +800,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="connection-status disconnected" id="connectionStatus">
+            🔴 Backend déconnecté
+        </div>
+        
         <div class="header">
             <h1>🗓️ Planning Manager</h1>
             <p>Gestion des équipes référents Permis S - BAL Collective</p>
@@ -922,6 +860,34 @@
                 </div>
 
                 <div class="sidebar-section">
+                    <h3>🤖 Assistant IA</h3>
+                    <div class="ai-chat-container">
+                        <div class="ai-chat-messages" id="aiChatMessages">
+                            <div class="chat-message ai-message">
+                                <div class="message-header">
+                                    <span class="message-author">🤖 Assistant</span>
+                                    <span class="message-time">--:--</span>
+                                </div>
+                                <div class="message-content">
+                                    Bonjour ! Je peux vous aider à :<br>
+                                    • Assigner des semaines<br>
+                                    • Gérer les vacances<br>
+                                    • Analyser l'équipe<br>
+                                    • Optimiser le planning<br><br>
+                                    Tapez votre demande ci-dessous !
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-chat-input">
+                            <input type="text" id="aiChatInput" placeholder="Ex: Assigner Jean semaine 15..." />
+                            <button onclick="sendChatMessage()" class="btn btn-primary" style="padding: 8px 12px; font-size: 0.8em;">
+                                Envoyer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
                     <h3>🗓️ Navigation</h3>
                     <div class="navigation-buttons">
                         <button class="nav-btn" onclick="scrollToMonth(0)">Jan</button>
@@ -944,8 +910,8 @@
                 <div class="sidebar-section">
                     <h3>⚡ Actions</h3>
                     <div style="display: grid; gap: 10px;">
-                        <button class="btn btn-success" style="width: 100%; font-size: 0.9em;" onclick="autoAssign()">
-                            🤖 Attribution Auto
+                        <button class="btn btn-success" style="width: 100%; font-size: 0.9em;" onclick="analyzeTeamWithAI()">
+                            🎯 Analyse IA
                         </button>
                         <button class="btn btn-warning" style="width: 100%; font-size: 0.9em;" onclick="showVacationModal()">
                             🏖️ Gérer Vacances
@@ -1131,6 +1097,15 @@
     </div>
 
     <script>
+        // ========================================
+        // CONFIGURATION ET VARIABLES GLOBALES
+        // ========================================
+        
+        // Configuration backend IA
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxpVjFoBroB1f-xkb6iKRr-Boc6DRyZ6MPFSK1PSeCwNKHNFrnnpqNnAfQZN9KzufrfCA/exec';
+        let backendConnected = false;
+        let aiChatHistory = [];
+
         // Configuration de l'équipe
         const team = [
             'Référent 1',
@@ -1159,14 +1134,185 @@
         let vacations = {};
         let isYearView = false;
 
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFromStorage();
-            initializeSelects();
-            generateCalendar();
-            generateTeamGrid();
-            updateStats();
-        });
+        // ========================================
+        // FONCTIONS IA ET BACKEND
+        // ========================================
+
+        async function callBackend(action, data = {}) {
+            try {
+                const payload = { action: action, ...data };
+                console.log('Appel backend:', payload);
+                
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Réponse backend:', result);
+                return result;
+            } catch (error) {
+                console.error('Erreur backend:', error);
+                showNotification('Erreur de connexion au backend', 'error');
+                return { success: false, error: error.toString() };
+            }
+        }
+
+        async function initializeBackend() {
+            try {
+                showNotification('Initialisation du système...', 'info');
+                updateConnectionStatus(false);
+                
+                const result = await callBackend('init_system');
+                
+                if (result.success) {
+                    backendConnected = true;
+                    updateConnectionStatus(true);
+                    showNotification('✅ Backend connecté et initialisé !', 'success');
+                    console.log('Sheets créés:', result.sheets);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Erreur initialisation backend:', error);
+                showNotification('❌ Erreur initialisation backend', 'error');
+                updateConnectionStatus(false);
+                backendConnected = false;
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (connected) {
+                statusElement.className = 'connection-status connected';
+                statusElement.innerHTML = '🟢 Backend connecté';
+            } else {
+                statusElement.className = 'connection-status disconnected';
+                statusElement.innerHTML = '🔴 Backend déconnecté';
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('aiChatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                displayChatMessage('user', message);
+                input.value = '';
+                
+                displayChatMessage('ai', '🤔 Analyse en cours...', true);
+                
+                try {
+                    const result = await callBackend('ai_chat', { message: message });
+                    
+                    document.querySelector('.loading-message')?.remove();
+                    
+                    if (result.success) {
+                        displayChatMessage('ai', result.message || 'Commande traitée !');
+                        
+                        // Si l'IA a exécuté une action, rafraîchir l'affichage
+                        if (result.action && result.action !== 'general_question') {
+                            generateCalendar();
+                            generateTeamGrid();
+                            updateStats();
+                            showNotification('✅ Action exécutée par l\'IA', 'success');
+                        }
+                    } else {
+                        displayChatMessage('ai', '❌ Erreur lors du traitement.');
+                    }
+                } catch (error) {
+                    document.querySelector('.loading-message')?.remove();
+                    displayChatMessage('ai', '❌ Erreur de connexion.');
+                }
+            }
+        }
+
+        function displayChatMessage(type, message, isLoading = false) {
+            const chatContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}-message ${isLoading ? 'loading-message' : ''}`;
+            
+            const timestamp = new Date().toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <span class="message-author">${type === 'user' ? '👤 Vous' : '🤖 Assistant'}</span>
+                    <span class="message-time">${timestamp}</span>
+                </div>
+                <div class="message-content">${message}</div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function analyzeTeamWithAI() {
+            try {
+                displayChatMessage('ai', '🎯 Analyse de l\'équipe en cours...');
+                
+                const result = await callBackend('analyze_team');
+                
+                if (result.success) {
+                    const analysis = result.analysis;
+                    
+                    let summary = '📊 **Analyse de l\'équipe :**\n\n';
+                    
+                    Object.entries(analysis).forEach(([member, data]) => {
+                        if (data.suggestions && data.suggestions.length > 0) {
+                            summary += `**${member}** (Risque: ${Math.round(data.riskScore * 100)}%)\n`;
+                            data.suggestions.forEach(suggestion => {
+                                summary += `• ${suggestion.message}\n`;
+                            });
+                            summary += '\n';
+                        }
+                    });
+                    
+                    if (summary === '📊 **Analyse de l\'équipe :**\n\n') {
+                        summary += '✅ Aucun problème détecté dans l\'équipe !';
+                    }
+                    
+                    displayChatMessage('ai', summary);
+                    showNotification('✅ Analyse terminée', 'success');
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Erreur analyse équipe:', error);
+                showNotification('❌ Erreur lors de l\'analyse', 'error');
+                displayChatMessage('ai', '❌ Erreur lors de l\'analyse de l\'équipe.');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // ========================================
+        // FONCTIONS PLANNING ORIGINALES
+        // ========================================
 
         function initializeSelects() {
             const selects = ['member1', 'member2', 'backupMember', 'vacationMember'];
@@ -1185,7 +1331,7 @@
         function generateCalendar() {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            grid.className = 'calendar-grid'; // Reset class
+            grid.className = 'calendar-grid';
             
             const months = [
                 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
@@ -1201,7 +1347,6 @@
                 header.textContent = month;
                 monthColumn.appendChild(header);
                 
-                // Générer les semaines du mois
                 const weeks = getWeeksInMonth(currentYear, monthIndex);
                 weeks.forEach(week => {
                     const weekItem = document.createElement('div');
@@ -1210,9 +1355,6 @@
                     const weekKey = `${currentYear}-W${week.week}`;
                     const assignment = assignments[weekKey];
                     const hasVacation = checkVacationConflict(week.start);
-                    
-                    // Debug: afficher la clé et l'assignment
-                    console.log(`Week ${week.week}: Key=${weekKey}, Assignment=`, assignment);
                     
                     if (assignment) {
                         weekItem.classList.add(hasVacation ? 'conflict' : 'assigned');
@@ -1224,7 +1366,6 @@
                         <div class="week-date">Semaine ${week.week} (${formatDate(week.start)} - ${formatDate(week.end)})</div>
                         <div class="week-assignment">${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}</div>
                         ${assignment ? `<div style="font-size: 0.8em; color: #6c757d;">Backup: ${assignment.backup}</div>` : ''}
-                        <div style="font-size: 0.7em; color: #999;">Key: ${weekKey}</div>
                     `;
                     
                     weekItem.onclick = () => selectWeek(weekKey, week);
@@ -1243,7 +1384,6 @@
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             
-            // Trouver le lundi de la première semaine
             let current = new Date(firstDay);
             while (current.getDay() !== 1) {
                 current.setDate(current.getDate() - 1);
@@ -1294,11 +1434,10 @@
                 const memberDiv = document.createElement('div');
                 memberDiv.className = 'team-member';
                 
-                // Colorer selon la charge de travail
                 let borderColor = '#dee2e6';
-                if (stats.workload > 125) borderColor = '#e74c3c'; // Surcharge
-                else if (stats.workload < 75) borderColor = '#f39c12'; // Sous-charge
-                else borderColor = '#27ae60'; // Équilibré
+                if (stats.workload > 125) borderColor = '#e74c3c';
+                else if (stats.workload < 75) borderColor = '#f39c12';
+                else borderColor = '#27ae60';
                 
                 memberDiv.style.borderLeft = `4px solid ${borderColor}`;
                 
@@ -1339,7 +1478,6 @@
             let vacationDays = 0;
             let nextAssignment = null;
             
-            // Compter les assignations et trouver la prochaine
             const currentWeek = getCurrentWeek();
             Object.entries(assignments).forEach(([weekKey, assignment]) => {
                 const weekNum = parseInt(weekKey.split('-W')[1]);
@@ -1355,7 +1493,6 @@
                 }
             });
             
-            // Compter les jours de congés
             if (vacations[member]) {
                 vacations[member].forEach(vacation => {
                     const start = new Date(vacation.start);
@@ -1366,10 +1503,9 @@
             }
             
             const totalWeeks = Object.keys(assignments).length || 52;
-            const expectedShare = totalWeeks / team.length; // Part équitable
+            const expectedShare = totalWeeks / team.length;
             const workload = Math.round((assigned / expectedShare) * 100);
             
-            // Déterminer le statut
             let status = 'Équilibré';
             if (workload > 125) status = 'Surcharge';
             else if (workload < 75) status = 'Sous-charge';
@@ -1397,24 +1533,17 @@
         }
 
         function selectWeek(weekKey, week) {
-            console.log('SelectWeek called with:', weekKey, week); // Debug
-            
             const weekInput = document.getElementById('weekInput');
             const weekNumber = week.week.toString().padStart(2, '0');
             weekInput.value = `${currentYear}-W${weekNumber}`;
             
-            console.log('Set input value to:', weekInput.value); // Debug
-            
-            // Pré-remplir avec l'assignment existant si il y en a un
             const existingAssignment = assignments[weekKey];
-            console.log('Existing assignment for', weekKey, ':', existingAssignment); // Debug
             
             if (existingAssignment) {
                 document.getElementById('member1').value = existingAssignment.member1;
                 document.getElementById('member2').value = existingAssignment.member2;
                 document.getElementById('backupMember').value = existingAssignment.backup;
             } else {
-                // Reset form si pas d'assignment existant
                 document.getElementById('member1').value = '';
                 document.getElementById('member2').value = '';
                 document.getElementById('backupMember').value = '';
@@ -1422,78 +1551,6 @@
             
             showAssignmentModal();
         }
-
-        // Gestion des formulaires
-        document.getElementById('assignmentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const weekValue = document.getElementById('weekInput').value;
-            const member1 = document.getElementById('member1').value;
-            const member2 = document.getElementById('member2').value;
-            const backup = document.getElementById('backupMember').value;
-            
-            console.log('Form values:', { weekValue, member1, member2, backup }); // Debug
-            
-            if (member1 === member2) {
-                alert('Les deux membres du binôme ne peuvent pas être identiques !');
-                return;
-            }
-            
-            if (!member1 || !member2 || !backup) {
-                alert('Veuillez remplir tous les champs !');
-                return;
-            }
-            
-            // Extraire l'année et la semaine du format HTML (2025-W01)
-            const matches = weekValue.match(/(\d{4})-W(\d+)/);
-            if (!matches) {
-                alert('Format de semaine invalide !');
-                return;
-            }
-            
-            const year = matches[1];
-            const weekNum = parseInt(matches[2]); // Convertir en nombre pour enlever le zéro
-            const weekKey = `${year}-W${weekNum}`;
-            
-            console.log('Generated key:', weekKey); // Debug
-            console.log('All assignments before:', assignments); // Debug
-            
-            assignments[weekKey] = { member1, member2, backup };
-            
-            console.log('All assignments after:', assignments); // Debug
-            
-            saveToStorage();
-            generateCalendar();
-            generateTeamGrid();
-            updateStats();
-            closeModal('assignmentModal');
-            
-            // Reset form
-            document.getElementById('assignmentForm').reset();
-        });
-
-        document.getElementById('vacationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const member = document.getElementById('vacationMember').value;
-            const start = document.getElementById('vacationStart').value;
-            const end = document.getElementById('vacationEnd').value;
-            
-            if (!vacations[member]) {
-                vacations[member] = [];
-            }
-            
-            vacations[member].push({ start, end });
-            
-            saveToStorage();
-            generateCalendar();
-            generateTeamGrid();
-            updateStats();
-            closeModal('vacationModal');
-            
-            // Reset form
-            document.getElementById('vacationForm').reset();
-        });
 
         function checkVacationConflict(weekStart) {
             for (const member of team) {
@@ -1523,7 +1580,6 @@
                 const weekKey = `${currentYear}-W${week}`;
                 const weekStart = getDateFromWeek(currentYear, week);
                 
-                // Vérifier les conflits de vacances
                 let availableBinomes = predefinedBinomes.filter(binome => {
                     return !vacations[binome[0]] || !vacations[binome[0]].some(vacation => {
                         const vacStart = new Date(vacation.start);
@@ -1537,7 +1593,7 @@
                 });
                 
                 if (availableBinomes.length === 0) {
-                    availableBinomes = predefinedBinomes; // Fallback
+                    availableBinomes = predefinedBinomes;
                 }
                 
                 const binome = availableBinomes[binomeIndex % availableBinomes.length];
@@ -1554,7 +1610,7 @@
             generateCalendar();
             generateTeamGrid();
             updateStats();
-            alert('Attribution automatique terminée !');
+            showNotification('Attribution automatique terminée !', 'success');
         }
 
         function getDateFromWeek(year, week) {
@@ -1565,7 +1621,7 @@
 
         function scrollToMonth(monthIndex) {
             const scrollContainer = document.querySelector('.calendar-scroll-container');
-            const monthWidth = 315; // 300px + 15px gap
+            const monthWidth = 315;
             const targetPosition = monthIndex * monthWidth;
             
             scrollContainer.scrollTo({
@@ -1578,10 +1634,8 @@
             const currentWeek = getCurrentWeek();
             const currentMonth = new Date().getMonth();
             
-            // Scroll vers le mois actuel
             scrollToMonth(currentMonth);
             
-            // Optionnel: highlight de la semaine actuelle
             setTimeout(() => {
                 const weekElements = document.querySelectorAll('.week-item');
                 weekElements.forEach(el => {
@@ -1599,7 +1653,6 @@
             const assignedWeeks = Object.keys(assignments).length;
             let conflictWeeks = 0;
             
-            // Compter les conflits
             Object.keys(assignments).forEach(weekKey => {
                 const weekNum = parseInt(weekKey.split('-W')[1]);
                 const weekStart = getDateFromWeek(currentYear, weekNum);
@@ -1611,13 +1664,11 @@
             const progress = Math.round((assignedWeeks / totalWeeks) * 100);
             const equityScore = calculateEquityScore();
             
-            // Mettre à jour la sidebar
             document.getElementById('sidebarProgress').textContent = progress + '%';
             document.getElementById('sidebarAssigned').textContent = `${assignedWeeks}/52`;
             document.getElementById('sidebarConflicts').textContent = conflictWeeks;
             document.getElementById('sidebarEquity').textContent = equityScore + '/10';
             
-            // Mettre à jour le résumé d'équipe
             updateTeamSummary();
         }
 
@@ -1649,7 +1700,6 @@
             const assignedWeeks = Object.keys(assignments).length;
             let conflictWeeks = 0;
             
-            // Compter les conflits (vacances vs assignations)
             Object.keys(assignments).forEach(weekKey => {
                 const weekNum = parseInt(weekKey.split('-W')[1]);
                 const weekStart = getDateFromWeek(currentYear, weekNum);
@@ -1663,8 +1713,6 @@
             }, 0);
             
             const progress = Math.round((assignedWeeks / totalWeeks) * 100);
-            
-            // Calculer le score d'équité (répartition équilibrée)
             const equityScore = calculateEquityScore();
             
             document.getElementById('totalWeeks').textContent = totalWeeks;
@@ -1675,7 +1723,6 @@
             document.getElementById('vacationWeeks').textContent = vacationWeeksCount;
             document.getElementById('progressBar').style.width = progress + '%';
             
-            // Colorer le score d'équité
             const equityElement = document.getElementById('equityScore');
             const equityCard = equityElement.closest('.stat-card');
             if (equityScore >= 8) {
@@ -1686,7 +1733,6 @@
                 equityCard.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
             }
             
-            // Colorer les conflits
             const conflictElement = document.getElementById('conflictWeeks');
             const conflictCard = conflictElement.closest('.stat-card');
             if (conflictWeeks === 0) {
@@ -1697,14 +1743,12 @@
                 conflictCard.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
             }
             
-            // Mettre à jour la sidebar
             updateSidebar();
         }
 
         function calculateEquityScore() {
             if (Object.keys(assignments).length === 0) return 0;
             
-            // Compter les assignations par membre
             const memberCounts = {};
             team.forEach(member => {
                 memberCounts[member] = 0;
@@ -1718,12 +1762,9 @@
             const counts = Object.values(memberCounts);
             const average = counts.reduce((sum, count) => sum + count, 0) / counts.length;
             
-            // Calculer l'écart type
             const variance = counts.reduce((sum, count) => sum + Math.pow(count - average, 2), 0) / counts.length;
             const standardDeviation = Math.sqrt(variance);
             
-            // Score d'équité : plus l'écart type est faible, plus le score est élevé
-            // Score max (10) quand écart type = 0, décroît avec l'écart type
             const maxScore = 10;
             const score = Math.max(0, Math.round(maxScore - (standardDeviation * 2)));
             
@@ -1736,126 +1777,9 @@
             updateStats();
         }
 
-        function exportToExcelCollective() {
-            const data = [];
-            
-            // En-têtes
-            data.push(['Semaine', 'Dates', 'Membre 1', 'Membre 2', 'Backup', 'Statut', 'Conflits']);
-            
-            // Générer toutes les semaines de l'année
-            for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
-                const assignment = assignments[weekKey];
-                const weekStart = getDateFromWeek(currentYear, week);
-                const weekEnd = new Date(weekStart);
-                weekEnd.setDate(weekEnd.getDate() + 6);
-                
-                const dateRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
-                const hasVacation = checkVacationConflict(weekStart);
-                
-                let statut = 'Non assignée';
-                let conflits = '';
-                
-                if (assignment) {
-                    statut = 'Assignée';
-                    if (hasVacation) {
-                        statut = 'Conflit vacances';
-                        conflits = 'Vacances en cours';
-                    }
-                }
-                
-                data.push([
-                    `Semaine ${week}`,
-                    dateRange,
-                    assignment ? assignment.member1 : '',
-                    assignment ? assignment.member2 : '',
-                    assignment ? assignment.backup : '',
-                    statut,
-                    conflits
-                ]);
-            }
-            
-            downloadCSV(data, `planning-collectif-${currentYear}.csv`);
-        }
-
-        function exportToExcelIndividual() {
-            // Créer un fichier pour chaque membre
-            team.forEach(member => {
-                const data = [];
-                const stats = getTeamMemberStats(member);
-                
-                // En-têtes avec stats
-                data.push([`Planning individuel - ${member} (${currentYear})`]);
-                data.push([`Semaines assignées: ${stats.assigned}`, `Semaines backup: ${stats.backup}`, `Jours de congés: ${stats.vacationDays}`]);
-                data.push([]); // Ligne vide
-                
-                // En-têtes du tableau
-                data.push(['Semaine', 'Dates', 'Rôle', 'Binôme', 'Backup', 'Vacances']);
-                
-                // Parcourir toutes les semaines
-                for (let week = 1; week <= 52; week++) {
-                    const weekKey = `${currentYear}-W${week}`;
-                    const assignment = assignments[weekKey];
-                    const weekStart = getDateFromWeek(currentYear, week);
-                    const weekEnd = new Date(weekStart);
-                    weekEnd.setDate(weekEnd.getDate() + 6);
-                    const dateRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
-                    
-                    let role = '';
-                    let binome = '';
-                    let backup = '';
-                    let vacances = '';
-                    
-                    // Vérifier les vacances
-                    if (vacations[member]) {
-                        const inVacation = vacations[member].some(vacation => {
-                            const vacStart = new Date(vacation.start);
-                            const vacEnd = new Date(vacation.end);
-                            return weekStart >= vacStart && weekStart <= vacEnd;
-                        });
-                        if (inVacation) vacances = 'En congés';
-                    }
-                    
-                    // Vérifier le rôle dans l'assignation
-                    if (assignment) {
-                        if (assignment.member1 === member) {
-                            role = 'Titulaire 1';
-                            binome = assignment.member2;
-                            backup = assignment.backup;
-                        } else if (assignment.member2 === member) {
-                            role = 'Titulaire 2';
-                            binome = assignment.member1;
-                            backup = assignment.backup;
-                        } else if (assignment.backup === member) {
-                            role = 'Backup';
-                            binome = `${assignment.member1} + ${assignment.member2}`;
-                        }
-                    }
-                    
-                    // N'ajouter que les semaines où la personne est impliquée
-                    if (role || vacances) {
-                        data.push([
-                            `Semaine ${week}`,
-                            dateRange,
-                            role,
-                            binome,
-                            backup,
-                            vacances
-                        ]);
-                    }
-                }
-                
-                downloadCSV(data, `planning-${member.replace(/\s+/g, '-')}-${currentYear}.csv`);
-            });
-            
-            alert(`${team.length} fichiers Excel individuels générés !`);
-        }
-
         function exportToExcelComplete() {
-            // Créer un export combiné avec statistiques détaillées
             const data = [];
             
-            // Section 1: Résumé exécutif
             data.push(['PLANNING ÉQUIPE RÉFÉRENTS PERMIS S', `ANNÉE ${currentYear}`]);
             data.push([]);
             data.push(['STATISTIQUES GÉNÉRALES']);
@@ -1873,7 +1797,6 @@
             data.push(['Avancement', `${progress}%`]);
             data.push([]);
             
-            // Section 2: Statistiques par membre
             data.push(['RÉPARTITION PAR MEMBRE']);
             data.push(['Nom', 'Semaines assignées', 'Semaines backup', 'Jours congés', 'Charge %']);
             
@@ -1889,8 +1812,6 @@
             });
             
             data.push([]);
-            
-            // Section 3: Planning détaillé
             data.push(['PLANNING DÉTAILLÉ']);
             data.push(['Semaine', 'Dates', 'Membre 1', 'Membre 2', 'Backup', 'Statut']);
             
@@ -1918,37 +1839,12 @@
                 ]);
             }
             
-            data.push([]);
-            
-            // Section 4: Calendrier des vacances
-            data.push(['CALENDRIER DES VACANCES']);
-            data.push(['Membre', 'Date début', 'Date fin', 'Durée (jours)']);
-            
-            team.forEach(member => {
-                if (vacations[member]) {
-                    vacations[member].forEach(vacation => {
-                        const start = new Date(vacation.start);
-                        const end = new Date(vacation.end);
-                        const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-                        
-                        data.push([
-                            member,
-                            start.toLocaleDateString('fr-FR'),
-                            end.toLocaleDateString('fr-FR'),
-                            duration
-                        ]);
-                    });
-                }
-            });
-            
             downloadCSV(data, `planning-complet-${currentYear}.csv`);
         }
 
         function downloadCSV(data, filename) {
-            // Convertir les données en CSV
             const csvContent = data.map(row => 
                 row.map(cell => {
-                    // Échapper les guillemets et entourer de guillemets si nécessaire
                     const cellStr = String(cell || '');
                     if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
                         return '"' + cellStr.replace(/"/g, '""') + '"';
@@ -1957,11 +1853,9 @@
                 }).join(',')
             ).join('\n');
             
-            // Ajouter BOM pour l'encodage UTF-8 (support des accents dans Excel)
             const BOM = '\uFEFF';
             const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
             
-            // Télécharger le fichier
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
@@ -1988,7 +1882,7 @@
             a.click();
             URL.revokeObjectURL(url);
             
-            alert('Données sauvegardées !');
+            showNotification('Données sauvegardées !', 'success');
         }
 
         function loadData() {
@@ -2012,9 +1906,9 @@
                             generateTeamGrid();
                             updateStats();
                             
-                            alert('Données chargées avec succès !');
+                            showNotification('Données chargées avec succès !', 'success');
                         } catch (error) {
-                            alert('Erreur lors du chargement du fichier !');
+                            showNotification('Erreur lors du chargement du fichier !', 'error');
                         }
                     };
                     reader.readAsText(file);
@@ -2035,13 +1929,12 @@
                 }
             });
             
-            alert(`🎉 ${exportedCount} calendriers générés !\n\nChaque référent peut maintenant importer son fichier .ics dans Outlook, Google Calendar, Apple Calendar, etc.\n\n✅ Import automatique de toutes ses permanences BAL`);
+            showNotification(`🎉 ${exportedCount} calendriers générés !`, 'success');
         }
 
         function generateICSForMember(member) {
             let events = [];
             
-            // Parcourir toutes les semaines assignées au membre
             Object.entries(assignments).forEach(([weekKey, assignment]) => {
                 const weekNum = parseInt(weekKey.split('-W')[1]);
                 const weekStart = getDateFromWeek(currentYear, weekNum);
@@ -2049,7 +1942,6 @@
                 let eventTitle = '';
                 let eventDescription = '';
                 
-                // Vérifier le rôle du membre
                 if (assignment.member1 === member || assignment.member2 === member) {
                     const partner = assignment.member1 === member ? assignment.member2 : assignment.member1;
                     eventTitle = `🔗 BAL Permis S - Binôme (Semaine ${weekNum})`;
@@ -2060,10 +1952,9 @@
                 }
                 
                 if (eventTitle) {
-                    // Événement de 5 jours (lundi à vendredi)
                     const eventStart = new Date(weekStart);
                     const eventEnd = new Date(weekStart);
-                    eventEnd.setDate(eventEnd.getDate() + 4); // Vendredi
+                    eventEnd.setDate(eventEnd.getDate() + 4);
                     
                     events.push({
                         title: eventTitle,
@@ -2075,7 +1966,6 @@
                 }
             });
             
-            // Ajouter les périodes de vacances
             if (vacations[member]) {
                 vacations[member].forEach(vacation => {
                     const vacStart = new Date(vacation.start);
@@ -2094,7 +1984,6 @@
             
             if (events.length === 0) return null;
             
-            // Générer le contenu ICS
             let icsContent = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
@@ -2188,7 +2077,6 @@
                 header.textContent = quarter.name;
                 quarterColumn.appendChild(header);
                 
-                // Toutes les semaines du trimestre
                 quarter.months.forEach(monthIndex => {
                     const weeks = getWeeksInMonth(currentYear, monthIndex);
                     weeks.forEach(week => {
@@ -2232,7 +2120,6 @@
             console.log('All assignments:', assignments);
             console.log('Vacations:', vacations);
             
-            // Test d'assignation directe
             const testKey = `${currentYear}-W1`;
             assignments[testKey] = {
                 member1: 'Référent 1',
@@ -2244,7 +2131,7 @@
             generateCalendar();
             updateStats();
             
-            alert(`Assignments: ${Object.keys(assignments).length}\nTest ajouté pour semaine 1\nVoir la console pour les détails`);
+            showNotification(`Assignments: ${Object.keys(assignments).length} - Test ajouté pour semaine 1`, 'info');
         }
 
         function resetPlanning() {
@@ -2255,7 +2142,7 @@
                 generateCalendar();
                 generateTeamGrid();
                 updateStats();
-                alert('Planning remis à zéro !');
+                showNotification('Planning remis à zéro !', 'success');
             }
         }
 
@@ -2285,6 +2172,94 @@
                 console.warn('Impossible de charger depuis localStorage');
             }
         }
+
+        // ========================================
+        // GESTIONNAIRES D'ÉVÉNEMENTS
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            loadFromStorage();
+            initializeSelects();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+            
+            // Initialiser le backend IA
+            await initializeBackend();
+            
+            // Event listener pour Enter dans le chat
+            const chatInput = document.getElementById('aiChatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendChatMessage();
+                    }
+                });
+            }
+        });
+
+        document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const weekValue = document.getElementById('weekInput').value;
+            const member1 = document.getElementById('member1').value;
+            const member2 = document.getElementById('member2').value;
+            const backup = document.getElementById('backupMember').value;
+            
+            if (member1 === member2) {
+                showNotification('Les deux membres du binôme ne peuvent pas être identiques !', 'error');
+                return;
+            }
+            
+            if (!member1 || !member2 || !backup) {
+                showNotification('Veuillez remplir tous les champs !', 'error');
+                return;
+            }
+            
+            const matches = weekValue.match(/(\d{4})-W(\d+)/);
+            if (!matches) {
+                showNotification('Format de semaine invalide !', 'error');
+                return;
+            }
+            
+            const year = matches[1];
+            const weekNum = parseInt(matches[2]);
+            const weekKey = `${year}-W${weekNum}`;
+            
+            assignments[weekKey] = { member1, member2, backup };
+            
+            saveToStorage();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+            closeModal('assignmentModal');
+            
+            document.getElementById('assignmentForm').reset();
+            showNotification('✅ Assignation sauvegardée !', 'success');
+        });
+
+        document.getElementById('vacationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const member = document.getElementById('vacationMember').value;
+            const start = document.getElementById('vacationStart').value;
+            const end = document.getElementById('vacationEnd').value;
+            
+            if (!vacations[member]) {
+                vacations[member] = [];
+            }
+            
+            vacations[member].push({ start, end });
+            
+            saveToStorage();
+            generateCalendar();
+            generateTeamGrid();
+            updateStats();
+            closeModal('vacationModal');
+            
+            document.getElementById('vacationForm').reset();
+            showNotification('✅ Vacances ajoutées !', 'success');
+        });
 
         // Fermer les modals en cliquant à l'extérieur
         window.onclick = function(event) {
