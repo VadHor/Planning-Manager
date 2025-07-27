@@ -126,7 +126,172 @@
 
         .main-content {
             padding: 30px;
+            display: flex;
+            gap: 20px;
         }
+
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .main-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+
+        .quick-stats {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quick-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .quick-stat-value {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .calendar-scroll-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 0 -25px;
+            padding: 0 25px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 300px);
+            gap: 15px;
+            min-width: 3600px;
+        }
+
+        .calendar-grid.year-view {
+            grid-template-columns: repeat(4, 350px);
+            min-width: 1400px;
+        }
+
+        .month-column {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 400px;
+            width: 100%;
+        }
+
+        .scroll-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .scroll-hint {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 1px solid #2196f3;
+            border-radius: 20px;
+            padding: 8px 16px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #1976d2;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .team-summary {
+            display: grid;
+            gap: 8px;
+        }
+
+        .team-member-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+
+        .member-name-short {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .member-load {
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.8em;
+        }
+
+        .load-balanced { background: #27ae60; }
+        .load-under { background: #f39c12; }
+        .load-over { background: #e74c3c; }
 
         .stats-grid {
             display: grid;
@@ -409,66 +574,293 @@
         .legend-color.conflict { background: #e74c3c; }
         .legend-color.unassigned { background: #dee2e6; }
 
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .close {
+            color: #64748b;
+            font-size: 28px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(248, 250, 252, 0.5);
+        }
+
+        .close:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 15px;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+            background: rgba(255,255,255,1);
+        }
+
+        .binome-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
         @media (max-width: 768px) {
-            .calendar-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .main-content {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
             }
             
-            /* Vue année sur mobile - 2 colonnes */
-            .calendar-grid[style*="repeat(4, 1fr)"] {
-                grid-template-columns: repeat(2, 1fr) !important;
+            .sidebar {
+                width: 100%;
+                position: static;
+                order: 2;
+            }
+            
+            .main-panel {
+                order: 1;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(12, 280px);
+                min-width: 3360px;
+            }
+            
+            .calendar-grid.year-view {
+                grid-template-columns: repeat(4, 300px);
+                min-width: 1200px;
             }
             
             .toolbar {
                 flex-direction: column;
                 align-items: stretch;
+                padding: 20px;
             }
             
             .toolbar-group {
                 justify-content: center;
             }
             
-            .stats-grid {
+            .header {
+                padding: 20px;
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+
+            .legend {
+                gap: 16px;
+            }
+
+            .navigation-buttons {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 480px) {
             .calendar-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(12, 240px);
+                min-width: 2880px;
             }
             
-            /* Vue année sur très petit écran - 1 colonne */
-            .calendar-grid[style*="repeat(4, 1fr)"] {
-                grid-template-columns: 1fr !important;
+            .calendar-grid.year-view {
+                grid-template-columns: repeat(2, 260px);
+                min-width: 520px;
             }
             
-            .stats-grid {
+            .btn {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .sidebar {
+                padding: 20px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .calendar-container {
+                padding: 20px;
+            }
+
+            .team-panel {
+                padding: 20px;
+            }
+
+            .binome-selector {
                 grid-template-columns: 1fr;
             }
         }
 
-        .export-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
+        /* Animations d'entrée en séquence */
+        .week-item:nth-child(1) { animation-delay: 0.1s; }
+        .week-item:nth-child(2) { animation-delay: 0.15s; }
+        .week-item:nth-child(3) { animation-delay: 0.2s; }
+        .week-item:nth-child(4) { animation-delay: 0.25s; }
+        .week-item:nth-child(5) { animation-delay: 0.3s; }
+
+        .team-member:nth-child(1) { animation-delay: 0.1s; }
+        .team-member:nth-child(2) { animation-delay: 0.2s; }
+        .team-member:nth-child(3) { animation-delay: 0.3s; }
+        .team-member:nth-child(4) { animation-delay: 0.4s; }
+        .team-member:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Animations pour les stats qui se mettent à jour */
+        .updating {
+            animation: pulse 0.5s ease-in-out;
         }
 
-        .progress-bar {
-            width: 100%;
+        /* Scroll bar stylé */
+        .calendar-scroll-container::-webkit-scrollbar {
             height: 8px;
-            background: #dee2e6;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 10px 0;
         }
 
-        .progress-fill {
+        .calendar-scroll-container::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+
+        .calendar-scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+
+        .calendar-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg, #5a67d8 0%, #68d391 100%);
+        }
+
+        /* Effet de focus states pour l'accessibilité */
+        button:focus,
+        .btn:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Animations de succès */
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); background: rgba(16, 185, 129, 0.1); }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: success 0.6s ease-out;
+        }
+
+        /* Loading states */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Hover effect pour les boutons de navigation */
+        .nav-btn:nth-child(1):hover { box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); }
+        .nav-btn:nth-child(2):hover { box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .nav-btn:nth-child(3):hover { box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); }
+        .nav-btn:nth-child(4):hover { box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
+
+        /* Effets de particules subtils */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #27ae60, #229954);
-            transition: width 0.3s ease;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.02) 0%, transparent 50%);
+            pointer-events: none;
         }
     </style>
 </head>
@@ -505,88 +897,162 @@
         </div>
 
         <div class="main-content">
-            <!-- Statistiques -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="totalWeeks">52</h3>
-                    <p>Semaines Total</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="assignedWeeks">0</h3>
-                    <p>Semaines Assignées</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="conflictWeeks">0</h3>
-                    <p>Conflits Détectés</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="progressPercent">0%</h3>
-                    <p>Avancement</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="equityScore">-</h3>
-                    <p>Équité (/10)</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="vacationWeeks">0</h3>
-                    <p>Périodes Vacances</p>
-                </div>
-            </div>
-
-            <!-- Légende -->
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color assigned"></div>
-                    <span>Assignée</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color vacation"></div>
-                    <span>Vacances</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color conflict"></div>
-                    <span>Conflit</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color unassigned"></div>
-                    <span>Non assignée</span>
-                </div>
-            </div>
-
-            <!-- Calendrier -->
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <h2>Planning Annuel <span id="displayYear">2025</span></h2>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <!-- Barre latérale -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>📊 Résumé</h3>
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <span>Progression</span>
+                            <span class="quick-stat-value" id="sidebarProgress">0%</span>
+                        </div>
+                        <div class="quick-stat">
+                            <span>Assignées</span>
+                            <span class="quick-stat-value" id="sidebarAssigned">0/52</span>
+                        </div>
+                        <div class="quick-stat">
+                            <span>Conflits</span>
+                            <span class="quick-stat-value" id="sidebarConflicts">0</span>
+                        </div>
+                        <div class="quick-stat">
+                            <span>Équité</span>
+                            <span class="quick-stat-value" id="sidebarEquity">-/10</span>
+                        </div>
                     </div>
                 </div>
-                <div class="calendar-grid" id="calendarGrid">
-                    <!-- Généré par JavaScript -->
+
+                <div class="sidebar-section">
+                    <h3>🗓️ Navigation</h3>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" onclick="scrollToMonth(0)">Jan</button>
+                        <button class="nav-btn" onclick="scrollToMonth(3)">Avr</button>
+                        <button class="nav-btn" onclick="scrollToMonth(6)">Juil</button>
+                        <button class="nav-btn" onclick="scrollToMonth(9)">Oct</button>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; font-size: 0.9em;" onclick="scrollToCurrentWeek()">
+                        📅 Semaine Actuelle
+                    </button>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>👥 Équipe</h3>
+                    <div class="team-summary" id="teamSummary">
+                        <!-- Généré par JavaScript -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>⚡ Actions</h3>
+                    <div style="display: grid; gap: 10px;">
+                        <button class="btn btn-success" style="width: 100%; font-size: 0.9em;" onclick="autoAssign()">
+                            🤖 Attribution Auto
+                        </button>
+                        <button class="btn btn-warning" style="width: 100%; font-size: 0.9em;" onclick="showVacationModal()">
+                            🏖️ Gérer Vacances
+                        </button>
+                        <button class="btn btn-primary" style="width: 100%; font-size: 0.9em;" onclick="exportAllCalendars()">
+                            📅 Export Calendriers
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Équipe -->
-            <div class="team-panel">
-                <h2 style="margin-bottom: 25px; color: #2c3e50;">📊 Statistiques d'Équipe</h2>
-                <div class="team-grid" id="teamGrid">
-                    <!-- Généré par JavaScript -->
+            <!-- Panel principal -->
+            <div class="main-panel">
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="totalWeeks">52</h3>
+                        <p>Semaines Total</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="assignedWeeks">0</h3>
+                        <p>Semaines Assignées</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="conflictWeeks">0</h3>
+                        <p>Conflits Détectés</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="progressPercent">0%</h3>
+                        <p>Avancement</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="equityScore">-</h3>
+                        <p>Équité (/10)</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="vacationWeeks">0</h3>
+                        <p>Périodes Vacances</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Export -->
-            <div class="export-section">
-                <h3>📋 Actions de Gestion</h3>
-                <p>Exportez votre planning ou sauvegardez vos données</p>
-                <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="saveData()">💾 Sauvegarder</button>
-                    <button class="btn btn-success" onclick="loadData()">📂 Charger</button>
-                    <button class="btn btn-warning" onclick="resetPlanning()">🔄 Reset</button>
-                    <button class="btn btn-primary" onclick="debugAssignments()">🔍 Debug</button>
+                <!-- Légende -->
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color assigned"></div>
+                        <span>Assignée</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color vacation"></div>
+                        <span>Vacances</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color conflict"></div>
+                        <span>Conflit</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color unassigned"></div>
+                        <span>Non assignée</span>
+                    </div>
                 </div>
-                <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="exportAllCalendars()">📅 Export Calendriers Individuels</button>
-                    <button class="btn btn-primary" onclick="toggleYearView()">🗓️ <span id="yearViewToggle">Vue Année Complète</span></button>
+
+                <!-- Calendrier -->
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h2>Planning Annuel <span id="displayYear">2025</span></h2>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="scroll-hint">
+                        ← → Défilez horizontalement pour naviguer dans l'année
+                    </div>
+                    
+                    <div class="calendar-scroll-container">
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Généré par JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="scroll-indicator">
+                        <span>💡 Utilisez les boutons de navigation ou faites défiler horizontalement</span>
+                    </div>
+                </div>
+
+                <!-- Équipe détaillée -->
+                <div class="team-panel">
+                    <h2 style="margin-bottom: 25px; color: #2c3e50;">📊 Statistiques d'Équipe</h2>
+                    <div class="team-grid" id="teamGrid">
+                        <!-- Généré par JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Export -->
+                <div class="export-section">
+                    <h3>📋 Actions de Gestion</h3>
+                    <p>Exportez votre planning ou sauvegardez vos données</p>
+                    <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="saveData()">💾 Sauvegarder</button>
+                        <button class="btn btn-success" onclick="loadData()">📂 Charger</button>
+                        <button class="btn btn-warning" onclick="resetPlanning()">🔄 Reset</button>
+                        <button class="btn btn-primary" onclick="debugAssignments()">🔍 Debug</button>
+                    </div>
+                    <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="exportAllCalendars()">📅 Export Calendriers Individuels</button>
+                        <button class="btn btn-primary" onclick="toggleYearView()">🗓️ <span id="yearViewToggle">Vue Année Complète</span></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -719,7 +1185,7 @@
         function generateCalendar() {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = 'repeat(12, 1fr)'; // Remettre 12 colonnes pour vue mensuelle
+            grid.className = 'calendar-grid'; // Reset class
             
             const months = [
                 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
@@ -1097,6 +1563,87 @@
             return new Date(jan1.getTime() + days * 24 * 60 * 60 * 1000);
         }
 
+        function scrollToMonth(monthIndex) {
+            const scrollContainer = document.querySelector('.calendar-scroll-container');
+            const monthWidth = 315; // 300px + 15px gap
+            const targetPosition = monthIndex * monthWidth;
+            
+            scrollContainer.scrollTo({
+                left: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        function scrollToCurrentWeek() {
+            const currentWeek = getCurrentWeek();
+            const currentMonth = new Date().getMonth();
+            
+            // Scroll vers le mois actuel
+            scrollToMonth(currentMonth);
+            
+            // Optionnel: highlight de la semaine actuelle
+            setTimeout(() => {
+                const weekElements = document.querySelectorAll('.week-item');
+                weekElements.forEach(el => {
+                    const weekText = el.querySelector('.week-date').textContent;
+                    if (weekText.includes(`Semaine ${currentWeek}`)) {
+                        el.style.boxShadow = '0 0 15px rgba(52, 152, 219, 0.5)';
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            }, 500);
+        }
+
+        function updateSidebar() {
+            const totalWeeks = 52;
+            const assignedWeeks = Object.keys(assignments).length;
+            let conflictWeeks = 0;
+            
+            // Compter les conflits
+            Object.keys(assignments).forEach(weekKey => {
+                const weekNum = parseInt(weekKey.split('-W')[1]);
+                const weekStart = getDateFromWeek(currentYear, weekNum);
+                if (checkVacationConflict(weekStart)) {
+                    conflictWeeks++;
+                }
+            });
+            
+            const progress = Math.round((assignedWeeks / totalWeeks) * 100);
+            const equityScore = calculateEquityScore();
+            
+            // Mettre à jour la sidebar
+            document.getElementById('sidebarProgress').textContent = progress + '%';
+            document.getElementById('sidebarAssigned').textContent = `${assignedWeeks}/52`;
+            document.getElementById('sidebarConflicts').textContent = conflictWeeks;
+            document.getElementById('sidebarEquity').textContent = equityScore + '/10';
+            
+            // Mettre à jour le résumé d'équipe
+            updateTeamSummary();
+        }
+
+        function updateTeamSummary() {
+            const container = document.getElementById('teamSummary');
+            container.innerHTML = '';
+            
+            team.forEach(member => {
+                const stats = getTeamMemberStats(member);
+                
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'team-member-summary';
+                
+                let loadClass = 'load-balanced';
+                if (stats.workload > 125) loadClass = 'load-over';
+                else if (stats.workload < 75) loadClass = 'load-under';
+                
+                memberDiv.innerHTML = `
+                    <span class="member-name-short">${member}</span>
+                    <span class="member-load ${loadClass}">${stats.assigned}</span>
+                `;
+                
+                container.appendChild(memberDiv);
+            });
+        }
+
         function updateStats() {
             const totalWeeks = 52;
             const assignedWeeks = Object.keys(assignments).length;
@@ -1149,6 +1696,9 @@
             } else {
                 conflictCard.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
             }
+            
+            // Mettre à jour la sidebar
+            updateSidebar();
         }
 
         function calculateEquityScore() {
@@ -1619,7 +2169,7 @@
         function generateYearView() {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = 'repeat(4, 1fr)'; // 4 colonnes pour les trimestres
+            grid.className = 'calendar-grid year-view';
             
             const quarters = [
                 { name: 'T1 - Jan-Mar', months: [0, 1, 2] },
