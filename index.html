@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning Manager - Gestion Complète (Amélioré)</title>
+    <title>Planning Manager - Gestion Complète</title>
     <style>
-        /* Reset de base */
+        /* Variables CSS pour une cohérence globale */
+        :root {
+            --primary-color: #5667E8;
+            --primary-dark: #4054D4;
+            --primary-light: #E8EAFD;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+            --dark-color: #1F2937;
+            --gray-color: #6B7280;
+            --light-gray: #F3F4F6;
+            --border-color: #E5E7EB;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --transition: all 0.2s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,377 +34,580 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            color: var(--dark-color);
+            line-height: 1.6;
         }
 
         .container {
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 2rem auto;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
 
+        /* Header */
         .header {
-            background: #2c3e50;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 20px;
+            padding: 2rem;
             text-align: center;
         }
 
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        /* Toolbar */
         .toolbar {
-            background: #ecf0f1;
-            padding: 15px;
+            background: var(--light-gray);
+            padding: 1.5rem;
             display: flex;
-            gap: 10px;
+            gap: 1rem;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border-color);
         }
 
+        /* Buttons */
         .btn {
-            padding: 10px 20px;
+            padding: 0.625rem 1.25rem;
             border: none;
-            border-radius: 5px;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
-        .btn-primary { background: #3498db; color: white; }
-        .btn-success { background: #27ae60; color: white; }
-        .btn-warning { background: #f39c12; color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-info { background: #17a2b8; color: white; }
+        .btn:active {
+            transform: translateY(0);
+        }
 
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #D97706;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+
+        .btn-info {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #2563EB;
+        }
+
+        .btn-small {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        /* Year Selector */
         .year-selector {
             display: flex;
-            aligns: center;
-            gap: 10px;
-            font-weight: bold;
-            font-size: 18px;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .year-selector span {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 4rem;
+            text-align: center;
         }
 
         .year-selector button {
-            width: 30px;
-            height: 30px;
+            width: 2rem;
+            height: 2rem;
             border: none;
-            border-radius: 50%;
-            background: #34495e;
+            border-radius: var(--radius-sm);
+            background: var(--primary-color);
             color: white;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
 
+        .year-selector button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Main Content */
         .main-content {
-            padding: 20px;
+            padding: 2rem;
         }
 
-        /* Onglets de navigation principaux */
+        /* Navigation Tabs */
         .nav-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ecf0f1;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0;
         }
 
         .nav-tab {
-            padding: 10px 20px;
+            padding: 0.75rem 1.5rem;
             background: none;
             border: none;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 500;
+            color: var(--gray-color);
             border-bottom: 3px solid transparent;
-            transition: all 0.3s;
+            transition: var(--transition);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        }
+
+        .nav-tab:hover {
+            background: var(--light-gray);
+            color: var(--dark-color);
         }
 
         .nav-tab.active {
-            color: #3498db;
-            border-bottom-color: #3498db;
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: var(--primary-light);
         }
 
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        /* Alertes de conflits améliorées */
-        .conflict-details {
-            background: #fff5f5;
-            border: 2px solid #e74c3c;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .conflict-details h3 {
-            color: #c0392b;
-            margin-bottom: 15px;
-        }
-
-        .conflict-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .conflict-table th,
-        .conflict-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        .conflict-table th {
-            background: #f8f9fa;
-            font-weight: bold;
-        }
-
-        .conflict-table tr:hover {
-            background: #f8f9fa;
-        }
-
-        /* Page Absences */
-        .absences-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .member-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            background: #f8f9fa;
-        }
-
-        .member-card h4 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #3498db;
-        }
-
-        .absence-item {
-            background: white;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
+        /* View Tabs */
+        .view-tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
         }
 
-        .absence-dates {
-            font-weight: bold;
-            color: #e74c3c;
+        .view-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--gray-color);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.875rem;
         }
 
-        .absence-duration {
-            background: #f39c12;
+        .view-tab:hover {
+            background: var(--light-gray);
+        }
+
+        .view-tab.active {
+            background: var(--primary-color);
             color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
+            border-color: var(--primary-color);
         }
 
-        /* Stats améliorées */
+        /* Stats Bar */
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .stat-box {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
             text-align: center;
-            border: 2px solid transparent;
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
         }
 
-        .stat-box.good { border-color: #27ae60; }
-        .stat-box.warning { border-color: #f39c12; }
-        .stat-box.danger { border-color: #e74c3c; }
+        .stat-box:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-box.good {
+            border-color: var(--success-color);
+            background: #F0FDF4;
+        }
+
+        .stat-box.warning {
+            border-color: var(--warning-color);
+            background: #FFFBEB;
+        }
+
+        .stat-box.danger {
+            border-color: var(--danger-color);
+            background: #FEF2F2;
+        }
 
         .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            line-height: 1;
         }
 
         .stat-label {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 5px;
+            color: var(--gray-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
         }
 
-        /* Calendrier Vue Année */
+        /* Calendar Year View */
         .calendar-year {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
         .month-block {
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             overflow: hidden;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .month-block:hover {
+            box-shadow: var(--shadow-md);
         }
 
         .month-header {
-            background: #34495e;
+            background: var(--primary-color);
             color: white;
-            padding: 10px;
+            padding: 1rem;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
         }
 
         .month-header:hover {
-            background: #2c3e50;
+            background: var(--primary-dark);
         }
 
         .weeks-container {
-            padding: 10px;
+            padding: 1rem;
         }
 
         .week-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
+            align-items: center;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9em;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            border: 1px solid transparent;
         }
 
         .week-row:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
+            background: var(--light-gray);
+            transform: translateX(4px);
         }
 
         .week-row.assigned {
-            background: #e8f5e9;
-            border-left: 4px solid #27ae60;
+            background: #F0FDF4;
+            border-color: var(--success-color);
+            color: #065F46;
         }
 
         .week-row.conflict {
-            background: #ffebee;
-            border-left: 4px solid #e74c3c;
-            font-weight: bold;
+            background: #FEF2F2;
+            border-color: var(--danger-color);
+            color: #7F1D1D;
+            font-weight: 600;
         }
 
         .week-row.vacation {
-            background: #fff3e0;
-            border-left: 4px solid #f39c12;
+            background: #FFFBEB;
+            border-color: var(--warning-color);
+            color: #78350F;
         }
 
         .week-number {
-            font-weight: bold;
-            color: #666;
+            font-weight: 700;
+            color: var(--gray-color);
+            min-width: 3rem;
         }
 
         .week-team {
             flex: 1;
             text-align: center;
+            font-weight: 500;
         }
 
         .week-status {
-            color: #e74c3c;
-            font-weight: bold;
+            color: var(--danger-color);
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
-        /* Vue Mensuelle */
+        /* Month View */
         .calendar-month {
             display: none;
+        }
+
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .month-nav h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
         }
 
         .month-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-top: 20px;
+            gap: 0.5rem;
         }
 
         .day-header {
-            background: #34495e;
+            background: var(--primary-color);
             color: white;
-            padding: 10px;
+            padding: 0.75rem;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: var(--radius-sm);
         }
 
         .day-cell {
             min-height: 100px;
-            border: 1px solid #ddd;
-            padding: 5px;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
             background: white;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             position: relative;
+            border-radius: var(--radius-sm);
         }
 
         .day-cell:hover {
-            background: #f8f9fa;
-            transform: scale(1.02);
+            background: var(--light-gray);
+            box-shadow: var(--shadow-sm);
         }
 
         .day-cell.other-month {
-            background: #f5f5f5;
-            color: #999;
+            background: #FAFAFA;
+            color: var(--gray-color);
         }
 
         .day-cell.has-assignment {
-            background: #e8f5e9;
+            background: #F0FDF4;
+            border-color: var(--success-color);
         }
 
         .day-cell.has-conflict {
-            background: #ffebee;
-            border: 2px solid #e74c3c;
+            background: #FEF2F2;
+            border-color: var(--danger-color);
         }
 
         .day-number {
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--dark-color);
         }
 
         .day-info {
-            font-size: 0.7em;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            color: var(--gray-color);
         }
 
         .conflict-indicator {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            color: #e74c3c;
-            font-weight: bold;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: var(--danger-color);
+            font-weight: 700;
         }
 
-        /* Navigation mois */
-        .month-nav {
+        /* Conflict Details */
+        .conflict-details {
+            background: white;
+            border: 2px solid var(--danger-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .conflict-details h3 {
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Tables */
+        .conflict-table,
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .conflict-table th,
+        .conflict-table td,
+        .dashboard-table th,
+        .dashboard-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .conflict-table th,
+        .dashboard-table th {
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .conflict-table tr:hover,
+        .dashboard-table tr:hover {
+            background: var(--light-gray);
+        }
+
+        .dashboard-table td {
+            text-align: center;
+        }
+
+        /* Absences */
+        .absences-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .member-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .member-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .member-card h4 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .absence-item {
+            background: var(--light-gray);
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: var(--radius-sm);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            transition: var(--transition);
         }
 
-        .month-nav h2 {
-            font-size: 24px;
+        .absence-item:hover {
+            background: #E5E7EB;
+        }
+
+        .absence-dates {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.875rem;
+        }
+
+        .absence-duration {
+            background: var(--warning-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         /* Modal */
@@ -395,140 +619,254 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
         }
 
         .modal-content {
             background: white;
-            margin: 50px auto;
-            padding: 30px;
+            margin: 3rem auto;
+            padding: 2rem;
             width: 90%;
             max-width: 500px;
-            border-radius: 10px;
+            border-radius: var(--radius-lg);
             position: relative;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .close {
             position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 28px;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #999;
+            color: var(--gray-color);
+            transition: var(--transition);
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
         }
 
         .close:hover {
-            color: #333;
+            background: var(--light-gray);
+            color: var(--dark-color);
         }
 
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Forms */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+            font-size: 0.875rem;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1em;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            transition: var(--transition);
+            background: white;
         }
 
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(86, 103, 232, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        /* Notification */
         .notification {
             position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 15px 20px;
-            border-radius: 5px;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
             color: white;
-            font-weight: bold;
+            font-weight: 500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
             z-index: 2000;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.5s;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.875rem;
         }
 
         .notification.show {
-            opacity: 1;
             transform: translateX(0);
         }
 
-        .notification.success { background: #27ae60; }
-        .notification.error { background: #e74c3c; }
-        .notification.warning { background: #f39c12; }
-        .notification.info { background: #3498db; }
-
-        /* Tableau de bord amélioré */
-        .dashboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .notification.success {
+            background: var(--success-color);
         }
 
-        .dashboard-table th,
-        .dashboard-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
+        .notification.error {
+            background: var(--danger-color);
         }
 
-        .dashboard-table th {
-            background: #f8f9fa;
-            font-weight: bold;
+        .notification.warning {
+            background: var(--warning-color);
         }
 
-        .dashboard-table tr:hover {
-            background: #f8f9fa;
+        .notification.info {
+            background: var(--info-color);
+        }
+
+        /* Resolved Solutions */
+        #resolvedSolutionsContainer {
+            margin-top: 2rem;
+        }
+
+        #resolvedSolutionsContainer h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        #resolvedSolutionsContainer > div {
+            background: #F0F9FF;
+            border: 1px solid #BFDBFE;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .calendar-year {
+                grid-template-columns: 1fr;
+            }
+
+            .month-grid {
+                gap: 0.25rem;
+            }
+
+            .day-cell {
+                min-height: 80px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Planning des Référents - Gestion Complète</h1>
+            <h1>📅 Planning des Référents - Gestion Complète</h1>
         </div>
 
         <div class="toolbar">
             <div class="year-selector">
-                <button id="prevYear">&lt;</button>
+                <button onclick="changeYear(-1)">◀</button>
                 <span id="currentYear">2025</span>
-                <button id="nextYear">&gt;</button>
+                <button onclick="changeYear(1)">▶</button>
             </div>
-            <button class="btn btn-primary" onclick="openModal('assignModal')">📅 Assigner Semaine</button>
-            <button class="btn btn-warning" onclick="openModal('vacationModal')">🌴 Ajouter Vacances</button>
-            <button class="btn btn-success" onclick="autoFillYear()">✅ Remplir l'Année</button>
-            <button class="btn btn-danger" onclick="resolveAllConflicts()">🛠️ Résoudre Tous les Conflits</button>
-            <button class="btn btn-info" onclick="exportAgendas()">📅 Exporter Agenda</button>
-            <button class="btn btn-info" onclick="exportExcel()">📊 Exporter Excel</button>
-            <button class="btn btn-warning" onclick="generateTestConflicts()">⚠️ Tester Conflicts</button>
+            
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="showAssignModal()">
+                    ➕ Assigner Semaine
+                </button>
+                <button class="btn btn-warning" onclick="showVacationModal()">
+                    🏖️ Ajouter Vacances
+                </button>
+                <button class="btn btn-success" onclick="autoFillYear()">
+                    ⚡ Remplir l'Année
+                </button>
+                <button class="btn btn-danger" onclick="resolveAllConflicts()">
+                    🔧 Résoudre Conflits
+                </button>
+                <button class="btn btn-info" onclick="exportPlanning()">
+                    💾 Exporter JSON
+                </button>
+                <button class="btn btn-info" onclick="exportExcel()">
+                    📊 Excel
+                </button>
+                <button class="btn btn-info" onclick="exportAgenda()">
+                    📅 Agenda
+                </button>
+                <button class="btn btn-warning" onclick="generateTestConflicts()">
+                    ⚠️ Test
+                </button>
+            </div>
         </div>
 
         <div class="main-content">
+            <!-- Navigation par onglets -->
             <div class="nav-tabs">
-                <button class="nav-tab active" data-tab="planning">Planning</button>
-                <button class="nav-tab" data-tab="absences">Absences</button>
-                <button class="nav-tab" data-tab="conflicts">Conflits</button>
-                <button class="nav-tab" data-tab="dashboard">Tableau de bord</button>
+                <button class="nav-tab active" onclick="switchTab(event, 'planning')">📅 Planning</button>
+                <button class="nav-tab" onclick="switchTab(event, 'absences')">🏖️ Absences</button>
+                <button class="nav-tab" onclick="switchTab(event, 'conflicts')">⚠️ Conflits</button>
+                <button class="nav-tab" onclick="switchTab(event, 'dashboard')">📊 Tableau de bord</button>
             </div>
 
-            <!-- Tab planning -->
-            <div class="tab-content active" id="planningTab">
+            <!-- Contenu onglet Planning -->
+            <div id="planningTab" class="tab-content active">
+                <!-- Stats -->
                 <div class="stats-bar">
-                    <div class="stat-box">
+                    <div class="stat-box good">
                         <div class="stat-number" id="weeksAssigned">0</div>
                         <div class="stat-label">Semaines Assignées</div>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-box warning">
                         <div class="stat-number" id="totalAbsences">0</div>
                         <div class="stat-label">Périodes d'Absence</div>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-box danger">
                         <div class="stat-number" id="conflictsCount">0</div>
                         <div class="stat-label">Conflits Actifs</div>
                     </div>
@@ -537,212 +875,704 @@
                         <div class="stat-label">Progression</div>
                     </div>
                 </div>
-                <div>
-                    <button id="viewYearBtn" class="btn btn-primary">Vue Année</button>
-                    <button id="viewMonthBtn" class="btn btn-primary">Vue Mois</button>
+
+                <!-- Sélecteur de vue -->
+                <div class="view-tabs">
+                    <button class="view-tab active" onclick="switchView(event, 'year')">Vue Année</button>
+                    <button class="view-tab" onclick="switchView(event, 'month')">Vue Mois</button>
                 </div>
-                <div id="calendarYear" class="calendar-year"></div>
-                <div id="calendarMonth" class="calendar-month"></div>
+
+                <!-- Vue Année -->
+                <div class="calendar-year" id="yearView">
+                    <!-- Généré par JavaScript -->
+                </div>
+
+                <!-- Vue Mois -->
+                <div class="calendar-month" id="monthView">
+                    <div class="month-nav">
+                        <button class="btn btn-primary" onclick="changeMonth(-1)">◀ Précédent</button>
+                        <h2 id="currentMonthTitle">Janvier 2025</h2>
+                        <button class="btn btn-primary" onclick="changeMonth(1)">Suivant ▶</button>
+                    </div>
+                    <div class="month-grid" id="monthGrid">
+                        <!-- Généré par JavaScript -->
+                    </div>
+                </div>
             </div>
 
-            <!-- Tab absences -->
-            <div class="tab-content" id="absencesTab">
-                <h2>Gestion des Absences</h2>
-                <div id="absencesContainer" class="absences-container"></div>
+            <!-- Contenu onglet Absences -->
+            <div id="absencesTab" class="tab-content">
+                <h2 style="margin-bottom: 1.5rem; color: var(--dark-color);">Gestion des Absences par Référent</h2>
+                <div class="absences-container" id="absencesContainer">
+                    <!-- Généré par JavaScript -->
+                </div>
             </div>
 
-            <!-- Tab conflicts -->
-            <div class="tab-content" id="conflictsTab">
-                <h2>Gestion des Conflits</h2>
-                <div id="conflictsContainer"></div>
-                <div id="resolvedSolutionsContainer"></div>
+            <!-- Contenu onglet Conflits -->
+            <div id="conflictsTab" class="tab-content">
+                <h2 style="margin-bottom: 1.5rem; color: var(--dark-color);">Détail des Conflits</h2>
+                <div id="conflictsDetails">
+                    <!-- Généré par JavaScript -->
+                </div>
+                <!-- Conteneur des solutions résolues -->
+                <div id="resolvedSolutionsContainer">
+                    <!-- Rempli dynamiquement pour afficher les solutions des conflits résolus -->
+                </div>
             </div>
 
-            <!-- Tab dashboard -->
-            <div class="tab-content" id="dashboardTab">
-                <h2>Tableau de bord des Référents</h2>
-                <div id="dashboardContainer"></div>
+            <!-- Contenu onglet Tableau de bord -->
+            <div id="dashboardTab" class="tab-content">
+                <h2 style="margin-bottom: 1.5rem; color: var(--dark-color);">Tableau de bord des Référents</h2>
+                <div id="dashboardContainer">
+                    <!-- Généré par JavaScript -->
+                </div>
             </div>
+
         </div>
     </div>
 
-    <!-- Assign modal -->
-    <div id="assignModal" class="modal">
+    <!-- Modal Assignation -->
+    <div class="modal" id="assignModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('assignModal')">&times;</span>
-            <h2>Assigner une équipe</h2>
-            <div class="form-group">
-                <label for="assignWeek">Semaine (1-52)</label>
-                <input type="number" id="assignWeek" min="1" max="52">
-            </div>
-            <div class="form-group">
-                <label for="assignMember1">Membre 1</label>
-                <select id="assignMember1"></select>
-            </div>
-            <div class="form-group">
-                <label for="assignMember2">Membre 2</label>
-                <select id="assignMember2"></select>
-            </div>
-            <div class="form-group">
-                <label for="assignBackup">Backup</label>
-                <select id="assignBackup"></select>
-            </div>
-            <button class="btn btn-primary" onclick="assignWeek()">Assigner</button>
+            <h2>Assigner une Semaine</h2>
+            <form id="assignForm" onsubmit="saveAssignment(event)">
+                <div class="form-group">
+                    <label>Semaine</label>
+                    <input type="week" id="weekInput" required>
+                </div>
+                <div class="form-group">
+                    <label>Binôme</label>
+                    <div class="form-row">
+                        <select id="member1" required>
+                            <option value="">Membre 1</option>
+                        </select>
+                        <select id="member2" required>
+                            <option value="">Membre 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Remplaçant</label>
+                    <select id="backup" required>
+                        <option value="">Sélectionner</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
+                    Enregistrer
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- Vacation modal -->
-    <div id="vacationModal" class="modal">
+    <!-- Modal Vacances -->
+    <div class="modal" id="vacationModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('vacationModal')">&times;</span>
-            <h2>Ajouter une période de vacances</h2>
-            <div class="form-group">
-                <label for="vacationMember">Référent</label>
-                <select id="vacationMember"></select>
-            </div>
-            <div class="form-group">
-                <label for="vacationStart">Date de début</label>
-                <input type="date" id="vacationStart">
-            </div>
-            <div class="form-group">
-                <label for="vacationEnd">Date de fin</label>
-                <input type="date" id="vacationEnd">
-            </div>
-            <button class="btn btn-primary" onclick="addVacation()">Enregistrer</button>
+            <h2>Ajouter des Vacances</h2>
+            <form id="vacationForm" onsubmit="saveVacation(event)">
+                <div class="form-group">
+                    <label>Référent</label>
+                    <select id="vacationMember" required>
+                        <option value="">Sélectionner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Du</label>
+                    <input type="date" id="vacationStart" required>
+                </div>
+                <div class="form-group">
+                    <label>Au</label>
+                    <input type="date" id="vacationEnd" required>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
+                    Enregistrer
+                </button>
+            </form>
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
     <script>
-        let currentYear = new Date().getFullYear();
-        let TEAM = [
-            "Référent 1", "Référent 2", "Référent 3", "Référent 4", "Référent 5",
-            "Référent 6", "Référent 7", "Référent 8", "Référent 9", "Référent 10"
+        // Configuration
+        const TEAM = [
+            'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
+            'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
         ];
-        let assignments = {};  // format: { '2025-W1': { member1: 'Référent 1', member2: 'Référent 2', backup: 'Référent 3' }, ... }
-        let vacations = {};    // format: { 'Référent 1': [ { start: '2025-01-01', end: '2025-01-07' }, ... ], ... }
-        let conflicts = [];    // liste des conflits détectés
-        let resolvedSolutions = []; // historique des solutions appliquées
 
-        // Navigation entre les tabs
-        const navTabs = document.querySelectorAll('.nav-tab');
-        const tabContents = document.querySelectorAll('.tab-content');
+        const BINOMES = [
+            ['Référent 1', 'Référent 2', 'Référent 3'],
+            ['Référent 4', 'Référent 5', 'Référent 6'],
+            ['Référent 7', 'Référent 8', 'Référent 9'],
+            ['Référent 2', 'Référent 10', 'Référent 1'],
+            ['Référent 3', 'Référent 6', 'Référent 4']
+        ];
 
-        navTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                navTabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
-                // Mettre à jour l'affichage si besoin
-                if (tab.dataset.tab === 'planning') {
-                    renderCalendar();
-                } else if (tab.dataset.tab === 'absences') {
-                    renderAbsencesView();
-                } else if (tab.dataset.tab === 'conflicts') {
-                    renderConflictsView();
-                } else if (tab.dataset.tab === 'dashboard') {
-                    renderDashboardView();
+        // État global
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let currentView = 'year';
+        let currentTab = 'planning';
+        let assignments = {};
+        let vacations = {};
+        let conflicts = [];
+        // Tableau des solutions de conflits résolus (historique)
+        let resolvedSolutions = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            loadData();
+            populateSelects();
+            updateDisplay();
+            detectConflicts();
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('planningData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                assignments = data.assignments || {};
+                vacations = data.vacations || {};
+                currentYear = data.year || currentYear;
+            }
+        }
+
+        function saveData() {
+            const data = {
+                year: currentYear,
+                assignments: assignments,
+                vacations: vacations
+            };
+            localStorage.setItem('planningData', JSON.stringify(data));
+        }
+
+        function populateSelects() {
+            const selects = ['member1', 'member2', 'backup', 'vacationMember'];
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.innerHTML = '<option value="">Sélectionner</option>';
+                    TEAM.forEach(member => {
+                        select.innerHTML += `<option value="${member}">${member}</option>`;
+                    });
                 }
             });
-        });
+        }
 
-        // Changer l'année
-        document.getElementById('prevYear').addEventListener('click', () => {
-            currentYear--;
-            document.getElementById('currentYear').textContent = currentYear;
-            updateDisplay();
-        });
-        document.getElementById('nextYear').addEventListener('click', () => {
-            currentYear++;
-            document.getElementById('currentYear').textContent = currentYear;
-            updateDisplay();
-        });
-        document.getElementById('currentYear').textContent = currentYear;
+        function switchTab(event, tab) {
+            currentTab = tab;
 
-        function updateDisplay() {
-            renderCalendar();
-            updateStats();
-            // Actualiser la vue courante
-            if (document.getElementById('absencesTab').classList.contains('active')) {
+            // Mettre à jour les onglets actifs
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Masquer tout contenu
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Afficher le bon contenu
+            if (tab === 'planning') {
+                document.getElementById('planningTab').classList.add('active');
+            } else if (tab === 'absences') {
+                document.getElementById('absencesTab').classList.add('active');
                 renderAbsencesView();
-            }
-            if (document.getElementById('conflictsTab').classList.contains('active')) {
+            } else if (tab === 'conflicts') {
+                document.getElementById('conflictsTab').classList.add('active');
                 renderConflictsView();
-            }
-            if (document.getElementById('dashboardTab').classList.contains('active')) {
+            } else if (tab === 'dashboard') {
+                document.getElementById('dashboardTab').classList.add('active');
                 renderDashboardView();
             }
         }
 
-        // Remplir les listes déroulantes pour assigner et pour les vacances
-        function populateMemberSelects() {
-            const selects = [
-                document.getElementById('assignMember1'),
-                document.getElementById('assignMember2'),
-                document.getElementById('assignBackup'),
-                document.getElementById('vacationMember')
+        function updateDisplay() {
+            document.getElementById('currentYear').textContent = currentYear;
+
+            if (currentView === 'year') {
+                renderYearView();
+            } else {
+                renderMonthView();
+            }
+
+            updateStats();
+        }
+
+        function renderYearView() {
+            const container = document.getElementById('yearView');
+            container.innerHTML = '';
+
+            const months = [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
             ];
-            selects.forEach(select => {
-                select.innerHTML = '';
-                TEAM.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member;
-                    option.textContent = member;
-                    select.appendChild(option);
+
+            months.forEach((month, index) => {
+                const monthBlock = document.createElement('div');
+                monthBlock.className = 'month-block';
+
+                const header = document.createElement('div');
+                header.className = 'month-header';
+                header.textContent = month;
+                header.onclick = () => {
+                    currentMonth = index;
+                    switchView(null, 'month');
+                };
+                monthBlock.appendChild(header);
+
+                const weeksContainer = document.createElement('div');
+                weeksContainer.className = 'weeks-container';
+
+                const weeks = getWeeksInMonth(currentYear, index);
+
+                weeks.forEach(week => {
+                    const weekRow = document.createElement('div');
+                    weekRow.className = 'week-row';
+
+                    const weekKey = `${currentYear}-W${week.number}`;
+                    const assignment = assignments[weekKey];
+                    const weekConflicts = conflicts.filter(c => c.week === week.number);
+
+                    if (weekConflicts.length > 0) {
+                        weekRow.classList.add('conflict');
+                        weekRow.title = weekConflicts.map(c =>
+                            `${c.member}: ${formatDateFR(new Date(c.vacationStart))} au ${formatDateFR(new Date(c.vacationEnd))}`
+                        ).join('\n');
+                    } else if (assignment) {
+                        weekRow.classList.add('assigned');
+                    }
+
+                    weekRow.innerHTML = `
+                        <span class="week-number">S${week.number}</span>
+                        <span class="week-team">
+                            ${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}
+                        </span>
+                        ${weekConflicts.length > 0 ? '<span class="week-status">⚠️</span>' : ''}
+                    `;
+
+                    weekRow.onclick = () => editWeek(week.number);
+
+                    weeksContainer.appendChild(weekRow);
                 });
+
+                monthBlock.appendChild(weeksContainer);
+                container.appendChild(monthBlock);
             });
         }
-        populateMemberSelects();
 
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
+        function renderMonthView() {
+            const monthNames = [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+            ];
+
+            document.getElementById('currentMonthTitle').textContent =
+                `${monthNames[currentMonth]} ${currentYear}`;
+
+            const grid = document.getElementById('monthGrid');
+            grid.innerHTML = '';
+
+            // En-têtes des jours
+            const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            days.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            // Calcul des jours
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDay = firstDay.getDay() || 7;
+
+            // Jours vides avant le premier jour du mois
+            for (let i = 1; i < startDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // Jours du mois
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+
+                const date = new Date(currentYear, currentMonth, day);
+                const weekNum = getWeekNumber(date);
+                const weekKey = `${currentYear}-W${weekNum}`;
+                const assignment = assignments[weekKey];
+                const weekConflicts = conflicts.filter(c => c.week === weekNum);
+
+                if (assignment) {
+                    cell.classList.add('has-assignment');
+                }
+
+                if (weekConflicts.length > 0) {
+                    cell.classList.add('has-conflict');
+                }
+
+                cell.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    <div class="day-info">S${weekNum}</div>
+                    ${weekConflicts.length > 0 ? '<div class="conflict-indicator">⚠️</div>' : ''}
+                `;
+
+                cell.onclick = () => editWeek(weekNum);
+
+                grid.appendChild(cell);
+            }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        function renderAbsencesView() {
+            const container = document.getElementById('absencesContainer');
+            container.innerHTML = '';
+
+            TEAM.forEach(member => {
+                const card = document.createElement('div');
+                card.className = 'member-card';
+
+                const memberVacations = vacations[member] || [];
+                const totalDays = memberVacations.reduce((sum, vac) => {
+                    const days = Math.ceil((new Date(vac.end) - new Date(vac.start)) / (1000 * 60 * 60 * 24)) + 1;
+                    return sum + days;
+                }, 0);
+
+                card.innerHTML = `
+                    <h4>${member} (${totalDays} jours)</h4>
+                    ${
+                        memberVacations.length === 0 ?
+                        '<p style="color: var(--gray-color); font-style: italic;">Aucune absence enregistrée</p>' :
+                        memberVacations.map(vac => {
+                            const start = new Date(vac.start);
+                            const end = new Date(vac.end);
+                            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+                            return `
+                                <div class="absence-item">
+                                    <span class="absence-dates">
+                                        ${formatDateFR(start)} - ${formatDateFR(end)}
+                                    </span>
+                                    <span class="absence-duration">${days} jours</span>
+                                    <button class="btn btn-danger btn-small" style="margin-left:10px;" onclick="deleteVacation('${member}', '${vac.start}', '${vac.end}')">
+                                        🗑️
+                                    </button>
+                                </div>
+                            `;
+                        }).join('')
+                    }
+                    <div class="quick-actions">
+                        <button class="btn btn-warning btn-small" onclick="addVacationForMember('${member}')">
+                            + Ajouter absence
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
         }
 
-        function assignWeek() {
-            const week = parseInt(document.getElementById('assignWeek').value);
-            const member1 = document.getElementById('assignMember1').value;
-            const member2 = document.getElementById('assignMember2').value;
-            const backup = document.getElementById('assignBackup').value;
+        function renderConflictsView() {
+            const container = document.getElementById('conflictsDetails');
+            container.innerHTML = '';
 
-            if (week < 1 || week > 52) {
-                showNotification('❌ Semaine invalide !', 'error');
-                return;
-            }
-            if (!member1 || !member2 || !backup) {
-                showNotification('❌ Sélectionnez tous les membres !', 'error');
-                return;
-            }
-            if (member1 === member2 || member1 === backup || member2 === backup) {
-                showNotification('❌ Les membres doivent être différents !', 'error');
+            if (conflicts.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--success-color); background: #F0FDF4; border-radius: var(--radius-md); border: 2px solid var(--success-color);">
+                        <h3 style="margin-bottom: 0.5rem;">✅ Aucun conflit détecté !</h3>
+                        <p style="color: var(--gray-color);">Tous les membres sont disponibles pour leurs assignations.</p>
+                    </div>
+                `;
+                // Effacer les solutions précédemment affichées
+                document.getElementById('resolvedSolutionsContainer').innerHTML = '';
                 return;
             }
 
-            const weekKey = `${currentYear}-W${week}`;
-            assignments[weekKey] = { member1, member2, backup };
+            // Grouper les conflits par semaine
+            const conflictsByWeek = {};
+            conflicts.forEach(conflict => {
+                if (!conflictsByWeek[conflict.week]) {
+                    conflictsByWeek[conflict.week] = [];
+                }
+                conflictsByWeek[conflict.week].push(conflict);
+            });
+
+            Object.entries(conflictsByWeek).forEach(([week, weekConflicts]) => {
+                const weekKey = `${currentYear}-W${week}`;
+                const assignment = assignments[weekKey];
+                const weekDates = getWeekDates(currentYear, parseInt(week));
+
+                const conflictDiv = document.createElement('div');
+                conflictDiv.className = 'conflict-details';
+
+                conflictDiv.innerHTML = `
+                    <h3>🚨 Semaine ${week} (${formatDateFR(weekDates.start)} au ${formatDateFR(weekDates.end)})</h3>
+                    <p><strong>Équipe assignée :</strong> ${assignment.member1} + ${assignment.member2} (Backup: ${assignment.backup})</p>
+                    
+                    <table class="conflict-table">
+                        <thead>
+                            <tr>
+                                <th>Membre en conflit</th>
+                                <th>Rôle</th>
+                                <th>Période d'absence</th>
+                                <th>Durée</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${
+                                weekConflicts.map(conflict => {
+                                    const role = conflict.member === assignment.member1 || conflict.member === assignment.member2 ? 'Principal' : 'Backup';
+                                    const days = Math.ceil((new Date(conflict.vacationEnd) - new Date(conflict.vacationStart)) / (1000 * 60 * 60 * 24)) + 1;
+
+                                    return `
+                                        <tr>
+                                            <td><strong>${conflict.member}</strong></td>
+                                            <td>${role}</td>
+                                            <td>${formatDateFR(new Date(conflict.vacationStart))} - ${formatDateFR(new Date(conflict.vacationEnd))}</td>
+                                            <td>${days} jours</td>
+                                        </tr>
+                                    `;
+                                }).join('')
+                            }
+                        </tbody>
+                    </table>
+                    
+                    <div class="quick-actions">
+                        <button class="btn btn-danger" onclick="resolveConflict(${week})">
+                            🔧 Résoudre ce conflit
+                        </button>
+                        <button class="btn btn-primary btn-small" onclick="editWeek(${week})">
+                            ✏️ Modifier l'assignation
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(conflictDiv);
+            });
+
+            // Afficher les solutions des conflits résolus si disponibles
+            renderResolvedSolutions();
+        }
+
+        function detectConflicts() {
+            conflicts = [];
+
+            Object.entries(assignments).forEach(([weekKey, assignment]) => {
+                const weekNum = parseInt(weekKey.split('-W')[1]);
+                const year = parseInt(weekKey.split('-W')[0]);
+                const weekDates = getWeekDates(year, weekNum);
+
+                // Vérifier chaque membre de l'assignation
+                [assignment.member1, assignment.member2, assignment.backup].forEach(member => {
+                    if (vacations[member]) {
+                        vacations[member].forEach(vacation => {
+                            const vacStart = new Date(vacation.start);
+                            const vacEnd = new Date(vacation.end);
+
+                            // Vérifier si les vacances chevauchent avec la semaine
+                            if (datesOverlap(weekDates.start, weekDates.end, vacStart, vacEnd)) {
+                                conflicts.push({
+                                    week: weekNum,
+                                    member: member,
+                                    vacationStart: vacation.start,
+                                    vacationEnd: vacation.end,
+                                    assignment: assignment
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            updateStats();
+            return conflicts;
+        }
+
+        function getWeekDates(year, weekNum) {
+            // Calculer le premier jeudi de l'année
+            const jan1 = new Date(year, 0, 1);
+            const jan1Day = jan1.getDay() || 7;
+
+            let firstThursday = new Date(year, 0, 1);
+            if (jan1Day <= 4) {
+                firstThursday.setDate(jan1.getDate() + (4 - jan1Day));
+            } else {
+                firstThursday.setDate(jan1.getDate() + (11 - jan1Day));
+            }
+
+            // Premier lundi de la semaine 1
+            const firstMonday = new Date(firstThursday);
+            firstMonday.setDate(firstThursday.getDate() - 3);
+
+            // Lundi de la semaine demandée
+            const weekStart = new Date(firstMonday);
+            weekStart.setDate(firstMonday.getDate() + (weekNum - 1) * 7);
+
+            // Dimanche de la semaine
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+
+            return { start: weekStart, end: weekEnd };
+        }
+
+        function datesOverlap(start1, end1, start2, end2) {
+            return start1 <= end2 && end1 >= start2;
+        }
+
+        function formatDateFR(date) {
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('fr-FR', options);
+        }
+
+        function getWeeksInMonth(year, month) {
+            const weeks = [];
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+
+            let current = new Date(firstDay);
+
+            while (current <= lastDay) {
+                const weekNum = getWeekNumber(current);
+                if (!weeks.find(w => w.number === weekNum)) {
+                    weeks.push({
+                        number: weekNum,
+                        start: new Date(current)
+                    });
+                }
+                current.setDate(current.getDate() + 7);
+            }
+
+            return weeks;
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        function switchView(event, view) {
+            currentView = view;
+
+            document.querySelectorAll('.view-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Si appelé sans événement (depuis YearView), mettre à jour manuellement l'onglet correct
+                const viewTabs = document.querySelectorAll('.view-tab');
+                if (view === 'year') viewTabs[0].classList.add('active');
+                else viewTabs[1].classList.add('active');
+            }
+
+            if (view === 'year') {
+                document.getElementById('yearView').style.display = 'grid';
+                document.getElementById('monthView').style.display = 'none';
+            } else {
+                document.getElementById('yearView').style.display = 'none';
+                document.getElementById('monthView').style.display = 'block';
+            }
+
+            updateDisplay();
+        }
+
+        function changeYear(delta) {
+            currentYear += delta;
+            updateDisplay();
+            detectConflicts();
+            // Actualiser la vue du tableau de bord si elle est active
+            if (currentTab === 'dashboard') {
+                renderDashboardView();
+            }
+        }
+
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderMonthView();
+        }
+
+        function showAssignModal() {
+            document.getElementById('assignModal').style.display = 'block';
+        }
+
+        function showVacationModal() {
+            document.getElementById('vacationModal').style.display = 'block';
+        }
+
+        function addVacationForMember(member) {
+            document.getElementById('vacationMember').value = member;
+            showVacationModal();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function editWeek(weekNum) {
+            const weekKey = `${currentYear}-W${weekNum}`;
+            const assignment = assignments[weekKey];
+
+            const weekInput = document.getElementById('weekInput');
+            weekInput.value = weekKey;
+
+            if (assignment) {
+                document.getElementById('member1').value = assignment.member1;
+                document.getElementById('member2').value = assignment.member2;
+                document.getElementById('backup').value = assignment.backup;
+            } else {
+                document.getElementById('member1').value = '';
+                document.getElementById('member2').value = '';
+                document.getElementById('backup').value = '';
+            }
+
+            showAssignModal();
+        }
+
+        function saveAssignment(event) {
+            event.preventDefault();
+
+            const weekValue = document.getElementById('weekInput').value;
+            const member1 = document.getElementById('member1').value;
+            const member2 = document.getElementById('member2').value;
+            const backup = document.getElementById('backup').value;
+
+            if (member1 === member2) {
+                showNotification('Les deux membres doivent être différents !', 'error');
+                return;
+            }
+
+            assignments[weekValue] = { member1, member2, backup };
+
             saveData();
             closeModal('assignModal');
             detectConflicts();
             updateDisplay();
-            showNotification(`✅ Semaine ${week} assignée à ${member1} & ${member2} (Backup: ${backup})`, 'success');
+            showNotification('✅ Assignation enregistrée !', 'success');
         }
 
-        function addVacation() {
+        function saveVacation(event) {
+            event.preventDefault();
+
             const member = document.getElementById('vacationMember').value;
             const start = document.getElementById('vacationStart').value;
             const end = document.getElementById('vacationEnd').value;
 
-            if (!member || !start || !end) {
-                showNotification('❌ Tous les champs sont requis !', 'error');
-                return;
-            }
-            if (new Date(start) > new Date(end)) {
-                showNotification('❌ La date de début doit être avant la date de fin !', 'error');
+            if (new Date(end) < new Date(start)) {
+                showNotification('La date de fin doit être après la date de début !', 'error');
                 return;
             }
 
@@ -759,7 +1589,7 @@
             detectConflicts();
             updateDisplay();
 
-            if (document.getElementById('absencesTab').classList.contains('active')) {
+            if (currentTab === 'absences') {
                 renderAbsencesView();
             }
 
@@ -767,57 +1597,27 @@
         }
 
         function autoFillYear() {
-            // Demande de confirmation avant de réinitialiser et remplir le planning avec une répartition équilibrée.
-            if (!confirm('Remplir automatiquement toute l\\'année avec une répartition globale équilibrée ?')) return;
+            if (!confirm('Remplir automatiquement toute l\'année avec une répartition équitable ?')) return;
 
-            // Réinitialiser toutes les assignations de l'année en cours avec une répartition globale équilibrée.
-            // L'objectif est que chaque référent soit assigné un nombre similaire de fois au rôle de membre (1 ou 2) et en tant que backup.
-            // On maintient des compteurs pour suivre le nombre d'attributions primaires et de backup par référent.
-            const primaryCounts = {};
-            const backupCounts = {};
-            TEAM.forEach(member => {
-                primaryCounts[member] = 0;
-                backupCounts[member] = 0;
-            });
-            // Pour chaque semaine, choisir les deux référents ayant le moins d'attributions primaires, puis le backup ayant le moins d'attributions backup.
+            // Réinitialiser toutes les assignations de l'année en cours
             for (let week = 1; week <= 52; week++) {
                 const weekKey = `${currentYear}-W${week}`;
-                // Trier les référents par nombre d'attributions primaires croissant
-                const sortedPrimary = [...TEAM].sort((a, b) => primaryCounts[a] - primaryCounts[b]);
-                const member1 = sortedPrimary[0];
-                // Chercher le deuxième membre avec le moins d'attributions primaires qui n'est pas le même que member1
-                let member2 = null;
-                for (let i = 1; i < sortedPrimary.length; i++) {
-                    if (sortedPrimary[i] !== member1) {
-                        member2 = sortedPrimary[i];
-                        break;
-                    }
-                }
-                // Trier les référents par nombre d'attributions backup croissant et choisir le premier différent des deux primaires
-                const sortedBackup = [...TEAM].sort((a, b) => backupCounts[a] - backupCounts[b]);
-                let backup = null;
-                for (const candidate of sortedBackup) {
-                    if (candidate !== member1 && candidate !== member2) {
-                        backup = candidate;
-                        break;
-                    }
-                }
-                // Enregistrer l'assignation de la semaine
+                // Attribution équitable : on parcourt la liste des référents de façon cyclique
+                const idx = (week - 1) % TEAM.length;
+                const member1 = TEAM[idx];
+                const member2 = TEAM[(idx + 1) % TEAM.length];
+                const backup = TEAM[(idx + 2) % TEAM.length];
                 assignments[weekKey] = {
                     member1: member1,
                     member2: member2,
                     backup: backup
                 };
-                // Mettre à jour les compteurs
-                primaryCounts[member1]++;
-                primaryCounts[member2]++;
-                backupCounts[backup]++;
             }
 
             saveData();
             detectConflicts();
             updateDisplay();
-            showNotification('✅ Planning rempli avec répartition globale équilibrée !', 'success');
+            showNotification('✅ Planning rempli avec répartition équitable !', 'success');
         }
 
         function resolveConflict(weekNum) {
@@ -827,9 +1627,9 @@
             // Membres en conflit
             const conflictMembers = weekConflicts.map(c => c.member);
 
-            // Trouver des membres disponibles (non en conflit et sans vacances sur cette semaine)
-            let available = TEAM.filter(member => {
-                // Ne pas prendre les membres déjà en conflit
+            // Trouver des membres disponibles
+            const available = TEAM.filter(member => {
+                // Pas en conflit
                 if (conflictMembers.includes(member)) return false;
 
                 // Pas en vacances cette semaine
@@ -842,26 +1642,6 @@
                     return datesOverlap(weekDates.start, weekDates.end, vacStart, vacEnd);
                 });
             });
-
-            // S'il n'y a pas suffisamment de membres disponibles, compléter en ignorant les vacances puis les conflits si besoin.
-            if (available.length < 3) {
-                // Ajouter des membres hors vacances (mais pouvant être en vacances) qui ne sont pas déjà présents
-                TEAM.forEach(member => {
-                    if (available.length >= 3) return;
-                    if (!conflictMembers.includes(member) && !available.includes(member)) {
-                        available.push(member);
-                    }
-                });
-            }
-            if (available.length < 3) {
-                // En dernier recours, inclure même les membres en conflit pour atteindre 3 membres
-                conflictMembers.forEach(member => {
-                    if (available.length >= 3) return;
-                    if (!available.includes(member)) {
-                        available.push(member);
-                    }
-                });
-            }
 
             // Enregistrer les propositions et la solution choisie
             const solutionRecord = {
@@ -887,10 +1667,10 @@
                 updateDisplay();
 
                 // Si nous sommes sur le tableau de bord ou la page conflits, mettre à jour la vue
-                if (document.getElementById('conflictsTab').classList.contains('active')) {
+                if (currentTab === 'conflicts') {
                     renderConflictsView();
                 }
-                if (document.getElementById('dashboardTab').classList.contains('active')) {
+                if (currentTab === 'dashboard') {
                     renderDashboardView();
                 }
 
@@ -916,520 +1696,179 @@
             let resolved = 0;
 
             uniqueWeeks.forEach(week => {
-                // Résoudre chaque conflit en utilisant la fonction dédiée
-                const initialConflicts = conflicts.length;
+                // Avant résolution, enregistrer l'état actuel
+                const beforeCount = conflicts.length;
                 resolveConflict(week);
-                if (conflicts.length < initialConflicts) {
+                detectConflicts();
+                if (conflicts.filter(c => c.week === week).length === 0) {
                     resolved++;
                 }
             });
 
-            detectConflicts();
-            if (resolved > 0) {
-                showNotification(`✅ ${resolved} conflit(s) résolu(s)`, 'success');
-            } else {
-                showNotification('❌ Aucun conflit n\\'a pu être résolu', 'error');
-            }
+            showNotification(`✅ ${resolved}/${uniqueWeeks.length} conflits résolus`, resolved > 0 ? 'success' : 'warning');
         }
 
-        // Détecter les conflits (absence sur une assignation)
-        function detectConflicts() {
-            conflicts = [];
-            // Pour chaque semaine assignée
-            Object.keys(assignments).forEach(key => {
-                const [year, w] = key.split('-W');
-                const week = parseInt(w);
-                const assign = assignments[key];
-                const weekDates = getWeekDates(parseInt(year), week);
-                // Vérifier les trois membres
-                [assign.member1, assign.member2, assign.backup].forEach(role => {
-                    if (vacations[role]) {
-                        vacations[role].forEach(vac => {
-                            const vacStart = new Date(vac.start);
-                            const vacEnd   = new Date(vac.end);
-                            if (datesOverlap(weekDates.start, weekDates.end, vacStart, vacEnd)) {
-                                conflicts.push({
-                                    week: week,
-                                    member: role,
-                                    role: (role === assign.backup ? 'Backup' : 'Principal'),
-                                    conflictStart: vac.start,
-                                    conflictEnd: vac.end
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        }
-
-        function datesOverlap(start1, end1, start2, end2) {
-            return (start1 <= end2) && (start2 <= end1);
-        }
-
-        // Calculer les dates de début et de fin d'une semaine (ISO-8601)
-        function getWeekDates(year, week) {
-            const simple = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
-            const dow = simple.getUTCDay();
-            const ISOweekStart = simple;
-            if (dow <= 4) {
-                ISOweekStart.setUTCDate(simple.getUTCDate() - simple.getUTCDay() + 1);
-            } else {
-                ISOweekStart.setUTCDate(simple.getUTCDate() + 8 - simple.getUTCDay());
-            }
-            const ISOweekEnd = new Date(ISOweekStart);
-            ISOweekEnd.setUTCDate(ISOweekStart.getUTCDate() + 6);
-            return { start: ISOweekStart, end: ISOweekEnd };
-        }
-
-        function renderCalendar() {
-            const calendarYearDiv = document.getElementById('calendarYear');
-            calendarYearDiv.innerHTML = '';
-            const calendarMonthDiv = document.getElementById('calendarMonth');
-            calendarMonthDiv.innerHTML = '';
-            const months = [
-                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-            ];
-
-            // Vue année
-            const yearContainer = document.getElementById('calendarYear');
-            yearContainer.style.display = 'grid';
-            const monthContainer = document.getElementById('calendarMonth');
-            monthContainer.style.display = 'none';
-
-            months.forEach((month, index) => {
-                const monthBlock = document.createElement('div');
-                monthBlock.className = 'month-block';
-
-                const monthHeader = document.createElement('div');
-                monthHeader.className = 'month-header';
-                monthHeader.textContent = month;
-                monthHeader.onclick = () => {
-                    renderMonthlyCalendar(index);
-                };
-                monthBlock.appendChild(monthHeader);
-
-                const weeksContainer = document.createElement('div');
-                weeksContainer.className = 'weeks-container';
-
-                // Afficher les 4 ou 5 semaines (index->month + 1)
-                for (let week = index * 4 + 1; week <= (index + 1) * 4 && week <= 52; week++) {
-                    const weekRow = document.createElement('div');
-                    weekRow.className = 'week-row';
-                    weekRow.onclick = () => {
-                        // Ouvrir modal pour assigner la semaine
-                        openModal('assignModal');
-                        document.getElementById('assignWeek').value = week;
-                    };
-
-                    const weekNumber = document.createElement('div');
-                    weekNumber.className = 'week-number';
-                    weekNumber.textContent = 'S' + week;
-                    weekRow.appendChild(weekNumber);
-
-                    const teamSpan = document.createElement('div');
-                    teamSpan.className = 'week-team';
-                    const weekKey = `${currentYear}-W${week}`;
-                    if (assignments[weekKey]) {
-                        const assign = assignments[weekKey];
-                        teamSpan.textContent = `${assign.member1} + ${assign.member2}`;
-                        weekRow.classList.add('assigned');
-                    } else {
-                        teamSpan.textContent = 'Non assignée';
-                    }
-                    weekRow.appendChild(teamSpan);
-
-                    const status = document.createElement('div');
-                    status.className = 'week-status';
-                    const conflictForWeek = conflicts.find(c => c.week === week);
-                    if (conflictForWeek) {
-                        status.textContent = '⚠️';
-                        weekRow.classList.add('conflict');
-                    }
-                    weekRow.appendChild(status);
-
-                    weeksContainer.appendChild(weekRow);
-                }
-
-                monthBlock.appendChild(weeksContainer);
-                yearContainer.appendChild(monthBlock);
-            });
-        }
-
-        function renderMonthlyCalendar(monthIndex) {
-            const months = [
-                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-            ];
-            const calendarYearDiv = document.getElementById('calendarYear');
-            calendarYearDiv.style.display = 'none';
-            const calendarMonthDiv = document.getElementById('calendarMonth');
-            calendarMonthDiv.style.display = 'block';
-            calendarMonthDiv.innerHTML = '';
-
-            // Navigation
-            const nav = document.createElement('div');
-            nav.className = 'month-nav';
-
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'btn btn-info';
-            prevBtn.textContent = '⟨';
-            prevBtn.onclick = () => {
-                const newIndex = monthIndex - 1 < 0 ? 11 : monthIndex - 1;
-                renderMonthlyCalendar(newIndex);
+        function exportPlanning() {
+            const data = {
+                version: '2.0',
+                exportDate: new Date().toISOString(),
+                year: currentYear,
+                assignments: assignments,
+                vacations: vacations,
+                stats: {
+                    totalAssignments: Object.keys(assignments).length,
+                    totalVacations: Object.values(vacations).reduce((sum, v) => sum + v.length, 0),
+                    conflicts: conflicts.length
+                },
+                resolvedSolutions: resolvedSolutions
             };
-            nav.appendChild(prevBtn);
 
-            const title = document.createElement('h2');
-            title.textContent = months[monthIndex];
-            nav.appendChild(title);
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
 
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'btn btn-info';
-            nextBtn.textContent = '⟩';
-            nextBtn.onclick = () => {
-                const newIndex = monthIndex + 1 > 11 ? 0 : monthIndex + 1;
-                renderMonthlyCalendar(newIndex);
-            };
-            nav.appendChild(nextBtn);
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `planning-${currentYear}-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
 
-            calendarMonthDiv.appendChild(nav);
-
-            // Grille du mois
-            const grid = document.createElement('div');
-            grid.className = 'month-grid';
-
-            // En-têtes des jours
-            const dayNames = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-            dayNames.forEach(name => {
-                const header = document.createElement('div');
-                header.className = 'day-header';
-                header.textContent = name;
-                grid.appendChild(header);
-            });
-
-            // Premier jour du mois
-            const firstDay = new Date(Date.UTC(currentYear, monthIndex, 1));
-            const firstDow = (firstDay.getUTCDay() + 6) % 7; // lundi = 0
-
-            // Nombre de jours dans ce mois
-            const daysInMonth = new Date(Date.UTC(currentYear, monthIndex + 1, 0)).getUTCDate();
-
-            // Affichage des cellules
-            for (let i = 0; i < firstDow; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'day-cell other-month';
-                grid.appendChild(cell);
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const cell = document.createElement('div');
-                cell.className = 'day-cell';
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = day;
-                cell.appendChild(dayNumber);
-
-                const dateObj = new Date(Date.UTC(currentYear, monthIndex, day));
-                const weekNum = getISOWeekNumber(dateObj);
-
-                // Informations sur la semaine assignée (si l'utilisateur clique le 1er jour)
-                const weekKey = `${currentYear}-W${weekNum}`;
-                const info = document.createElement('div');
-                info.className = 'day-info';
-                if (assignments[weekKey]) {
-                    const ass = assignments[weekKey];
-                    info.textContent = `${ass.member1} & ${ass.member2}`;
-                    cell.classList.add('has-assignment');
-                } else {
-                    info.textContent = 'Libre';
-                }
-                cell.appendChild(info);
-
-                // Conflit ce jour ?
-                const conflict = conflicts.find(c => {
-                    const vacStart = new Date(c.conflictStart);
-                    const vacEnd   = new Date(c.conflictEnd);
-                    return datesOverlap(dateObj, dateObj, vacStart, vacEnd);
-                });
-                if (conflict) {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'conflict-indicator';
-                    indicator.textContent = '⚠️';
-                    cell.classList.add('has-conflict');
-                    cell.appendChild(indicator);
-                }
-
-                cell.onclick = () => {
-                    // Ouvrir le modal d'assignation avec la semaine correspondante
-                    const mondayDate = getMondayOfWeek(weekNum, currentYear);
-                    const isoWeek = getISOWeekNumber(mondayDate);
-                    openModal('assignModal');
-                    document.getElementById('assignWeek').value = isoWeek;
-                };
-
-                grid.appendChild(cell);
-            }
-
-            calendarMonthDiv.appendChild(grid);
-        }
-
-        function getISOWeekNumber(date) {
-            const target = new Date(date.valueOf());
-            const dayNr  = (date.getUTCDay() + 6) % 7;
-            target.setUTCDate(target.getUTCDate() - dayNr + 3);
-            const firstThursday = target.valueOf();
-            target.setUTCMonth(0, 1);
-            if (target.getUTCDay() !== 4) {
-                target.setUTCMonth(0, 1 + ((4 - target.getUTCDay()) + 7) % 7);
-            }
-            return 1 + Math.ceil((firstThursday - target) / 604800000);
-        }
-
-        function getMondayOfWeek(week, year) {
-            const simple = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
-            const dow = simple.getUTCDay();
-            const ISOweekStart = simple;
-            if (dow <= 4) {
-                ISOweekStart.setUTCDate(simple.getUTCDate() - dow + 1);
-            } else {
-                ISOweekStart.setUTCDate(simple.getUTCDate() + 8 - dow);
-            }
-            return ISOweekStart;
-        }
-
-        function saveData() {
-            localStorage.setItem('planningAssignments', JSON.stringify(assignments));
-            localStorage.setItem('planningVacations', JSON.stringify(vacations));
-        }
-
-        function loadData() {
-            const storedAssignments = localStorage.getItem('planningAssignments');
-            const storedVacations = localStorage.getItem('planningVacations');
-            assignments = storedAssignments ? JSON.parse(storedAssignments) : {};
-            vacations = storedVacations ? JSON.parse(storedVacations) : {};
-        }
-        loadData();
-        detectConflicts();
-        updateDisplay();
-
-        // Affichage de la vue absences
-        function renderAbsencesView() {
-            const container = document.getElementById('absencesContainer');
-            container.innerHTML = '';
-            TEAM.forEach(member => {
-                const card = document.createElement('div');
-                card.className = 'member-card';
-                const header = document.createElement('h4');
-                header.textContent = member;
-                card.appendChild(header);
-
-                const absList = vacations[member] || [];
-                if (absList.length === 0) {
-                    const noAbs = document.createElement('p');
-                    noAbs.textContent = 'Aucune absence';
-                    card.appendChild(noAbs);
-                } else {
-                    absList.forEach(vac => {
-                        const item = document.createElement('div');
-                        item.className = 'absence-item';
-
-                        const datesDiv = document.createElement('div');
-                        datesDiv.className = 'absence-dates';
-                        datesDiv.textContent = `${vac.start} au ${vac.end}`;
-                        item.appendChild(datesDiv);
-
-                        const durationDiv = document.createElement('div');
-                        const start = new Date(vac.start);
-                        const end = new Date(vac.end);
-                        const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-                        durationDiv.className = 'absence-duration';
-                        durationDiv.textContent = `${days} j`;
-                        item.appendChild(durationDiv);
-
-                        // Bouton supprimer
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.textContent = 'Supprimer';
-                        deleteBtn.className = 'btn btn-danger';
-                        deleteBtn.onclick = () => {
-                            deleteVacation(member, vac.start, vac.end);
-                        };
-                        item.appendChild(deleteBtn);
-
-                        card.appendChild(item);
-                    });
-                }
-
-                container.appendChild(card);
-            });
-        }
-
-        // Affichage de la vue des conflits
-        function renderConflictsView() {
-            const container = document.getElementById('conflictsContainer');
-            container.innerHTML = '';
-
-            // Grouper les conflits par semaine
-            const grouped = {};
-            conflicts.forEach(conflict => {
-                if (!grouped[conflict.week]) grouped[conflict.week] = [];
-                grouped[conflict.week].push(conflict);
-            });
-
-            Object.keys(grouped).sort((a, b) => a - b).forEach(weekNum => {
-                const weekConflicts = grouped[weekNum];
-
-                const detailsDiv = document.createElement('div');
-                detailsDiv.className = 'conflict-details';
-
-                const weekDates = getWeekDates(currentYear, parseInt(weekNum));
-                const weekLabel = `Semaine ${weekNum} (${weekDates.start.toISOString().split('T')[0]} au ${weekDates.end.toISOString().split('T')[0]})`;
-                const title = document.createElement('h3');
-                title.textContent = weekLabel;
-                detailsDiv.appendChild(title);
-
-                const assign = assignments[`${currentYear}-W${weekNum}`];
-                const assignText = assign ? `${assign.member1} + ${assign.member2} (Backup: ${assign.backup})` : 'Non assignée';
-                const assignP = document.createElement('p');
-                assignP.innerHTML = `<strong>Équipe assignée :</strong> ${assignText}`;
-                detailsDiv.appendChild(assignP);
-
-                // Tableau des membres en conflit
-                const table = document.createElement('table');
-                table.className = 'conflict-table';
-                const thead = document.createElement('thead');
-                const trHead = document.createElement('tr');
-                ['Membre en conflit', 'Rôle', 'Période d\\'absence', 'Durée'].forEach(text => {
-                    const th = document.createElement('th');
-                    th.textContent = text;
-                    trHead.appendChild(th);
-                });
-                thead.appendChild(trHead);
-                table.appendChild(thead);
-
-                const tbody = document.createElement('tbody');
-                weekConflicts.forEach(conf => {
-                    const tr = document.createElement('tr');
-                    const tdMember = document.createElement('td');
-                    tdMember.textContent = conf.member;
-                    const tdRole = document.createElement('td');
-                    tdRole.textContent = conf.role;
-                    const tdPeriod = document.createElement('td');
-                    tdPeriod.textContent = `${conf.conflictStart} - ${conf.conflictEnd}`;
-                    const tdDays = document.createElement('td');
-                    const start = new Date(conf.conflictStart);
-                    const end = new Date(conf.conflictEnd);
-                    const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-                    tdDays.textContent = days + ' j';
-                    tr.appendChild(tdMember);
-                    tr.appendChild(tdRole);
-                    tr.appendChild(tdPeriod);
-                    tr.appendChild(tdDays);
-                    tbody.appendChild(tr);
-                });
-                table.appendChild(tbody);
-                detailsDiv.appendChild(table);
-
-                const buttonsDiv = document.createElement('div');
-                buttonsDiv.style.marginTop = '10px';
-
-                const resolveBtn = document.createElement('button');
-                resolveBtn.className = 'btn btn-success';
-                resolveBtn.textContent = 'Résoudre ce conflit';
-                resolveBtn.onclick = () => {
-                    resolveConflict(parseInt(weekNum));
-                };
-                buttonsDiv.appendChild(resolveBtn);
-
-                const modifyBtn = document.createElement('button');
-                modifyBtn.className = 'btn btn-warning';
-                modifyBtn.textContent = 'Modifier l\\'assignation';
-                modifyBtn.onclick = () => {
-                    openModal('assignModal');
-                    document.getElementById('assignWeek').value = parseInt(weekNum);
-                };
-                buttonsDiv.appendChild(modifyBtn);
-
-                detailsDiv.appendChild(buttonsDiv);
-                container.appendChild(detailsDiv);
-            });
-
-            renderResolvedSolutions();
+            showNotification('💾 Planning exporté !', 'success');
         }
 
         /**
-         * Exportation des données du planning au format CSV.
+         * Formate une date en chaîne AAAA-MM-JJ pour le CSV/Excel.
+         * @param {Date} date
+         * @returns {string}
+         */
+        function formatDateCSV(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        /**
+         * Formate une date en chaîne AAAAMMJJ pour le format iCalendar.
+         * @param {Date} date
+         * @returns {string}
+         */
+        function formatDateICS(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}${m}${d}`;
+        }
+
+        /**
+         * Exporte le planning sous forme de fichier CSV (compatible Excel).
          */
         function exportExcel() {
-            let csvContent = 'Semaine;Date début;Date fin;Membre 1;Membre 2;Backup\\n';
-            for (let week = 1; week <= 52; week++) {
+            let csv = 'Semaine,Date début,Date fin,Membre 1,Membre 2,Backup\n';
+            const totalWeeks = 52;
+            for (let week = 1; week <= totalWeeks; week++) {
                 const weekKey = `${currentYear}-W${week}`;
+                const ass = assignments[weekKey];
+                if (!ass) continue;
                 const weekDates = getWeekDates(currentYear, week);
                 const startStr = formatDateCSV(weekDates.start);
                 const endStr = formatDateCSV(weekDates.end);
-                const ass = assignments[weekKey];
-                const m1 = ass ? ass.member1 : '';
-                const m2 = ass ? ass.member2 : '';
-                const bk = ass ? ass.backup  : '';
-                csvContent += `${week};${startStr};${endStr};${m1};${m2};${bk}\\n`;
+                csv += `${week},${startStr},${endStr},${ass.member1},${ass.member2},${ass.backup}\n`;
             }
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `planning-${currentYear}.csv`;
+            link.download = `planning-${currentYear}-${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
-            showNotification('✅ Fichier Excel exporté !', 'success');
-        }
-
-        function formatDateCSV(dateObj) {
-            return dateObj.toISOString().split('T')[0];
-        }
-
-        function formatDateICS(dateObj) {
-            return dateObj.toISOString().split('T')[0].replace(/-/g, '');
+            showNotification('📊 Fichier Excel/CSV exporté !', 'success');
         }
 
         /**
-         * Exporte des fichiers .ics individuels par référent contenant toutes ses périodes de piquet.
+         * Exporte des fichiers .ics (Agenda) pour chaque membre avec leurs périodes de piquet.
          */
-        function exportAgendas() {
-            // Créer un fichier par membre
+        function exportAgenda() {
             TEAM.forEach(member => {
-                let ics = 'BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//Planning//FR\\n';
-                Object.keys(assignments).forEach(key => {
-                    if (!key.startsWith(`${currentYear}-W`)) return;
-                    const [yr, w] = key.split('-W');
-                    const week = parseInt(w);
-                    const ass = assignments[key];
-                    let role = null;
+                let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Planning Manager//FR\nCALSCALE:GREGORIAN\n';
+                const totalWeeks = 52;
+                for (let week = 1; week <= totalWeeks; week++) {
+                    const weekKey = `${currentYear}-W${week}`;
+                    const ass = assignments[weekKey];
+                    if (!ass) continue;
+                    
+                    let role = '';
+                    let isPrincipal = false;
+                    
                     if (ass.member1 === member || ass.member2 === member) {
-                        role = 'Principal';
+                        role = 'Piquet Principal';
+                        isPrincipal = true;
                     } else if (ass.backup === member) {
                         role = 'Backup';
+                        isPrincipal = false;
+                    } else {
+                        continue; // Ce membre n'est pas assigné cette semaine
                     }
-                    if (!role) return;
-                    const { start, end } = getWeekDates(currentYear, week);
+                    
+                    const weekDates = getWeekDates(currentYear, week);
+                    const start = weekDates.start;
+                    const end = weekDates.end;
                     const dtStart = formatDateICS(start);
                     const dtEnd = formatDateICS(new Date(end.getFullYear(), end.getMonth(), end.getDate() + 1));
-                    const uid = `${currentYear}-W${week}-${member.replace(/\\s+/g, '_')}@planning`;
+                    const uid = `${currentYear}-W${week}-${member.replace(/\s+/g, '_')}@planning`;
                     const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                    ics += 'BEGIN:VEVENT\\n';
-                    ics += `UID:${uid}\\n`;
-                    ics += `DTSTAMP:${stamp}\\n`;
-                    ics += `DTSTART;VALUE=DATE:${dtStart}\\n`;
-                    ics += `DTEND;VALUE=DATE:${dtEnd}\\n`;
-                    ics += `SUMMARY:Période de piquet semaine ${week}\\n`;
-                    ics += `DESCRIPTION:Semaine ${week}: ${ass.member1} + ${ass.member2} (Backup: ${ass.backup})\\nRôle: ${role}\\n`;
-                    ics += 'END:VEVENT\\n';
-                });
+                    
+                    // Définir les couleurs et catégories selon le rôle
+                    const categories = isPrincipal ? 'PIQUET PRINCIPAL' : 'BACKUP';
+                    const color = isPrincipal ? 'darkred' : 'darkblue';
+                    
+                    // Titre plus explicite
+                    const summary = isPrincipal ? 
+                        `🚨 PIQUET PRINCIPAL - Semaine ${week}` : 
+                        `📞 BACKUP - Semaine ${week}`;
+                    
+                    // Description détaillée
+                    let description = `Semaine ${week}\\n`;
+                    description += `Équipe: ${ass.member1} + ${ass.member2}\\n`;
+                    description += `Backup: ${ass.backup}\\n\\n`;
+                    
+                    if (isPrincipal) {
+                        description += `⚠️ RESPONSABILITÉS PIQUET PRINCIPAL:\\n`;
+                        description += `- Participer à la séance hebdomadaire\\n`;
+                        description += `- Gérer la BAL (Boîte Aux Lettres)\\n`;
+                        description += `- Traiter les demandes urgentes\\n`;
+                        description += `- Assurer la permanence téléphonique\\n`;
+                    } else {
+                        description += `📞 RESPONSABILITÉS BACKUP:\\n`;
+                        description += `- Être disponible en cas de besoin\\n`;
+                        description += `- Remplacer si absence du piquet principal\\n`;
+                        description += `- Support en cas de surcharge\\n`;
+                    }
+                    
+                    ics += 'BEGIN:VEVENT\n';
+                    ics += `UID:${uid}\n`;
+                    ics += `DTSTAMP:${stamp}\n`;
+                    ics += `DTSTART;VALUE=DATE:${dtStart}\n`;
+                    ics += `DTEND;VALUE=DATE:${dtEnd}\n`;
+                    ics += `SUMMARY:${summary}\n`;
+                    ics += `DESCRIPTION:${description}\n`;
+                    ics += `CATEGORIES:${categories}\n`;
+                    ics += `STATUS:CONFIRMED\n`;
+                    ics += `PRIORITY:${isPrincipal ? '1' : '5'}\n`;
+                    // Ajouter une alarme pour les piquets principaux
+                    if (isPrincipal) {
+                        ics += 'BEGIN:VALARM\n';
+                        ics += 'TRIGGER:-P1D\n'; // Rappel 1 jour avant
+                        ics += 'ACTION:DISPLAY\n';
+                        ics += 'DESCRIPTION:Rappel: Vous êtes de piquet principal demain!\\nN\'oubliez pas la séance et la gestion de la BAL.\n';
+                        ics += 'END:VALARM\n';
+                    }
+                    ics += 'END:VEVENT\n';
+                }
                 ics += 'END:VCALENDAR';
                 const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8;' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `agenda-${member.replace(/\\s+/g, '_')}-${currentYear}.ics`;
+                link.download = `agenda-${member.replace(/\s+/g, '_')}-${currentYear}.ics`;
                 link.click();
             });
-            showNotification('📅 Fichiers Agenda exportés !', 'success');
+            showNotification('📅 Fichiers Agenda exportés avec distinction Piquet/Backup !', 'success');
         }
 
         /**
@@ -1440,12 +1879,12 @@
          */
         function deleteVacation(member, start, end) {
             if (!vacations[member]) return;
-            if (!confirm('Supprimer cette absence ?')) return;
+            if (!confirm('Supprimer cette absence ?')) return;
             vacations[member] = vacations[member].filter(v => !(v.start === start && v.end === end));
             saveData();
             detectConflicts();
             updateDisplay();
-            if (document.getElementById('absencesTab').classList.contains('active')) {
+            if (currentTab === 'absences') {
                 renderAbsencesView();
             }
             showNotification('📅 Absence supprimée', 'success');
@@ -1473,10 +1912,10 @@
             saveData();
             detectConflicts();
             updateDisplay();
-            if (document.getElementById('absencesTab').classList.contains('active')) {
+            if (currentTab === 'absences') {
                 renderAbsencesView();
             }
-            if (document.getElementById('conflictsTab').classList.contains('active')) {
+            if (currentTab === 'conflicts') {
                 renderConflictsView();
             }
             showNotification('⚠️ Conflits de test générés', 'warning');
@@ -1537,30 +1976,35 @@
                 return;
             }
             const heading = document.createElement('h3');
-            heading.style.margin = '30px 0 10px 0';
+            heading.style.margin = '2rem 0 1rem 0';
             heading.textContent = '📝 Solutions de résolution des conflits';
             container.appendChild(heading);
 
             resolvedSolutions.forEach(sol => {
                 const solDiv = document.createElement('div');
-                solDiv.style.background = '#f0f8ff';
-                solDiv.style.border = '1px solid #bcdff1';
-                solDiv.style.padding = '10px';
-                solDiv.style.marginBottom = '10px';
-                solDiv.style.borderRadius = '6px';
+                solDiv.style.background = '#F0F9FF';
+                solDiv.style.border = '1px solid #BFDBFE';
+                solDiv.style.padding = '1rem';
+                solDiv.style.marginBottom = '0.75rem';
+                solDiv.style.borderRadius = 'var(--radius-md)';
+                solDiv.style.fontSize = '0.875rem';
 
                 const proposals = sol.proposals.length > 0 ?
-                    sol.proposals.map(m => `<span style="margin-right:8px;">${m}</span>`).join('') :
-                    '<em>Aucune proposition disponible</em>';
+                    sol.proposals.map(m => `<span style="margin-right:0.5rem; padding: 0.25rem 0.5rem; background: white; border-radius: var(--radius-sm);">${m}</span>`).join('') :
+                    '<em style="color: var(--gray-color);">Aucune proposition disponible</em>';
 
                 const chosen = sol.chosen ?
                     `${sol.chosen.member1} + ${sol.chosen.member2} (Backup: ${sol.chosen.backup})` :
-                    '<em>Pas de solution choisie</em>';
+                    '<em style="color: var(--gray-color);">Pas de solution choisie</em>';
 
                 solDiv.innerHTML = `
-                    <strong>Semaine ${sol.week}</strong><br>
-                    <strong>Propositions:</strong> ${proposals}<br>
-                    <strong>Choix:</strong> ${chosen}
+                    <strong style="color: var(--dark-color);">Semaine ${sol.week}</strong><br>
+                    <div style="margin-top: 0.5rem;">
+                        <strong>Propositions:</strong> ${proposals}
+                    </div>
+                    <div style="margin-top: 0.5rem;">
+                        <strong>Solution choisie:</strong> <span style="color: var(--success-color); font-weight: 600;">${chosen}</span>
+                    </div>
                 `;
                 container.appendChild(solDiv);
             });
@@ -1576,8 +2020,8 @@
             html += '<th>Référent</th>';
             html += '<th>Semaine(s) principale(s)</th>';
             html += '<th>Semaine(s) backup</th>';
-            html += '<th>Périodes d\\'absence</th>';
-            html += '<th>Jours d\\'absence</th>';
+            html += '<th>Périodes d\'absence</th>';
+            html += '<th>Jours d\'absence</th>';
             html += '<th>Charge (%)</th>';
             html += '</tr></thead><tbody>';
 
@@ -1608,13 +2052,18 @@
                 const maxLoad = 52; // max 52 semaines
                 const chargePercent = ((loadPoints / maxLoad) * 100).toFixed(1);
 
+                // Coloration selon la charge
+                let chargeColor = 'var(--success-color)';
+                if (parseFloat(chargePercent) > 30) chargeColor = 'var(--warning-color)';
+                if (parseFloat(chargePercent) > 50) chargeColor = 'var(--danger-color)';
+
                 html += `<tr>
-                    <td style="font-weight:bold;">${member}</td>
+                    <td style="font-weight:600; color: var(--dark-color);">${member}</td>
                     <td>${principalCount}</td>
                     <td>${backupCount}</td>
                     <td>${periods}</td>
                     <td>${daysAbsent}</td>
-                    <td>${chargePercent}%</td>
+                    <td style="font-weight: 600; color: ${chargeColor};">${chargePercent}%</td>
                 </tr>`;
             });
 
