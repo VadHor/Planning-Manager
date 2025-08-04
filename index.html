@@ -807,7 +807,46 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📅 Planning des Référents - Gestion Complète</h1>
+            <h1>📅 PLANNING MANAGER</h1>
+            <p style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">by Vadhor</p>
+            <!-- Contenu onglet Paramètres -->
+            <div id="settingsTab" class="tab-content">
+                <h2 style="margin-bottom: 1.5rem; color: var(--dark-color);">Paramètres de l'équipe</h2>
+                <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; max-width: 800px;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Personnaliser les noms des référents</h3>
+                    <p style="color: var(--gray-color); margin-bottom: 2rem;">
+                        Modifiez les noms des référents pour utiliser les vrais prénoms de votre équipe.
+                    </p>
+                    <div id="teamNamesContainer" style="display: grid; gap: 1rem;">
+                        <!-- Généré dynamiquement -->
+                    </div>
+                    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                        <button class="btn btn-success" onclick="saveTeamNames()">
+                            💾 Enregistrer les modifications
+                        </button>
+                        <button class="btn btn-warning" onclick="resetTeamNames()">
+                            🔄 Réinitialiser
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Section Gestion des jours de congés -->
+                <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; max-width: 800px; margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Gestion des congés annuels</h3>
+                    <p style="color: var(--gray-color); margin-bottom: 2rem;">
+                        Définissez le nombre de jours de congés autorisés par référent pour l'année.
+                    </p>
+                    <div id="vacationLimitsContainer" style="display: grid; gap: 1rem;">
+                        <!-- Généré dynamiquement -->
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn btn-success" onclick="saveVacationLimits()">
+                            💾 Enregistrer les limites
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="toolbar">
@@ -997,10 +1036,16 @@
 
     <script>
         // Configuration
-        const TEAM = [
+        let TEAM = [
             'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
             'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
         ];
+        
+        // Noms personnalisés des référents
+        let customTeamNames = {};
+        
+        // Limites de vacances par référent
+        let vacationLimits = {};
 
         const BINOMES = [
             ['Référent 1', 'Référent 2', 'Référent 3'],
@@ -1040,6 +1085,11 @@
                 assignments = data.assignments || {};
                 vacations = data.vacations || {};
                 currentYear = data.year || currentYear;
+                customTeamNames = data.customTeamNames || {};
+                vacationLimits = data.vacationLimits || {};
+                
+                // Appliquer les noms personnalisés
+                applyCustomNames();
             }
         }
 
@@ -1047,9 +1097,26 @@
             const data = {
                 year: currentYear,
                 assignments: assignments,
-                vacations: vacations
+                vacations: vacations,
+                customTeamNames: customTeamNames,
+                vacationLimits: vacationLimits
             };
             localStorage.setItem('planningData', JSON.stringify(data));
+        }
+        
+        // Fonction pour obtenir le nom affiché d'un référent
+        function getDisplayName(referentKey) {
+            return customTeamNames[referentKey] || referentKey;
+        }
+        
+        // Fonction pour appliquer les noms personnalisés
+        function applyCustomNames() {
+            const defaultTeam = [
+                'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
+                'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
+            ];
+            
+            TEAM = defaultTeam.map(ref => customTeamNames[ref] || ref);
         }
 
         function populateSelects() {
@@ -1089,6 +1156,9 @@
             } else if (tab === 'dashboard') {
                 document.getElementById('dashboardTab').classList.add('active');
                 renderDashboardView();
+            } else if (tab === 'settings') {
+                document.getElementById('settingsTab').classList.add('active');
+                renderSettingsView();
             }
         }
 
@@ -2014,15 +2084,21 @@
         function renderDashboardView() {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = '';
-
+            
+            // Stats globales
+            let totalVacationDays = 0;
+            let totalAssignments = 0;
+            
             // Construction du tableau
             let html = '<table class="dashboard-table"><thead><tr>';
             html += '<th>Référent</th>';
-            html += '<th>Semaine(s) principale(s)</th>';
-            html += '<th>Semaine(s) backup</th>';
-            html += '<th>Périodes d\'absence</th>';
-            html += '<th>Jours d\'absence</th>';
+            html += '<th>Semaines principales</th>';
+            html += '<th>Semaines backup</th>';
+            html += '<th>Jours d\'absence pris</th>';
+            html += '<th>Jours autorisés</th>';
+            html += '<th>Solde congés</th>';
             html += '<th>Charge (%)</th>';
+            html += '<th>Statut</th>';
             html += '</tr></thead><tbody>';
 
             TEAM.forEach(member => {
@@ -2035,6 +2111,7 @@
                         if (assign.backup === member) backupCount++;
                     }
                 });
+                totalAssignments += principalCount + backupCount;
 
                 // Périodes d'absence et jours d'absence
                 const periods = vacations[member] ? vacations[member].length : 0;
@@ -2046,6 +2123,12 @@
                         daysAbsent += Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
                     });
                 }
+                totalVacationDays += daysAbsent;
+                
+                // Limite de vacances
+                const defaultRef = Object.keys(customTeamNames).find(key => customTeamNames[key] === member) || member;
+                const limit = vacationLimits[defaultRef] || 25; // 25 jours par défaut
+                const balance = limit - daysAbsent;
 
                 // Charge : on considère 1 point par assignation principale et 0.5 par backup
                 const loadPoints = principalCount + backupCount * 0.5;
@@ -2056,19 +2139,227 @@
                 let chargeColor = 'var(--success-color)';
                 if (parseFloat(chargePercent) > 30) chargeColor = 'var(--warning-color)';
                 if (parseFloat(chargePercent) > 50) chargeColor = 'var(--danger-color)';
+                
+                // Statut basé sur le solde de congés
+                let statusColor = 'var(--success-color)';
+                let statusText = '✅ OK';
+                if (balance < 5) {
+                    statusColor = 'var(--warning-color)';
+                    statusText = '⚠️ Attention';
+                }
+                if (balance < 0) {
+                    statusColor = 'var(--danger-color)';
+                    statusText = '❌ Dépassement';
+                }
 
                 html += `<tr>
                     <td style="font-weight:600; color: var(--dark-color);">${member}</td>
                     <td>${principalCount}</td>
                     <td>${backupCount}</td>
-                    <td>${periods}</td>
                     <td>${daysAbsent}</td>
+                    <td>${limit}</td>
+                    <td style="font-weight: 600; color: ${balance < 0 ? 'var(--danger-color)' : 'var(--dark-color)'};">${balance}</td>
                     <td style="font-weight: 600; color: ${chargeColor};">${chargePercent}%</td>
+                    <td style="color: ${statusColor};">${statusText}</td>
                 </tr>`;
             });
 
             html += '</tbody></table>';
-            container.innerHTML = html;
+            
+            // Ajouter des stats récapitulatives
+            const statsHtml = `
+                <div style="margin-top: 2rem; padding: 1.5rem; background: var(--light-gray); border-radius: var(--radius-md);">
+                    <h3 style="margin-bottom: 1rem; color: var(--dark-color);">Statistiques globales</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">${totalVacationDays}</div>
+                            <div style="color: var(--gray-color); font-size: 0.875rem;">Jours de congés pris au total</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--success-color);">${totalAssignments}</div>
+                            <div style="color: var(--gray-color); font-size: 0.875rem;">Assignations totales</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--warning-color);">${(totalVacationDays / TEAM.length).toFixed(1)}</div>
+                            <div style="color: var(--gray-color); font-size: 0.875rem;">Moyenne jours/personne</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = statsHtml + html;
+        }
+
+        // Génération de la vue des paramètres
+        function renderSettingsView() {
+            // Partie 1: Noms personnalisés
+            const container = document.getElementById('teamNamesContainer');
+            container.innerHTML = '';
+            
+            const defaultTeam = [
+                'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
+                'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
+            ];
+            
+            defaultTeam.forEach((ref, index) => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.style.display = 'grid';
+                fieldDiv.style.gridTemplateColumns = '150px 1fr';
+                fieldDiv.style.gap = '1rem';
+                fieldDiv.style.alignItems = 'center';
+                
+                fieldDiv.innerHTML = `
+                    <label style="font-weight: 600; color: var(--dark-color);">${ref} :</label>
+                    <input 
+                        type="text" 
+                        id="name-${ref}" 
+                        value="${customTeamNames[ref] || ''}"
+                        placeholder="Ex: Fred, Marie, Jean..."
+                        style="padding: 0.625rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.875rem;"
+                    >
+                `;
+                
+                container.appendChild(fieldDiv);
+            });
+            
+            // Partie 2: Limites de vacances
+            const limitsContainer = document.getElementById('vacationLimitsContainer');
+            limitsContainer.innerHTML = '';
+            
+            defaultTeam.forEach((ref, index) => {
+                const displayName = customTeamNames[ref] || ref;
+                const fieldDiv = document.createElement('div');
+                fieldDiv.style.display = 'grid';
+                fieldDiv.style.gridTemplateColumns = '250px 100px auto';
+                fieldDiv.style.gap = '1rem';
+                fieldDiv.style.alignItems = 'center';
+                
+                const currentLimit = vacationLimits[ref] || 25;
+                const memberVacations = vacations[displayName] || [];
+                let daysUsed = 0;
+                memberVacations.forEach(vac => {
+                    const start = new Date(vac.start);
+                    const end = new Date(vac.end);
+                    daysUsed += Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                });
+                const remaining = currentLimit - daysUsed;
+                
+                fieldDiv.innerHTML = `
+                    <label style="font-weight: 600; color: var(--dark-color);">${displayName} :</label>
+                    <input 
+                        type="number" 
+                        id="limit-${ref}" 
+                        value="${currentLimit}"
+                        min="0"
+                        max="50"
+                        style="padding: 0.625rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.875rem;"
+                    >
+                    <span style="font-size: 0.875rem; color: ${remaining < 0 ? 'var(--danger-color)' : 'var(--gray-color)'};">
+                        ${daysUsed} jours pris / ${remaining} restants
+                    </span>
+                `;
+                
+                limitsContainer.appendChild(fieldDiv);
+            });
+        }
+        
+        // Sauvegarder les limites de vacances
+        function saveVacationLimits() {
+            const defaultTeam = [
+                'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
+                'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
+            ];
+            
+            defaultTeam.forEach(ref => {
+                const input = document.getElementById(`limit-${ref}`);
+                if (input) {
+                    vacationLimits[ref] = parseInt(input.value) || 25;
+                }
+            });
+            
+            saveData();
+            showNotification('✅ Limites de congés mises à jour !', 'success');
+            
+            // Rafraîchir le tableau de bord si on y est
+            if (currentTab === 'dashboard') {
+                renderDashboardView();
+            }
+        }
+        
+        // Sauvegarder les noms personnalisés
+        function saveTeamNames() {
+            const defaultTeam = [
+                'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
+                'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
+            ];
+            
+            const oldNames = {...customTeamNames};
+            customTeamNames = {};
+            
+            defaultTeam.forEach(ref => {
+                const input = document.getElementById(`name-${ref}`);
+                if (input && input.value.trim()) {
+                    customTeamNames[ref] = input.value.trim();
+                }
+            });
+            
+            // Mettre à jour les assignments et vacations avec les nouveaux noms
+            updateDataWithNewNames(oldNames, customTeamNames);
+            
+            applyCustomNames();
+            saveData();
+            populateSelects();
+            updateDisplay();
+            
+            showNotification('✅ Noms des référents mis à jour !', 'success');
+        }
+        
+        // Mettre à jour les données avec les nouveaux noms
+        function updateDataWithNewNames(oldNames, newNames) {
+            const defaultTeam = [
+                'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
+                'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9', 'Référent 10'
+            ];
+            
+            // Créer un mapping des anciens noms vers les nouveaux
+            const nameMapping = {};
+            defaultTeam.forEach(ref => {
+                const oldName = oldNames[ref] || ref;
+                const newName = newNames[ref] || ref;
+                if (oldName !== newName) {
+                    nameMapping[oldName] = newName;
+                }
+            });
+            
+            // Mettre à jour les assignments
+            Object.keys(assignments).forEach(weekKey => {
+                const assignment = assignments[weekKey];
+                if (nameMapping[assignment.member1]) assignment.member1 = nameMapping[assignment.member1];
+                if (nameMapping[assignment.member2]) assignment.member2 = nameMapping[assignment.member2];
+                if (nameMapping[assignment.backup]) assignment.backup = nameMapping[assignment.backup];
+            });
+            
+            // Mettre à jour les vacations
+            const newVacations = {};
+            Object.keys(vacations).forEach(member => {
+                const newMemberName = nameMapping[member] || member;
+                newVacations[newMemberName] = vacations[member];
+            });
+            vacations = newVacations;
+        }
+        
+        // Réinitialiser les noms
+        function resetTeamNames() {
+            if (!confirm('Voulez-vous vraiment réinitialiser tous les noms par défaut ?')) return;
+            
+            customTeamNames = {};
+            applyCustomNames();
+            saveData();
+            populateSelects();
+            updateDisplay();
+            renderSettingsView();
+            
+            showNotification('🔄 Noms réinitialisés !', 'info');
         }
 
         // Fermer les modals en cliquant dehors
