@@ -496,7 +496,9 @@
                 <button class="btn btn-success" onclick="autoFillWithBalance()">⚡ Remplissage Intelligent</button>
                 <button class="btn btn-primary" onclick="showAssignModal()">➕ Assigner Semaine</button>
                 <button class="btn btn-warning" onclick="showVacationModal()">🏖️ Ajouter Absence</button>
-                <button class="btn btn-info" onclick="exportAll()">💾 Export Complet</button>
+                <button class="btn btn-info" onclick="exportAll()">💾 Export JSON</button>
+                <button class="btn btn-info" onclick="showImportModal()">📥 Import JSON</button>
+                <button class="btn btn-info" onclick="exportCalendars()">📅 Export Calendriers</button>
                 <button class="btn btn-dark" onclick="showTeamEditModal()">👥 Éditer Équipe</button>
             </div>
             <div class="danger-zone">
@@ -514,6 +516,7 @@
                 <button class="tab-btn" onclick="switchTab(event, 'absences')">🏖️ Absences</button>
                 <button class="tab-btn" onclick="switchTab(event, 'conflicts')">⚠️ Conflits</button>
                 <button class="tab-btn" onclick="switchTab(event, 'team')">👥 Équipe</button>
+                <button class="tab-btn" onclick="switchTab(event, 'importexport')">📤 Import/Export</button>
                 <button class="tab-btn manager-tab" onclick="switchTab(event, 'management')">🎯 GESTION MANAGÉRIALE</button>
             </div>
 
@@ -580,6 +583,129 @@
                         <!-- Généré dynamiquement -->
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Import/Export Tab -->
+            <div id="importexportTab" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">📤 Centre d'Import/Export</h2>
+                
+                <!-- Section Export -->
+                <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1;">
+                        📤 Export des Données
+                    </h3>
+                    
+                    <div style="display: grid; gap: 20px;">
+                        <!-- Export JSON -->
+                        <div style="border: 2px solid #3498db; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #3498db15);">
+                            <h4 style="color: #3498db; margin-bottom: 10px;">💾 Export JSON Complet</h4>
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Sauvegarde complète du planning incluant toutes les assignations, absences, configuration et noms d'équipe.
+                                Format idéal pour les backups et le partage.
+                            </p>
+                            <button class="btn btn-primary" onclick="exportAll()" style="width: 100%;">
+                                💾 Télécharger le fichier JSON
+                            </button>
+                        </div>
+                        
+                        <!-- Export Calendriers -->
+                        <div style="border: 2px solid #27ae60; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #27ae6015);">
+                            <h4 style="color: #27ae60; margin-bottom: 10px;">📅 Export Calendriers Individuels</h4>
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Génère un fichier .ics pour chaque membre de l'équipe avec ses périodes de piquet et absences.
+                                Compatible avec Outlook, Google Calendar, Apple Calendar, etc.
+                            </p>
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                                <small style="color: #666;">
+                                    <strong>Contenu des calendriers :</strong><br>
+                                    • 🟢 Semaines en tant que référent principal<br>
+                                    • 🟠 Semaines en tant que backup<br>
+                                    • 🏖️ Périodes d'absence<br>
+                                    • ⏰ Rappels automatiques (J-1)
+                                </small>
+                            </div>
+                            <button class="btn btn-success" onclick="exportCalendars()" style="width: 100%;">
+                                📅 Générer les ${TEAM.length} calendriers
+                            </button>
+                        </div>
+                        
+                        <!-- Export Excel/CSV -->
+                        <div style="border: 2px solid #f39c12; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #f39c1215);">
+                            <h4 style="color: #f39c12; margin-bottom: 10px;">📊 Export Excel/CSV</h4>
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Export au format CSV pour analyse dans Excel ou Google Sheets.
+                                Contient toutes les assignations de l'année en format tabulaire.
+                            </p>
+                            <button class="btn btn-warning" onclick="exportCSV()" style="width: 100%;">
+                                📊 Télécharger le fichier CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Import -->
+                <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1;">
+                        📥 Import des Données
+                    </h3>
+                    
+                    <div style="border: 2px solid #e74c3c; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #e74c3c15);">
+                        <h4 style="color: #e74c3c; margin-bottom: 10px;">📥 Import depuis JSON</h4>
+                        
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffc107;">
+                            <p style="margin: 0; color: #856404;">
+                                <strong>⚠️ Attention :</strong> L'import remplacera TOUTES les données actuelles du planning.
+                                Assurez-vous d'avoir une sauvegarde si nécessaire.
+                            </p>
+                        </div>
+                        
+                        <p style="color: #666; margin-bottom: 15px;">
+                            Restaurez un planning précédemment exporté. Le fichier doit être au format JSON généré par cette application.
+                        </p>
+                        
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong style="color: #2c3e50;">Données qui seront importées :</strong>
+                            <ul style="margin: 10px 0 0 20px; color: #666;">
+                                <li>Toutes les assignations de semaines</li>
+                                <li>Toutes les périodes d'absence</li>
+                                <li>Les noms personnalisés de l'équipe</li>
+                                <li>La configuration des seuils de gravité</li>
+                                <li>L'année du planning</li>
+                            </ul>
+                        </div>
+                        
+                        <input type="file" 
+                               id="importFileInput" 
+                               accept=".json" 
+                               style="display: none;"
+                               onchange="handleDirectImport(this)">
+                        
+                        <button class="btn btn-danger" 
+                                onclick="document.getElementById('importFileInput').click()" 
+                                style="width: 100%;">
+                            📥 Sélectionner un fichier JSON à importer
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Historique -->
+                <div style="background: #f8f9fa; border-radius: 15px; padding: 20px; margin-top: 30px;">
+                    <h4 style="color: #666; margin-bottom: 15px;">📝 Informations Système</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div>
+                            <strong>Version :</strong> 3.1
+                        </div>
+                        <div>
+                            <strong>Année en cours :</strong> ${currentYear}
+                        </div>
+                        <div>
+                            <strong>Membres d'équipe :</strong> ${TEAM.length}
+                        </div>
+                        <div>
+                            <strong>Dernière sauvegarde :</strong> <span id="lastSaveTime">-</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Management Tab -->
@@ -721,6 +847,35 @@
                     <input type="date" id="vacationEnd" required>
                 </div>
                 <button type="submit" class="btn btn-success" style="width: 100%;">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Import JSON -->
+    <div class="modal" id="importModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('importModal')">&times;</span>
+            <div class="modal-header">
+                <h2>📥 Importer un Planning</h2>
+            </div>
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #ffc107;">
+                <p style="margin: 0; color: #856404;">
+                    <strong>⚠️ Attention :</strong> L'import remplacera TOUTES les données actuelles (assignations, absences, noms d'équipe, configuration).
+                </p>
+            </div>
+            <form onsubmit="handleImport(event)">
+                <div class="form-group">
+                    <label>Fichier JSON</label>
+                    <input type="file" id="importFile" accept=".json" required style="width: 100%; padding: 10px; border: 2px solid #ecf0f1; border-radius: 8px;">
+                </div>
+                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button type="button" class="btn btn-dark" onclick="closeModal('importModal')">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        📥 Importer
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -1317,7 +1472,167 @@
             
             if (tab === 'management') {
                 updateManagerialDashboard();
+            } else if (tab === 'importexport') {
+                updateImportExportInfo();
             }
+        }
+
+        function updateImportExportInfo() {
+            // Mettre à jour les informations système
+            const lastSave = localStorage.getItem('planningData');
+            if (lastSave) {
+                const data = JSON.parse(lastSave);
+                if (data.lastModified) {
+                    const date = new Date(data.lastModified);
+                    document.getElementById('lastSaveTime').textContent = formatDateTimeFR(date);
+                }
+            }
+            
+            // Mettre à jour le nombre de calendriers
+            const calendarBtn = document.querySelector('#importexportTab .btn-success');
+            if (calendarBtn) {
+                calendarBtn.innerHTML = `📅 Générer les ${TEAM.length} calendriers`;
+            }
+        }
+
+        function formatDateTimeFR(date) {
+            const options = { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return date.toLocaleDateString('fr-FR', options);
+        }
+
+        function exportCSV() {
+            let csv = 'Semaine,Date Début,Date Fin,Membre 1,Membre 2,Backup,Statut\n';
+            
+            for (let week = 1; week <= 52; week++) {
+                const weekKey = `${currentYear}-W${week}`;
+                const weekDates = getWeekDates(currentYear, week);
+                const assignment = assignments[weekKey];
+                const hasConflict = conflicts.some(c => c.week === week);
+                
+                const startStr = formatDateCSV(weekDates.start);
+                const endStr = formatDateCSV(weekDates.end);
+                
+                if (assignment) {
+                    const status = hasConflict ? 'Conflit' : 'OK';
+                    csv += `${week},${startStr},${endStr},${assignment.member1},${assignment.member2},${assignment.backup},${status}\n`;
+                } else {
+                    csv += `${week},${startStr},${endStr},-,-,-,Non assignée\n`;
+                }
+            }
+            
+            // Ajouter une section pour les absences
+            csv += '\n\nABSENCES\n';
+            csv += 'Référent,Date Début,Date Fin,Jours\n';
+            
+            Object.entries(vacations).forEach(([member, absences]) => {
+                absences.forEach(absence => {
+                    const days = Math.ceil((new Date(absence.end) - new Date(absence.start)) / (1000 * 60 * 60 * 24)) + 1;
+                    csv += `${member},${absence.start},${absence.end},${days}\n`;
+                });
+            });
+            
+            // Télécharger le fichier
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `planning_${currentYear}_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            showNotification('📊 Export CSV généré avec succès', 'success');
+        }
+
+        function formatDateCSV(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${d}/${m}/${y}`;
+        }
+
+        function handleDirectImport(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validation
+                    if (!importedData.assignments || !importedData.year) {
+                        throw new Error('Format de fichier invalide');
+                    }
+                    
+                    // Afficher un résumé avant import
+                    const assignmentCount = Object.keys(importedData.assignments).length;
+                    const vacationCount = importedData.vacations ? 
+                        Object.values(importedData.vacations).reduce((sum, v) => sum + v.length, 0) : 0;
+                    
+                    const message = `Voulez-vous importer ce planning ?\n\n` +
+                        `📅 Année : ${importedData.year}\n` +
+                        `📋 Assignations : ${assignmentCount} semaines\n` +
+                        `🏖️ Absences : ${vacationCount} périodes\n` +
+                        `👥 Équipe : ${importedData.teamNames ? importedData.teamNames.length : 'Non définie'} membres\n\n` +
+                        `⚠️ Cela remplacera TOUTES les données actuelles.`;
+                    
+                    if (!confirm(message)) {
+                        input.value = ''; // Reset file input
+                        return;
+                    }
+                    
+                    // Importer les données
+                    currentYear = importedData.year || currentYear;
+                    assignments = importedData.assignments || {};
+                    vacations = importedData.vacations || {};
+                    severityConfig = importedData.severityConfig || severityConfig;
+                    
+                    if (importedData.teamNames && Array.isArray(importedData.teamNames)) {
+                        TEAM = importedData.teamNames;
+                    } else if (importedData.team && Array.isArray(importedData.team)) {
+                        TEAM = importedData.team;
+                    }
+                    
+                    // Mettre à jour l'interface
+                    document.getElementById('currentYear').textContent = currentYear;
+                    
+                    if (severityConfig) {
+                        document.getElementById('severity1').value = severityConfig.level1 || 1;
+                        document.getElementById('severity2').value = severityConfig.level2 || 2;
+                        document.getElementById('severity3').value = severityConfig.level3 || 3;
+                    }
+                    
+                    // Sauvegarder et rafraîchir
+                    saveData();
+                    populateSelects();
+                    detectConflicts();
+                    updateAllDisplays();
+                    
+                    showNotification(
+                        `✅ Import réussi ! Planning ${importedData.year} chargé avec ${assignmentCount} assignations.`, 
+                        'success'
+                    );
+                    
+                    // Reset file input
+                    input.value = '';
+                    
+                } catch (error) {
+                    console.error('Erreur d\'import:', error);
+                    showNotification('❌ Erreur lors de l\'import : ' + error.message, 'error');
+                    input.value = '';
+                }
+            };
+            
+            reader.onerror = function() {
+                showNotification('❌ Erreur de lecture du fichier', 'error');
+                input.value = '';
+            };
+            
+            reader.readAsText(file);
         }
 
         function autoFillWithBalance() {
@@ -1680,14 +1995,212 @@
             showNotification('✅ Absence supprimée', 'success');
         }
 
+        function exportCalendars() {
+            let exportCount = 0;
+            
+            TEAM.forEach(member => {
+                let icsContent = 'BEGIN:VCALENDAR\r\n';
+                icsContent += 'VERSION:2.0\r\n';
+                icsContent += 'PRODID:-//Planning Manager Pro//FR\r\n';
+                icsContent += 'CALSCALE:GREGORIAN\r\n';
+                icsContent += 'METHOD:PUBLISH\r\n';
+                icsContent += `X-WR-CALNAME:Planning ${member} - ${currentYear}\r\n`;
+                icsContent += `X-WR-TIMEZONE:Europe/Paris\r\n`;
+                
+                // Parcourir toutes les semaines de l'année
+                Object.entries(assignments).forEach(([weekKey, assignment]) => {
+                    if (!weekKey.startsWith(`${currentYear}-W`)) return;
+                    
+                    const weekNum = parseInt(weekKey.split('-W')[1]);
+                    const weekDates = getWeekDates(currentYear, weekNum);
+                    
+                    // Déterminer le rôle du membre
+                    let role = null;
+                    let eventColor = '';
+                    
+                    if (assignment.member1 === member || assignment.member2 === member) {
+                        role = 'Référent Principal';
+                        eventColor = 'GREEN';
+                    } else if (assignment.backup === member) {
+                        role = 'Backup';
+                        eventColor = 'ORANGE';
+                    }
+                    
+                    if (role) {
+                        // Créer l'événement
+                        const uid = `${weekKey}-${member.replace(/\s+/g, '_')}@planningpro`;
+                        const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                        
+                        // Dates au format iCalendar (YYYYMMDD)
+                        const startDate = formatDateICS(weekDates.start);
+                        const endDate = formatDateICS(new Date(weekDates.end.getTime() + 86400000)); // +1 jour pour inclure le dimanche
+                        
+                        icsContent += 'BEGIN:VEVENT\r\n';
+                        icsContent += `UID:${uid}\r\n`;
+                        icsContent += `DTSTAMP:${stamp}\r\n`;
+                        icsContent += `DTSTART;VALUE=DATE:${startDate}\r\n`;
+                        icsContent += `DTEND;VALUE=DATE:${endDate}\r\n`;
+                        icsContent += `SUMMARY:${role} - Semaine ${weekNum}\r\n`;
+                        icsContent += `DESCRIPTION:Semaine ${weekNum} (${formatDateFR(weekDates.start)} au ${formatDateFR(weekDates.end)})\\n`;
+                        icsContent += `Équipe: ${assignment.member1} + ${assignment.member2}\\n`;
+                        icsContent += `Backup: ${assignment.backup}\\n`;
+                        icsContent += `Rôle: ${role}\r\n`;
+                        icsContent += `CATEGORIES:${role}\r\n`;
+                        icsContent += `X-APPLE-TRAVEL-ADVISORY-BEHAVIOR:AUTOMATIC\r\n`;
+                        
+                        // Ajouter une alarme 1 jour avant
+                        icsContent += 'BEGIN:VALARM\r\n';
+                        icsContent += 'TRIGGER:-P1D\r\n';
+                        icsContent += 'ACTION:DISPLAY\r\n';
+                        icsContent += `DESCRIPTION:Rappel: ${role} demain (Semaine ${weekNum})\r\n`;
+                        icsContent += 'END:VALARM\r\n';
+                        
+                        icsContent += 'END:VEVENT\r\n';
+                    }
+                });
+                
+                // Ajouter les périodes d'absence comme événements
+                if (vacations[member]) {
+                    vacations[member].forEach((vacation, index) => {
+                        const uid = `vacation-${member.replace(/\s+/g, '_')}-${index}@planningpro`;
+                        const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                        
+                        const startDate = formatDateICS(new Date(vacation.start));
+                        const endDate = formatDateICS(new Date(new Date(vacation.end).getTime() + 86400000));
+                        
+                        icsContent += 'BEGIN:VEVENT\r\n';
+                        icsContent += `UID:${uid}\r\n`;
+                        icsContent += `DTSTAMP:${stamp}\r\n`;
+                        icsContent += `DTSTART;VALUE=DATE:${startDate}\r\n`;
+                        icsContent += `DTEND;VALUE=DATE:${endDate}\r\n`;
+                        icsContent += `SUMMARY:🏖️ Absence - ${member}\r\n`;
+                        icsContent += `DESCRIPTION:Période d'absence\r\n`;
+                        icsContent += `CATEGORIES:ABSENCE\r\n`;
+                        icsContent += 'END:VEVENT\r\n';
+                    });
+                }
+                
+                icsContent += 'END:VCALENDAR';
+                
+                // Créer et télécharger le fichier
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                const fileName = `planning_${member.replace(/\s+/g, '_')}_${currentYear}.ics`;
+                link.download = fileName;
+                
+                // Petit délai entre chaque téléchargement pour éviter les blocages
+                setTimeout(() => {
+                    link.click();
+                    exportCount++;
+                    
+                    if (exportCount === TEAM.length) {
+                        setTimeout(() => {
+                            showNotification(`📅 ${exportCount} calendriers exportés avec succès !`, 'success');
+                        }, 500);
+                    }
+                }, exportCount * 100);
+            });
+        }
+
+        function formatDateICS(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}${month}${day}`;
+        }
+
+        function showImportModal() {
+            document.getElementById('importModal').style.display = 'block';
+        }
+
+        function handleImport(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('importFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showNotification('❌ Veuillez sélectionner un fichier', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validation basique
+                    if (!importedData.assignments || !importedData.year) {
+                        throw new Error('Format de fichier invalide');
+                    }
+                    
+                    // Confirmation finale
+                    if (!confirm(`Importer le planning de l'année ${importedData.year} ?\n\nCela remplacera TOUTES les données actuelles.`)) {
+                        return;
+                    }
+                    
+                    // Importer les données
+                    currentYear = importedData.year || currentYear;
+                    assignments = importedData.assignments || {};
+                    vacations = importedData.vacations || {};
+                    severityConfig = importedData.severityConfig || severityConfig;
+                    
+                    // Importer les noms d'équipe si présents
+                    if (importedData.teamNames && Array.isArray(importedData.teamNames)) {
+                        TEAM = importedData.teamNames;
+                    } else if (importedData.team && Array.isArray(importedData.team)) {
+                        TEAM = importedData.team;
+                    }
+                    
+                    // Mettre à jour l'année affichée
+                    document.getElementById('currentYear').textContent = currentYear;
+                    
+                    // Mettre à jour la configuration
+                    if (severityConfig) {
+                        document.getElementById('severity1').value = severityConfig.level1 || 1;
+                        document.getElementById('severity2').value = severityConfig.level2 || 2;
+                        document.getElementById('severity3').value = severityConfig.level3 || 3;
+                    }
+                    
+                    // Sauvegarder et rafraîchir
+                    saveData();
+                    populateSelects();
+                    detectConflicts();
+                    updateAllDisplays();
+                    closeModal('importModal');
+                    
+                    // Afficher les statistiques d'import
+                    const assignmentCount = Object.keys(assignments).length;
+                    const vacationCount = Object.values(vacations).reduce((sum, v) => sum + v.length, 0);
+                    
+                    showNotification(
+                        `✅ Import réussi ! ${assignmentCount} assignations et ${vacationCount} absences importées pour ${currentYear}`, 
+                        'success'
+                    );
+                    
+                } catch (error) {
+                    console.error('Erreur d\'import:', error);
+                    showNotification('❌ Erreur lors de l\'import : ' + error.message, 'error');
+                }
+            };
+            
+            reader.onerror = function() {
+                showNotification('❌ Erreur de lecture du fichier', 'error');
+            };
+            
+            reader.readAsText(file);
+        }
+
         function exportAll() {
             const data = {
-                version: '3.0',
+                version: '3.1',
                 exportDate: new Date().toISOString(),
                 year: currentYear,
                 assignments: assignments,
                 vacations: vacations,
                 severityConfig: severityConfig,
+                teamNames: TEAM,
                 metrics: {
                     coverageRate: document.getElementById('coverageRate').textContent,
                     conflictCount: document.getElementById('conflictCount').textContent,
@@ -1696,17 +2209,16 @@
                     avgWorkload: document.getElementById('avgWorkload').textContent,
                     criticalWeeks: document.getElementById('criticalWeeks').textContent
                 },
-                conflicts: conflicts,
-                team: TEAM
+                conflicts: conflicts
             };
             
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `planning-${currentYear}-${new Date().toISOString().split('T')[0]}.json`;
+            link.download = `planning_${currentYear}_${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
-            showNotification('💾 Export complet généré', 'success');
+            showNotification('💾 Export JSON généré avec succès', 'success');
         }
 
         // Fonctions utilitaires
