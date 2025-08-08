@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning Manager Pro - Gestion Complète</title>
+    <title>Planning Manager Pro - Gestion Complète (v3.2)</title>
     <style>
         /* Reset et styles de base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -37,74 +33,36 @@
             align-items: center;
         }
 
-        .header h1 {
-            font-size: 32px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .header h1 { font-size: 32px; display: flex; align-items: center; gap: 15px; }
 
         .year-selector {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            color: white;
+            display: flex; align-items: center; gap: 15px;
+            font-size: 20px; font-weight: bold; color: white;
         }
 
         .year-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.2); border: 2px solid white;
+            color: white; cursor: pointer; font-weight: bold; transition: all 0.3s;
         }
-
-        .year-btn:hover {
-            background: white;
-            color: #764ba2;
-        }
+        .year-btn:hover { background: white; color: #764ba2; }
 
         /* Toolbar */
         .toolbar {
-            background: #2c3e50;
-            padding: 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
+            background: #2c3e50; padding: 20px; display: flex; gap: 15px; flex-wrap: wrap;
+            justify-content: space-between; align-items: center;
         }
 
         .danger-zone {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            background: rgba(231, 76, 60, 0.1);
-            border: 2px solid #e74c3c;
-            border-radius: 10px;
+            display: flex; gap: 10px; padding: 15px;
+            background: rgba(231, 76, 60, 0.1); border: 2px solid #e74c3c; border-radius: 10px;
         }
 
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            font-size: 14px;
+            padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer;
+            font-weight: bold; transition: all 0.3s; font-size: 14px;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .btn-danger { background: #e74c3c; color: white; }
         .btn-warning { background: #f39c12; color: white; }
         .btn-success { background: #27ae60; color: white; }
@@ -113,369 +71,93 @@
         .btn-dark { background: #34495e; color: white; }
 
         /* Tabs */
-        .tabs-container {
-            padding: 30px;
-        }
-
-        .tabs-nav {
-            display: flex;
-            gap: 10px;
-            border-bottom: 2px solid #ecf0f1;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            padding: 15px 25px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            color: #7f8c8d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            color: #3498db;
-            border-bottom-color: #3498db;
-        }
-
-        .tab-btn.manager-tab {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px 8px 0 0;
-            margin-left: auto;
-        }
-
-        .tab-btn.manager-tab:hover {
-            transform: translateY(-2px);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tabs-container { padding: 30px; }
+        .tabs-nav { display: flex; gap: 10px; border-bottom: 2px solid #ecf0f1; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { padding: 15px 25px; background: none; border: none; cursor: pointer; font-weight: bold; color: #7f8c8d; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .tab-btn.active { color: #3498db; border-bottom-color: #3498db; }
+        .tab-btn.manager-tab { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; margin-left: auto; }
+        .tab-btn.manager-tab:hover { transform: translateY(-2px); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         /* Metrics Dashboard */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .metric-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid #3498db;
-            transition: transform 0.3s;
+            background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db; transition: transform 0.3s;
         }
-
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .metric-card.critical {
-            border-left-color: #e74c3c;
-            background: #fff5f5;
-        }
-
-        .metric-card.warning {
-            border-left-color: #f39c12;
-            background: #fffbf0;
-        }
-
-        .metric-card.success {
-            border-left-color: #27ae60;
-            background: #f0fff4;
-        }
-
-        .metric-value {
-            font-size: 36px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .metric-label {
-            color: #7f8c8d;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .metric-trend {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #95a5a6;
-        }
+        .metric-card:hover { transform: translateY(-5px); }
+        .metric-card.critical { border-left-color: #e74c3c; background: #fff5f5; }
+        .metric-card.warning { border-left-color: #f39c12; background: #fffbf0; }
+        .metric-card.success { border-left-color: #27ae60; background: #f0fff4; }
+        .metric-value { font-size: 36px; font-weight: bold; color: #2c3e50; margin-bottom: 10px; }
+        .metric-label { color: #7f8c8d; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .metric-trend { margin-top: 10px; font-size: 12px; color: #95a5a6; }
 
         /* Config Panel */
-        .config-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .config-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-
-        .config-item:last-child {
-            border-bottom: none;
-        }
-
-        .config-label {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .config-input {
-            padding: 8px 15px;
-            border: 2px solid #ecf0f1;
-            border-radius: 8px;
-            width: 100px;
-            text-align: center;
-            font-weight: bold;
-        }
+        .config-panel { background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .config-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #ecf0f1; }
+        .config-item:last-child { border-bottom: none; }
+        .config-label { font-weight: bold; color: #2c3e50; }
+        .config-input { padding: 8px 15px; border: 2px solid #ecf0f1; border-radius: 8px; width: 100px; text-align: center; font-weight: bold; }
 
         /* Conflict Panel */
-        .conflict-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .conflict-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ecf0f1;
-        }
-
-        .severity-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
+        .conflict-panel { background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .conflict-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1; }
+        .severity-badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; }
         .severity-1 { background: #fff3cd; color: #856404; }
         .severity-2 { background: #ffeaa7; color: #d68910; }
         .severity-3 { background: #ffcccc; color: #c0392b; }
 
         /* Stats bar */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            border: 2px solid transparent;
-        }
-
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; border: 2px solid transparent; }
         .stat-box.good { border-color: #27ae60; }
         .stat-box.warning { border-color: #f39c12; }
         .stat-box.danger { border-color: #e74c3c; }
-
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
+        .stat-number { font-size: 2.5em; font-weight: bold; color: #2c3e50; }
+        .stat-label { color: #666; font-size: 0.9em; margin-top: 5px; }
 
         /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .data-table th {
-            background: #34495e;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .data-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-
-        .data-table tbody tr:hover {
-            background: #f8f9fa;
-        }
+        .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .data-table th { background: #34495e; color: white; padding: 15px; text-align: left; font-weight: bold; }
+        .data-table td { padding: 12px 15px; border-bottom: 1px solid #ecf0f1; }
+        .data-table tbody tr:hover { background: #f8f9fa; }
 
         /* Calendar views */
-        .calendar-year {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .month-block {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .month-header {
-            background: #34495e;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .weeks-container {
-            padding: 10px;
-        }
-
+        .calendar-year { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .month-block { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .month-header { background: #34495e; color: white; padding: 10px; text-align: center; font-weight: bold; }
+        .weeks-container { padding: 10px; }
         .week-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9em;
+            display: flex; justify-content: space-between; padding: 8px; margin: 5px 0; border-radius: 5px; cursor: pointer;
+            transition: all 0.3s; font-size: 0.9em;
         }
-
-        .week-row:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
-        }
-
-        .week-row.assigned {
-            background: #e8f5e9;
-            border-left: 4px solid #27ae60;
-        }
-
-        .week-row.conflict {
-            background: #ffebee;
-            border-left: 4px solid #e74c3c;
-            font-weight: bold;
-        }
+        .week-row:hover { background: #f8f9fa; transform: translateX(5px); }
+        .week-row.assigned { background: #e8f5e9; border-left: 4px solid #27ae60; }
+        .week-row.conflict { background: #ffebee; border-left: 4px solid #e74c3c; font-weight: bold; }
 
         /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-        }
-
-        .modal-content {
-            background: white;
-            margin: 50px auto;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 15px;
-            position: relative;
-        }
-
-        .modal-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ecf0f1;
-        }
-
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 30px;
-            cursor: pointer;
-            color: #999;
-        }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+        .modal-content { background: white; margin: 50px auto; padding: 30px; width: 90%; max-width: 600px; border-radius: 15px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-header { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1; }
+        .close { position: absolute; right: 20px; top: 20px; font-size: 30px; cursor: pointer; color: #999; }
 
         /* Notification */
         .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 20px 30px;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            transform: translateX(400px);
-            transition: transform 0.3s;
-            z-index: 2000;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: fixed; top: 30px; right: 30px; padding: 20px 30px; border-radius: 10px; color: white; font-weight: bold;
+            transform: translateX(400px); transition: transform 0.3s; z-index: 2000; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
+        .notification.show { transform: translateX(0); }
         .notification.success { background: linear-gradient(135deg, #27ae60, #229954); }
         .notification.error { background: linear-gradient(135deg, #e74c3c, #c0392b); }
         .notification.warning { background: linear-gradient(135deg, #f39c12, #e67e22); }
         .notification.info { background: linear-gradient(135deg, #3498db, #2980b9); }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ecf0f1;
-            border-radius: 8px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 2px solid #ecf0f1; border-radius: 8px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
@@ -498,7 +180,7 @@
                 <button class="btn btn-warning" onclick="showVacationModal()">🏖️ Ajouter Absence</button>
                 <button class="btn btn-info" onclick="exportAll()">💾 Export JSON</button>
                 <button class="btn btn-info" onclick="showImportModal()">📥 Import JSON</button>
-                <button class="btn btn-info" onclick="exportCalendars()">📅 Export Calendriers</button>
+                <button class="btn btn-success" onclick="exportCalendars()">📅 Export Calendriers</button>
                 <button class="btn btn-dark" onclick="showTeamEditModal()">👥 Éditer Équipe</button>
             </div>
             <div class="danger-zone">
@@ -541,28 +223,20 @@
                     </div>
                 </div>
 
-                <div class="calendar-year" id="yearView">
-                    <!-- Généré dynamiquement -->
-                </div>
+                <div class="calendar-year" id="yearView"></div>
             </div>
 
             <!-- Absences Tab -->
             <div id="absencesTab" class="tab-content">
                 <h2 style="margin-bottom: 20px;">Gestion des Absences</h2>
-                <div id="absencesContainer">
-                    <!-- Généré dynamiquement -->
-                </div>
+                <div id="absencesContainer"></div>
             </div>
 
             <!-- Conflicts Tab -->
             <div id="conflictsTab" class="tab-content">
                 <h2 style="margin-bottom: 20px;">Centre de Résolution des Conflits</h2>
-                <button class="btn btn-danger" style="margin-bottom: 20px;" onclick="resolveAllConflicts()">
-                    🔧 Résoudre Tous Automatiquement
-                </button>
-                <div id="conflictList">
-                    <!-- Généré dynamiquement -->
-                </div>
+                <button class="btn btn-danger" style="margin-bottom: 20px;" onclick="resolveAllConflicts()">🔧 Résoudre Tous Automatiquement</button>
+                <div id="conflictList"></div>
             </div>
 
             <!-- Team Tab -->
@@ -579,131 +253,61 @@
                             <th>Score Équilibre</th>
                         </tr>
                     </thead>
-                    <tbody id="teamTableBody">
-                        <!-- Généré dynamiquement -->
-                    </tbody>
+                    <tbody id="teamTableBody"></tbody>
                 </table>
             </div>
 
             <!-- Import/Export Tab -->
             <div id="importexportTab" class="tab-content">
                 <h2 style="margin-bottom: 30px; color: #2c3e50;">📤 Centre d'Import/Export</h2>
-                
-                <!-- Section Export -->
                 <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1;">
-                        📤 Export des Données
-                    </h3>
-                    
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1;">📤 Export des Données</h3>
                     <div style="display: grid; gap: 20px;">
-                        <!-- Export JSON -->
                         <div style="border: 2px solid #3498db; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #3498db15);">
                             <h4 style="color: #3498db; margin-bottom: 10px;">💾 Export JSON Complet</h4>
-                            <p style="color: #666; margin-bottom: 15px;">
-                                Sauvegarde complète du planning incluant toutes les assignations, absences, configuration et noms d'équipe.
-                                Format idéal pour les backups et le partage.
-                            </p>
-                            <button class="btn btn-primary" onclick="exportAll()" style="width: 100%;">
-                                💾 Télécharger le fichier JSON
-                            </button>
+                            <p style="color: #666; margin-bottom: 15px;">Sauvegarde complète du planning incluant toutes les assignations, absences, configuration et noms d'équipe.</p>
+                            <button class="btn btn-primary" onclick="exportAll()" style="width: 100%;">💾 Télécharger le fichier JSON</button>
                         </div>
-                        
-                        <!-- Export Calendriers -->
                         <div style="border: 2px solid #27ae60; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #27ae6015);">
                             <h4 style="color: #27ae60; margin-bottom: 10px;">📅 Export Calendriers Individuels</h4>
-                            <p style="color: #666; margin-bottom: 15px;">
-                                Génère un fichier .ics pour chaque membre de l'équipe avec ses périodes de piquet et absences.
-                                Compatible avec Outlook, Google Calendar, Apple Calendar, etc.
-                            </p>
+                            <p style="color: #666; margin-bottom: 15px;">Génère un fichier .ics pour chaque membre de l'équipe (Outlook/Google/Apple).</p>
                             <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
                                 <small style="color: #666;">
-                                    <strong>Contenu des calendriers :</strong><br>
-                                    • 🟢 Semaines en tant que référent principal<br>
-                                    • 🟠 Semaines en tant que backup<br>
-                                    • 🏖️ Périodes d'absence<br>
-                                    • ⏰ Rappels automatiques (J-1)
+                                    <strong>Contenu :</strong><br>
+                                    • 🟢 Semaines en principal<br>
+                                    • 🟠 Semaines en backup<br>
+                                    • 🏖️ Absences<br>
+                                    • ⏰ Rappels (J-1)
                                 </small>
                             </div>
-                            <button class="btn btn-success" onclick="exportCalendars()" style="width: 100%;">
-                                📅 Générer les ${TEAM.length} calendriers
-                            </button>
+                            <button class="btn btn-success" onclick="exportCalendars()" style="width: 100%;">📅 Générer les <span id="calendarCount">9</span> calendriers</button>
                         </div>
-                        
-                        <!-- Export Excel/CSV -->
                         <div style="border: 2px solid #f39c12; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #f39c1215);">
                             <h4 style="color: #f39c12; margin-bottom: 10px;">📊 Export Excel/CSV</h4>
-                            <p style="color: #666; margin-bottom: 15px;">
-                                Export au format CSV pour analyse dans Excel ou Google Sheets.
-                                Contient toutes les assignations de l'année en format tabulaire.
-                            </p>
-                            <button class="btn btn-warning" onclick="exportCSV()" style="width: 100%;">
-                                📊 Télécharger le fichier CSV
-                            </button>
+                            <p style="color: #666; margin-bottom: 15px;">Export CSV (assignations + absences) pour Excel/Sheets.</p>
+                            <button class="btn btn-warning" onclick="exportCSV()" style="width: 100%;">📊 Télécharger le fichier CSV</button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Section Import -->
                 <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1;">
-                        📥 Import des Données
-                    </h3>
-                    
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ecf0f1;">📥 Import des Données</h3>
                     <div style="border: 2px solid #e74c3c; border-radius: 10px; padding: 20px; background: linear-gradient(to right, white, #e74c3c15);">
                         <h4 style="color: #e74c3c; margin-bottom: 10px;">📥 Import depuis JSON</h4>
-                        
                         <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffc107;">
-                            <p style="margin: 0; color: #856404;">
-                                <strong>⚠️ Attention :</strong> L'import remplacera TOUTES les données actuelles du planning.
-                                Assurez-vous d'avoir une sauvegarde si nécessaire.
-                            </p>
+                            <p style="margin:0; color:#856404;"><strong>⚠️</strong> L'import remplace TOUTES les données.</p>
                         </div>
-                        
-                        <p style="color: #666; margin-bottom: 15px;">
-                            Restaurez un planning précédemment exporté. Le fichier doit être au format JSON généré par cette application.
-                        </p>
-                        
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            <strong style="color: #2c3e50;">Données qui seront importées :</strong>
-                            <ul style="margin: 10px 0 0 20px; color: #666;">
-                                <li>Toutes les assignations de semaines</li>
-                                <li>Toutes les périodes d'absence</li>
-                                <li>Les noms personnalisés de l'équipe</li>
-                                <li>La configuration des seuils de gravité</li>
-                                <li>L'année du planning</li>
-                            </ul>
-                        </div>
-                        
-                        <input type="file" 
-                               id="importFileInput" 
-                               accept=".json" 
-                               style="display: none;"
-                               onchange="handleDirectImport(this)">
-                        
-                        <button class="btn btn-danger" 
-                                onclick="document.getElementById('importFileInput').click()" 
-                                style="width: 100%;">
-                            📥 Sélectionner un fichier JSON à importer
-                        </button>
+                        <p style="color:#666; margin-bottom:15px;">Sélectionnez un fichier généré par cette application.</p>
+                        <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="handleDirectImport(this)">
+                        <button class="btn btn-danger" onclick="document.getElementById('importFileInput').click()" style="width: 100%;">📥 Sélectionner un fichier JSON à importer</button>
                     </div>
                 </div>
-                
-                <!-- Historique -->
                 <div style="background: #f8f9fa; border-radius: 15px; padding: 20px; margin-top: 30px;">
                     <h4 style="color: #666; margin-bottom: 15px;">📝 Informations Système</h4>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div>
-                            <strong>Version :</strong> 3.1
-                        </div>
-                        <div>
-                            <strong>Année en cours :</strong> ${currentYear}
-                        </div>
-                        <div>
-                            <strong>Membres d'équipe :</strong> ${TEAM.length}
-                        </div>
-                        <div>
-                            <strong>Dernière sauvegarde :</strong> <span id="lastSaveTime">-</span>
-                        </div>
+                        <div><strong>Version :</strong> 3.2</div>
+                        <div><strong>Année en cours :</strong> <span id="infoYear">2025</span></div>
+                        <div><strong>Membres d'équipe :</strong> <span id="teamCount">9</span></div>
+                        <div><strong>Dernière sauvegarde :</strong> <span id="lastSaveTime">-</span></div>
                     </div>
                 </div>
             </div>
@@ -711,14 +315,12 @@
             <!-- Management Tab -->
             <div id="managementTab" class="tab-content">
                 <h2 style="margin-bottom: 30px; color: #2c3e50;">🎯 Tableau de Bord Managérial</h2>
-                
-                <!-- Métriques Essentielles -->
                 <h3 style="margin-bottom: 20px;">📈 Métriques Essentielles</h3>
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="metric-value" id="coverageRate">0%</div>
                         <div class="metric-label">Taux de Couverture</div>
-                        <div class="metric-trend" id="coverageTrend">52 semaines totales</div>
+                        <div class="metric-trend" id="coverageTrend">Semaines totales</div>
                     </div>
                     <div class="metric-card critical" id="conflictCard">
                         <div class="metric-value" id="conflictCount">0</div>
@@ -747,7 +349,6 @@
                     </div>
                 </div>
 
-                <!-- Configuration des Seuils -->
                 <div class="config-panel">
                     <h3 style="margin-bottom: 20px; color: #2c3e50;">⚙️ Configuration des Seuils de Gravité</h3>
                     <div class="config-item">
@@ -762,30 +363,20 @@
                         <span class="config-label">🔴 Gravité 3 : Nombre de membres absents</span>
                         <input type="number" class="config-input" id="severity3" value="3" min="1" max="3">
                     </div>
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="applySeverityConfig()">
-                        Appliquer Configuration
-                    </button>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="applySeverityConfig()">Appliquer Configuration</button>
                 </div>
 
-                <!-- Analyse des Conflits -->
                 <div class="conflict-panel">
                     <div class="conflict-header">
                         <h3>🚨 Analyse Détaillée des Conflits</h3>
-                        <button class="btn btn-danger" onclick="resolveAllConflicts()">
-                            🔧 Résolution Automatique Globale
-                        </button>
+                        <button class="btn btn-danger" onclick="resolveAllConflicts()">🔧 Résolution Automatique Globale</button>
                     </div>
-                    <div id="managerConflictList">
-                        <!-- Généré dynamiquement -->
-                    </div>
+                    <div id="managerConflictList"></div>
                 </div>
 
-                <!-- Vue d'ensemble annuelle -->
                 <div style="background: white; border-radius: 15px; padding: 25px; margin-top: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                     <h3 style="margin-bottom: 20px;">📊 Vue d'Ensemble Annuelle</h3>
-                    <div id="yearOverview">
-                        <!-- Généré dynamiquement -->
-                    </div>
+                    <div id="yearOverview"></div>
                 </div>
             </div>
         </div>
@@ -795,9 +386,7 @@
     <div class="modal" id="assignModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('assignModal')">&times;</span>
-            <div class="modal-header">
-                <h2>📅 Assigner une Semaine</h2>
-            </div>
+            <div class="modal-header"><h2>📅 Assigner une Semaine</h2></div>
             <form onsubmit="saveAssignment(event)">
                 <div class="form-group">
                     <label>Semaine</label>
@@ -806,19 +395,13 @@
                 <div class="form-group">
                     <label>Binôme</label>
                     <div class="form-row">
-                        <select id="member1" required>
-                            <option value="">Membre 1</option>
-                        </select>
-                        <select id="member2" required>
-                            <option value="">Membre 2</option>
-                        </select>
+                        <select id="member1" required><option value="">Membre 1</option></select>
+                        <select id="member2" required><option value="">Membre 2</option></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Backup</label>
-                    <select id="backup" required>
-                        <option value="">Sélectionner</option>
-                    </select>
+                    <select id="backup" required><option value="">Sélectionner</option></select>
                 </div>
                 <button type="submit" class="btn btn-success" style="width: 100%;">Enregistrer</button>
             </form>
@@ -828,15 +411,11 @@
     <div class="modal" id="vacationModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('vacationModal')">&times;</span>
-            <div class="modal-header">
-                <h2>🏖️ Ajouter une Absence</h2>
-            </div>
+            <div class="modal-header"><h2>🏖️ Ajouter une Absence</h2></div>
             <form onsubmit="saveVacation(event)">
                 <div class="form-group">
                     <label>Référent</label>
-                    <select id="vacationMember" required>
-                        <option value="">Sélectionner</option>
-                    </select>
+                    <select id="vacationMember" required><option value="">Sélectionner</option></select>
                 </div>
                 <div class="form-group">
                     <label>Date de début</label>
@@ -855,26 +434,18 @@
     <div class="modal" id="importModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('importModal')">&times;</span>
-            <div class="modal-header">
-                <h2>📥 Importer un Planning</h2>
-            </div>
-            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #ffc107;">
-                <p style="margin: 0; color: #856404;">
-                    <strong>⚠️ Attention :</strong> L'import remplacera TOUTES les données actuelles (assignations, absences, noms d'équipe, configuration).
-                </p>
+            <div class="modal-header"><h2>📥 Importer un Planning</h2></div>
+            <div style="background:#fff3cd; padding:15px; border-radius:8px; margin-bottom:20px; border:2px solid #ffc107;">
+                <p style="margin:0; color:#856404;"><strong>⚠️</strong> L'import remplacera TOUTES les données.</p>
             </div>
             <form onsubmit="handleImport(event)">
                 <div class="form-group">
                     <label>Fichier JSON</label>
-                    <input type="file" id="importFile" accept=".json" required style="width: 100%; padding: 10px; border: 2px solid #ecf0f1; border-radius: 8px;">
+                    <input type="file" id="importFile" accept=".json" required style="width:100%; padding:10px; border:2px solid #ecf0f1; border-radius:8px;">
                 </div>
-                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button type="button" class="btn btn-dark" onclick="closeModal('importModal')">
-                        Annuler
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        📥 Importer
-                    </button>
+                <div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <button type="button" class="btn btn-dark" onclick="closeModal('importModal')">Annuler</button>
+                    <button type="submit" class="btn btn-success">📥 Importer</button>
                 </div>
             </form>
         </div>
@@ -882,28 +453,17 @@
 
     <!-- Modal Edition Equipe -->
     <div class="modal" id="teamEditModal">
-        <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+        <div class="modal-content">
             <span class="close" onclick="closeModal('teamEditModal')">&times;</span>
-            <div class="modal-header">
-                <h2>👥 Éditer les Noms des Référents</h2>
-            </div>
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <p style="margin: 0; color: #666;">
-                    <strong>💡 Conseil :</strong> Modifiez les noms des référents pour correspondre à votre équipe réelle. 
-                    Les modifications seront appliquées partout dans l'application.
-                </p>
+            <div class="modal-header"><h2>👥 Éditer les Noms des Référents</h2></div>
+            <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:20px;">
+                <p style="margin:0; color:#666;"><strong>💡 Conseil :</strong> Modifiez les noms pour correspondre à votre équipe réelle.</p>
             </div>
             <form onsubmit="saveTeamNames(event)">
-                <div id="teamEditList" style="display: grid; gap: 10px;">
-                    <!-- Généré dynamiquement -->
-                </div>
-                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button type="button" class="btn btn-warning" onclick="resetTeamNames()">
-                        🔄 Réinitialiser les noms
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        ✅ Enregistrer les modifications
-                    </button>
+                <div id="teamEditList" style="display:grid; gap:10px;"></div>
+                <div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <button type="button" class="btn btn-warning" onclick="resetTeamNames()">🔄 Réinitialiser les noms</button>
+                    <button type="submit" class="btn btn-success">✅ Enregistrer les modifications</button>
                 </div>
             </form>
         </div>
@@ -913,78 +473,61 @@
     <div class="notification" id="notification"></div>
 
     <script>
+        /************ UTILITAIRES ************/
+        function formatWeekKey(year, weekNum) {
+            return `${year}-W${String(weekNum).padStart(2, '0')}`;
+        }
+        function esc(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));}
+        function getISOWeeksInYear(year) {
+            const d = new Date(year, 11, 31);
+            const week = getWeekNumber(d);
+            return week === 1 ? getWeekNumber(new Date(year, 11, 24)) : week;
+        }
+
         // Configuration
-        let TEAM = [
-            'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
-            'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9'
-        ];
+        let TEAM = ['Référent 1','Référent 2','Référent 3','Référent 4','Référent 5','Référent 6','Référent 7','Référent 8','Référent 9'];
 
         // État global
-        let currentYear = new Date().getFullYear();
+        let currentYear = 2025;     // année pilotée par l'utilisateur
         let assignments = {};
         let vacations = {};
         let conflicts = [];
-        let severityConfig = {
-            level1: 1,
-            level2: 2,
-            level3: 3
-        };
+        let severityConfig = { level1:1, level2:2, level3:3 };
 
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
+        document.addEventListener('DOMContentLoaded', initializeApp);
 
         function initializeApp() {
             loadData();
             populateSelects();
             updateAllDisplays();
             detectConflicts();
+            updateAllDisplays();
         }
 
         function loadData() {
             const saved = localStorage.getItem('planningData');
             if (saved) {
                 const data = JSON.parse(saved);
-                
-                // Charger les noms de l'équipe si sauvegardés
+
+                // Noms d'équipe
                 if (data.teamNames) {
-                    TEAM = data.teamNames;
-                    // S'assurer qu'on a exactement 9 membres
-                    while (TEAM.length < 9) {
-                        TEAM.push(`Référent ${TEAM.length + 1}`);
-                    }
-                    while (TEAM.length > 9) {
-                        TEAM.pop();
-                    }
+                    TEAM = data.teamNames.slice(0,9);
+                    while (TEAM.length < 9) TEAM.push(`Référent ${TEAM.length + 1}`);
                 }
-                
-                // Migrer les anciennes données avec les nouveaux noms si nécessaire
-                const oldAssignments = data.assignments || {};
-                const oldVacations = data.vacations || {};
-                
-                assignments = {};
-                vacations = {};
-                
-                // Migrer les assignments
-                Object.entries(oldAssignments).forEach(([key, value]) => {
-                    assignments[key] = value;
-                });
-                
-                // Migrer les vacations
-                Object.entries(oldVacations).forEach(([key, value]) => {
-                    // Ne garder que les vacations pour les 9 premiers membres
-                    if (TEAM.includes(key) || TEAM.indexOf(key) < 9) {
-                        vacations[key] = value;
-                    }
-                });
-                
-                currentYear = data.year || currentYear;
+
+                // Importer données
+                assignments = data.assignments || {};
+                vacations   = data.vacations || {};
                 severityConfig = data.severityConfig || severityConfig;
+
+                // ⚠️ Ne pas écraser currentYear ici — c'est l'année choisie par l'utilisateur
+                // currentYear = data.year || currentYear;  // <-- SUPPRIMÉ
             }
             document.getElementById('currentYear').textContent = currentYear;
-            
-            // Mettre à jour les inputs de configuration
+            document.getElementById('infoYear').textContent = currentYear;
+            document.getElementById('teamCount').textContent = TEAM.length;
+
+            // Input config
             document.getElementById('severity1').value = severityConfig.level1;
             document.getElementById('severity2').value = severityConfig.level2;
             document.getElementById('severity3').value = severityConfig.level3;
@@ -993,9 +536,9 @@
         function saveData() {
             const data = {
                 year: currentYear,
-                assignments: assignments,
-                vacations: vacations,
-                severityConfig: severityConfig,
+                assignments,
+                vacations,
+                severityConfig,
                 teamNames: TEAM,
                 lastModified: new Date().toISOString()
             };
@@ -1003,10 +546,8 @@
         }
 
         function confirmReboot() {
-            if (confirm('⚠️ ATTENTION: Cette action effacera TOUTES les données (assignations, absences, configurations).\n\nÊtes-vous sûr de vouloir continuer?')) {
-                if (confirm('🔴 DERNIÈRE CONFIRMATION: Toutes les données seront perdues définitivement. Continuer?')) {
-                    rebootSystem();
-                }
+            if (confirm('⚠️ ATTENTION: Cette action effacera TOUTES les données.\n\nÊtes-vous sûr ?')) {
+                if (confirm('🔴 DERNIÈRE CONFIRMATION: Continuer ?')) rebootSystem();
             }
         }
 
@@ -1014,19 +555,14 @@
             assignments = {};
             vacations = {};
             conflicts = [];
-            severityConfig = {
-                level1: 1,
-                level2: 2,
-                level3: 3
-            };
-            
+            severityConfig = { level1:1, level2:2, level3:3 };
             saveData();
             updateAllDisplays();
             showNotification('🔄 SYSTÈME RÉINITIALISÉ - Toutes les données ont été effacées', 'warning');
         }
 
         function clearAllVacations() {
-            if (confirm('⚠️ Effacer toutes les absences de tous les référents?')) {
+            if (confirm('⚠️ Effacer toutes les absences de tous les référents ?')) {
                 vacations = {};
                 saveData();
                 detectConflicts();
@@ -1039,20 +575,15 @@
             const s1 = parseInt(document.getElementById('severity1').value);
             const s2 = parseInt(document.getElementById('severity2').value);
             const s3 = parseInt(document.getElementById('severity3').value);
-            
+
             if (s1 < s2 && s2 <= s3) {
-                severityConfig = {
-                    level1: s1,
-                    level2: s2,
-                    level3: s3
-                };
+                severityConfig = { level1:s1, level2:s2, level3:s3 };
                 saveData();
                 detectConflicts();
                 updateAllDisplays();
                 showNotification('✅ Configuration des seuils appliquée', 'success');
             } else {
-                showNotification('❌ Les seuils doivent être croissants (Gravité 1 < Gravité 2 ≤ Gravité 3)', 'error');
-                // Restaurer les valeurs
+                showNotification('❌ Les seuils doivent être croissants (G1 < G2 ≤ G3)', 'error');
                 document.getElementById('severity1').value = severityConfig.level1;
                 document.getElementById('severity2').value = severityConfig.level2;
                 document.getElementById('severity3').value = severityConfig.level3;
@@ -1061,24 +592,24 @@
 
         function detectConflicts() {
             conflicts = [];
-            
+
             Object.entries(assignments).forEach(([weekKey, assignment]) => {
-                const weekNum = parseInt(weekKey.split('-W')[1]);
-                const year = parseInt(weekKey.split('-W')[0]);
+                const [yearStr, wStr] = weekKey.split('-W');
+                const year = parseInt(yearStr);
+                const weekNum = parseInt(wStr);
                 const weekDates = getWeekDates(year, weekNum);
-                
                 let weekConflicts = [];
-                
+
                 [assignment.member1, assignment.member2, assignment.backup].forEach(member => {
                     if (vacations[member]) {
                         vacations[member].forEach(vacation => {
                             const vacStart = new Date(vacation.start);
                             const vacEnd = new Date(vacation.end);
-                            
                             if (datesOverlap(weekDates.start, weekDates.end, vacStart, vacEnd)) {
                                 weekConflicts.push({
+                                    year,
                                     week: weekNum,
-                                    member: member,
+                                    member,
                                     role: member === assignment.backup ? 'Backup' : 'Principal',
                                     vacationStart: vacation.start,
                                     vacationEnd: vacation.end
@@ -1087,23 +618,19 @@
                         });
                     }
                 });
-                
+
                 if (weekConflicts.length > 0) {
                     let severity = 1;
-                    if (weekConflicts.length >= severityConfig.level3) {
-                        severity = 3;
-                    } else if (weekConflicts.length >= severityConfig.level2) {
-                        severity = 2;
-                    }
-                    
-                    weekConflicts.forEach(conflict => {
-                        conflict.severity = severity;
-                        conflict.totalAbsent = weekConflicts.length;
-                        conflicts.push(conflict);
+                    if (weekConflicts.length >= severityConfig.level3) severity = 3;
+                    else if (weekConflicts.length >= severityConfig.level2) severity = 2;
+
+                    weekConflicts.forEach(c => {
+                        c.severity = severity;
+                        c.totalAbsent = weekConflicts.length;
+                        conflicts.push(c);
                     });
                 }
             });
-            
             return conflicts;
         }
 
@@ -1118,15 +645,12 @@
         }
 
         function updateStats() {
-            const totalWeeks = 52;
-            const assignedWeeks = Object.keys(assignments).filter(key => 
-                key.startsWith(`${currentYear}-W`)
-            ).length;
-            
+            const totalWeeks = getISOWeeksInYear(currentYear);
+            const assignedWeeks = Object.keys(assignments).filter(k => k.startsWith(`${currentYear}-W`)).length;
             const totalAbsences = Object.values(vacations).reduce((sum, v) => sum + v.length, 0);
-            const conflictCount = [...new Set(conflicts.map(c => c.week))].length;
+            const conflictCount = [...new Set(conflicts.filter(c=>c.year===currentYear).map(c => c.week))].length;
             const progress = Math.round((assignedWeeks / totalWeeks) * 100);
-            
+
             document.getElementById('weeksAssigned').textContent = assignedWeeks;
             document.getElementById('totalAbsences').textContent = totalAbsences;
             document.getElementById('conflictsCount').textContent = conflictCount;
@@ -1134,57 +658,44 @@
         }
 
         function updateMetrics() {
-            // Taux de couverture
-            const totalWeeks = 52;
-            const assignedWeeks = Object.keys(assignments).filter(key => 
-                key.startsWith(`${currentYear}-W`)
-            ).length;
+            const totalWeeks = getISOWeeksInYear(currentYear);
+            const assignedWeeks = Object.keys(assignments).filter(k => k.startsWith(`${currentYear}-W`)).length;
             const coverageRate = Math.round((assignedWeeks / totalWeeks) * 100);
-            
+
             document.getElementById('coverageRate').textContent = coverageRate + '%';
             document.getElementById('coverageTrend').textContent = `${assignedWeeks}/${totalWeeks} semaines`;
-            
-            // Conflits
-            const uniqueConflictWeeks = [...new Set(conflicts.map(c => c.week))];
+
+            const currentYearConflicts = conflicts.filter(c => c.year === currentYear);
+            const uniqueConflictWeeks = [...new Set(currentYearConflicts.map(c => c.week))];
             document.getElementById('conflictCount').textContent = uniqueConflictWeeks.length;
-            
-            const severity3Count = uniqueConflictWeeks.filter(week => 
-                conflicts.find(c => c.week === week && c.severity === 3)
-            ).length;
-            const severity2Count = uniqueConflictWeeks.filter(week => 
-                conflicts.find(c => c.week === week && c.severity === 2)
-            ).length;
-            
-            document.getElementById('conflictTrend').textContent = 
-                severity3Count > 0 ? `${severity3Count} critiques` : 
-                severity2Count > 0 ? `${severity2Count} majeurs` : 
-                'Aucun critique';
-            
-            // Modifier la couleur de la carte
+
+            const severity3Count = uniqueConflictWeeks.filter(week => currentYearConflicts.find(c => c.week === week && c.severity === 3)).length;
+            const severity2Count = uniqueConflictWeeks.filter(week => currentYearConflicts.find(c => c.week === week && c.severity === 2)).length;
+
+            document.getElementById('conflictTrend').textContent =
+                severity3Count > 0 ? `${severity3Count} critiques` :
+                severity2Count > 0 ? `${severity2Count} majeurs` : 'Aucun critique';
+
             const conflictCard = document.getElementById('conflictCard');
             if (conflictCard) {
                 conflictCard.className = 'metric-card';
-                if (uniqueConflictWeeks.length === 0) {
-                    conflictCard.classList.add('success');
-                } else if (severity3Count > 0) {
-                    conflictCard.classList.add('critical');
-                } else if (severity2Count > 0) {
-                    conflictCard.classList.add('warning');
-                }
+                if (uniqueConflictWeeks.length === 0) conflictCard.classList.add('success');
+                else if (severity3Count > 0) conflictCard.classList.add('critical');
+                else if (severity2Count > 0) conflictCard.classList.add('warning');
             }
-            
+
             // Taux d'absence
             let totalAbsenceDays = 0;
             Object.values(vacations).forEach(memberVacations => {
                 memberVacations.forEach(vac => {
-                    const days = Math.ceil((new Date(vac.end) - new Date(vac.start)) / (1000 * 60 * 60 * 24)) + 1;
+                    const days = Math.ceil((new Date(vac.end) - new Date(vac.start)) / 86400000) + 1;
                     totalAbsenceDays += days;
                 });
             });
             const absenceRate = Math.round((totalAbsenceDays / (365 * TEAM.length)) * 100);
             document.getElementById('absenceRate').textContent = absenceRate + '%';
             document.getElementById('absenceTrend').textContent = `${totalAbsenceDays} jours total`;
-            
+
             // Score d'équilibre
             const workloads = calculateWorkloads();
             const workloadValues = Object.values(workloads).map(w => w.total);
@@ -1192,216 +703,186 @@
             const minWorkload = Math.min(...workloadValues);
             const balanceScore = Math.round((maxWorkload - minWorkload) * 10) / 10;
             document.getElementById('balanceScore').textContent = balanceScore;
-            
+
             // Charge moyenne
-            const totalPositions = assignedWeeks * 3; // 3 positions par semaine
-            const avgWorkload = assignedWeeks > 0 ? 
-                Math.round((totalPositions / TEAM.length) * 10) / 10 : 0;
+            const totalPositions = assignedWeeks * 3;
+            const avgWorkload = assignedWeeks > 0 ? Math.round((totalPositions / TEAM.length) * 10) / 10 : 0;
             document.getElementById('avgWorkload').textContent = avgWorkload;
-            
+
             // Semaines critiques
-            const criticalWeeks = [...new Set(conflicts.filter(c => c.severity >= 2).map(c => c.week))].length;
+            const criticalWeeks = [...new Set(currentYearConflicts.filter(c => c.severity >= 2).map(c => c.week))].length;
             document.getElementById('criticalWeeks').textContent = criticalWeeks;
         }
 
         function calculateWorkloads() {
             const workloads = {};
-            
-            TEAM.forEach(member => {
-                workloads[member] = {
-                    principal: 0,
-                    backup: 0,
-                    total: 0
-                };
+            TEAM.forEach(member => { workloads[member] = { principal:0, backup:0, total:0 }; });
+
+            Object.entries(assignments).forEach(([key, assignment]) => {
+                if (assignment.member1 && workloads[assignment.member1]) workloads[assignment.member1].principal++;
+                if (assignment.member2 && workloads[assignment.member2]) workloads[assignment.member2].principal++;
+                if (assignment.backup && workloads[assignment.backup]) workloads[assignment.backup].backup++;
             });
-            
-            Object.values(assignments).forEach(assignment => {
-                if (workloads[assignment.member1]) workloads[assignment.member1].principal++;
-                if (workloads[assignment.member2]) workloads[assignment.member2].principal++;
-                if (workloads[assignment.backup]) workloads[assignment.backup].backup++;
-            });
-            
+
             Object.keys(workloads).forEach(member => {
                 workloads[member].total = workloads[member].principal + (workloads[member].backup * 0.5);
             });
-            
             return workloads;
         }
 
         function updateConflictDisplay() {
             const container = document.getElementById('conflictList');
             if (!container) return;
-            
+
             container.innerHTML = '';
-            
-            if (conflicts.length === 0) {
+            const currentYearConflicts = conflicts.filter(c => c.year === currentYear);
+
+            if (currentYearConflicts.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #27ae60;">
                         <h3>✅ Aucun conflit détecté</h3>
                         <p>Le planning est optimal</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-            
+
             const conflictsByWeek = {};
-            conflicts.forEach(conflict => {
-                if (!conflictsByWeek[conflict.week]) {
-                    conflictsByWeek[conflict.week] = [];
-                }
+            currentYearConflicts.forEach(conflict => {
+                if (!conflictsByWeek[conflict.week]) conflictsByWeek[conflict.week] = [];
                 conflictsByWeek[conflict.week].push(conflict);
             });
-            
+
             const sortedWeeks = Object.keys(conflictsByWeek).sort((a, b) => {
                 const severityA = conflictsByWeek[a][0].severity;
                 const severityB = conflictsByWeek[b][0].severity;
                 return severityB - severityA;
             });
-            
+
             sortedWeeks.forEach(week => {
                 const weekConflicts = conflictsByWeek[week];
                 const severity = weekConflicts[0].severity;
                 const totalAbsent = weekConflicts[0].totalAbsent;
-                
+
                 const conflictDiv = document.createElement('div');
                 conflictDiv.style.cssText = 'border: 2px solid #e74c3c; border-radius: 10px; padding: 20px; margin-bottom: 15px; background: #fff5f5;';
-                
+
                 let severityBadge = '';
                 if (severity === 1) severityBadge = '<span class="severity-badge severity-1">Gravité 1</span>';
                 else if (severity === 2) severityBadge = '<span class="severity-badge severity-2">Gravité 2</span>';
                 else severityBadge = '<span class="severity-badge severity-3">GRAVITÉ 3</span>';
-                
+
                 conflictDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3 style="color: #c0392b;">Semaine ${week}</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 style="color:#c0392b;">Semaine ${week}</h3>
                         ${severityBadge}
                     </div>
-                    <p style="margin-bottom: 10px;"><strong>${totalAbsent} membre(s) absent(s)</strong></p>
-                    <ul style="margin-bottom: 15px;">
+                    <p style="margin-bottom:10px;"><strong>${totalAbsent} membre(s) absent(s)</strong></p>
+                    <ul style="margin-bottom:15px;">
                         ${weekConflicts.map(c => `
-                            <li>${c.member} (${c.role}) - ${formatDateFR(new Date(c.vacationStart))} au ${formatDateFR(new Date(c.vacationEnd))}</li>
+                            <li>${esc(c.member)} (${c.role}) - ${formatDateFR(new Date(c.vacationStart))} au ${formatDateFR(new Date(c.vacationEnd))}</li>
                         `).join('')}
                     </ul>
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display:flex; gap:10px;">
                         <button class="btn btn-danger" onclick="resolveConflict(${week})">🔧 Résoudre</button>
                         <button class="btn btn-primary" onclick="editWeek(${week})">✏️ Modifier</button>
-                    </div>
-                `;
-                
+                    </div>`;
                 container.appendChild(conflictDiv);
             });
         }
 
         function updateManagerialDashboard() {
-            // Update conflict list in management tab
             const managerConflictList = document.getElementById('managerConflictList');
-            if (managerConflictList) {
-                managerConflictList.innerHTML = document.getElementById('conflictList').innerHTML;
-            }
-            
-            // Update year overview
+            if (managerConflictList) managerConflictList.innerHTML = document.getElementById('conflictList').innerHTML;
             updateYearOverview();
         }
 
         function updateYearOverview() {
             const container = document.getElementById('yearOverview');
             if (!container) return;
-            
             container.innerHTML = '';
-            
+
             const monthsGrid = document.createElement('div');
             monthsGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;';
-            
-            const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
-                          'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-            
+
+            const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+            const currentYearConflicts = conflicts.filter(c => c.year === currentYear);
+
             months.forEach((month, index) => {
                 const monthCard = document.createElement('div');
-                monthCard.style.cssText = 'background: #f8f9fa; border: 1px solid #ecf0f1; border-radius: 10px; padding: 15px;';
-                
+                monthCard.style.cssText = 'background:#f8f9fa; border:1px solid #ecf0f1; border-radius:10px; padding:15px;';
+
                 const weeks = getWeeksInMonth(currentYear, index);
-                const monthAssignments = weeks.filter(w => assignments[`${currentYear}-W${w.number}`]).length;
-                const monthConflicts = weeks.filter(w => conflicts.some(c => c.week === w.number)).length;
-                
+                const monthAssignments = weeks.filter(w => assignments[formatWeekKey(currentYear, w.number)]).length;
+                const monthConflicts = weeks.filter(w => currentYearConflicts.some(c => c.week === w.number)).length;
+
                 monthCard.innerHTML = `
-                    <h4 style="color: #2c3e50; margin-bottom: 10px;">${month}</h4>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <h4 style="color:#2c3e50; margin-bottom:10px;">${month}</h4>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
                         <span>Couverture: ${monthAssignments}/${weeks.length}</span>
-                        <span style="color: ${monthConflicts > 0 ? '#e74c3c' : '#27ae60'};">
-                            ${monthConflicts > 0 ? `⚠️ ${monthConflicts} conflits` : '✅ OK'}
+                        <span style="color:${monthConflicts>0?'#e74c3c':'#27ae60'};">
+                            ${monthConflicts>0?`⚠️ ${monthConflicts} conflits`:'✅ OK'}
                         </span>
                     </div>
-                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
                         ${weeks.map(w => {
-                            const hasAssignment = assignments[`${currentYear}-W${w.number}`];
-                            const hasConflict = conflicts.some(c => c.week === w.number);
-                            const severity = hasConflict ? conflicts.find(c => c.week === w.number).severity : 0;
-                            
+                            const hasAssignment = !!assignments[formatWeekKey(currentYear, w.number)];
+                            const foundConflict = currentYearConflicts.find(c => c.week === w.number);
+                            const hasConflict = !!foundConflict;
+                            const severity = hasConflict ? foundConflict.severity : 0;
+
                             let color = '#95a5a6';
-                            if (hasConflict) {
-                                color = severity === 3 ? '#e74c3c' : severity === 2 ? '#f39c12' : '#f1c40f';
-                            } else if (hasAssignment) {
-                                color = '#27ae60';
-                            }
-                            
-                            return `<div style="width: 30px; height: 30px; background: ${color}; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; cursor: pointer;" onclick="editWeek(${w.number})" title="Semaine ${w.number}">${w.number}</div>`;
+                            if (hasConflict) color = severity === 3 ? '#e74c3c' : (severity === 2 ? '#f39c12' : '#f1c40f');
+                            else if (hasAssignment) color = '#27ae60';
+
+                            return `<div style="width:30px; height:30px; background:${color}; border-radius:5px; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold; cursor:pointer;" onclick="editWeek(${w.number})" title="Semaine ${w.number}">${w.number}</div>`;
                         }).join('')}
-                    </div>
-                `;
-                
+                    </div>`;
                 monthsGrid.appendChild(monthCard);
             });
-            
+
             container.appendChild(monthsGrid);
         }
 
         function updateYearView() {
             const container = document.getElementById('yearView');
             if (!container) return;
-            
             container.innerHTML = '';
-            
-            const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                          'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-            
+
+            const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+            const currentYearConflicts = conflicts.filter(c => c.year === currentYear);
+
             months.forEach((month, index) => {
                 const monthBlock = document.createElement('div');
                 monthBlock.className = 'month-block';
-                
+
                 const header = document.createElement('div');
                 header.className = 'month-header';
                 header.textContent = month;
                 monthBlock.appendChild(header);
-                
+
                 const weeksContainer = document.createElement('div');
                 weeksContainer.className = 'weeks-container';
-                
+
                 const weeks = getWeeksInMonth(currentYear, index);
-                
                 weeks.forEach(week => {
                     const weekRow = document.createElement('div');
                     weekRow.className = 'week-row';
-                    
-                    const weekKey = `${currentYear}-W${week.number}`;
+
+                    const weekKey = formatWeekKey(currentYear, week.number);
                     const assignment = assignments[weekKey];
-                    const weekConflicts = conflicts.filter(c => c.week === week.number);
-                    
-                    if (weekConflicts.length > 0) {
-                        weekRow.classList.add('conflict');
-                    } else if (assignment) {
-                        weekRow.classList.add('assigned');
-                    }
-                    
+                    const weekConflicts = currentYearConflicts.filter(c => c.week === week.number);
+
+                    if (weekConflicts.length > 0) weekRow.classList.add('conflict');
+                    else if (assignment) weekRow.classList.add('assigned');
+
                     weekRow.innerHTML = `
-                        <span style="font-weight: bold;">S${week.number}</span>
-                        <span>${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}</span>
-                        ${weekConflicts.length > 0 ? '<span style="color: #e74c3c;">⚠️</span>' : ''}
-                    `;
-                    
+                        <span style="font-weight:bold;">S${week.number}</span>
+                        <span>${assignment ? `${esc(assignment.member1)} + ${esc(assignment.member2)}` : 'Non assignée'}</span>
+                        ${weekConflicts.length > 0 ? '<span style="color:#e74c3c;">⚠️</span>' : ''}`;
                     weekRow.onclick = () => editWeek(week.number);
                     weeksContainer.appendChild(weekRow);
                 });
-                
+
                 monthBlock.appendChild(weeksContainer);
                 container.appendChild(monthBlock);
             });
@@ -1410,34 +891,28 @@
         function updateAbsencesView() {
             const container = document.getElementById('absencesContainer');
             if (!container) return;
-            
             container.innerHTML = '';
-            container.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;';
-            
+            container.style.cssText = 'display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;';
+
             TEAM.forEach(member => {
                 const card = document.createElement('div');
-                card.style.cssText = 'border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #f8f9fa;';
-                
+                card.style.cssText = 'border:1px solid #ddd; border-radius:8px; padding:15px; background:#f8f9fa;';
                 const memberVacations = vacations[member] || [];
-                const totalDays = memberVacations.reduce((sum, vac) => {
-                    return sum + Math.ceil((new Date(vac.end) - new Date(vac.start)) / (1000 * 60 * 60 * 24)) + 1;
-                }, 0);
-                
+                const totalDays = memberVacations.reduce((sum, vac) => sum + Math.ceil((new Date(vac.end) - new Date(vac.start)) / 86400000) + 1, 0);
+
                 card.innerHTML = `
-                    <h4 style="color: #2c3e50; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db;">
-                        ${member} (${totalDays} jours)
+                    <h4 style="color:#2c3e50; margin-bottom:15px; padding-bottom:10px; border-bottom:2px solid #3498db;">
+                        ${esc(member)} (${totalDays} jours)
                     </h4>
-                    ${memberVacations.length === 0 ? 
-                        '<p style="color: #666; font-style: italic;">Aucune absence</p>' :
-                        memberVacations.map(vac => `
-                            <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                    ${
+                        memberVacations.length === 0
+                        ? '<p style="color:#666; font-style:italic;">Aucune absence</p>'
+                        : memberVacations.map(vac => `
+                            <div style="background:white; padding:10px; margin:5px 0; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
                                 <span>${formatDateFR(new Date(vac.start))} - ${formatDateFR(new Date(vac.end))}</span>
-                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="deleteVacation('${member}', '${vac.start}', '${vac.end}')">🗑️</button>
-                            </div>
-                        `).join('')
-                    }
-                `;
-                
+                                <button class="btn btn-danger" style="padding:5px 10px; font-size:12px;" onclick="deleteVacation('${esc(member)}','${vac.start}','${vac.end}')">🗑️</button>
+                            </div>`).join('')
+                    }`;
                 container.appendChild(card);
             });
         }
@@ -1445,31 +920,27 @@
         function updateTeamTable() {
             const tbody = document.getElementById('teamTableBody');
             if (!tbody) return;
-            
             tbody.innerHTML = '';
             const workloads = calculateWorkloads();
-            
+
             TEAM.forEach(member => {
                 const workload = workloads[member];
-                const absenceDays = vacations[member] ? 
-                    vacations[member].reduce((sum, vac) => {
-                        return sum + Math.ceil((new Date(vac.end) - new Date(vac.start)) / (1000 * 60 * 60 * 24)) + 1;
-                    }, 0) : 0;
-                
-                const chargePercent = Math.round((workload.total / 52) * 100);
+                const absenceDays = vacations[member]
+                    ? vacations[member].reduce((sum, vac) => sum + Math.ceil((new Date(vac.end) - new Date(vac.start)) / 86400000) + 1, 0)
+                    : 0;
+
+                const chargePercent = Math.round((workload.total / getISOWeeksInYear(currentYear)) * 100);
                 const avgWorkload = Object.values(workloads).reduce((sum, w) => sum + w.total, 0) / TEAM.length;
                 const balanceScore = Math.round(Math.abs(workload.total - avgWorkload) * 10) / 10;
-                
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><strong>${member}</strong></td>
+                    <td><strong>${esc(member)}</strong></td>
                     <td>${workload.principal}</td>
                     <td>${workload.backup}</td>
                     <td>${absenceDays}</td>
                     <td>${chargePercent}%</td>
-                    <td>${balanceScore}</td>
-                `;
-                
+                    <td>${balanceScore}</td>`;
                 tbody.appendChild(row);
             });
         }
@@ -1477,58 +948,41 @@
         function switchTab(event, tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
             event.target.classList.add('active');
             document.getElementById(tab + 'Tab').classList.add('active');
-            
-            if (tab === 'management') {
-                updateManagerialDashboard();
-            } else if (tab === 'importexport') {
-                updateImportExportInfo();
-            }
+
+            if (tab === 'management') updateManagerialDashboard();
+            else if (tab === 'importexport') updateImportExportInfo();
         }
 
         function updateImportExportInfo() {
-            // Mettre à jour les informations système
             const lastSave = localStorage.getItem('planningData');
             if (lastSave) {
                 const data = JSON.parse(lastSave);
-                if (data.lastModified) {
-                    const date = new Date(data.lastModified);
-                    document.getElementById('lastSaveTime').textContent = formatDateTimeFR(date);
-                }
+                if (data.lastModified) document.getElementById('lastSaveTime').textContent = formatDateTimeFR(new Date(data.lastModified));
             }
-            
-            // Mettre à jour le nombre de calendriers
-            const calendarBtn = document.querySelector('#importexportTab .btn-success');
-            if (calendarBtn) {
-                calendarBtn.innerHTML = `📅 Générer les ${TEAM.length} calendriers`;
-            }
+            document.getElementById('calendarCount').textContent = TEAM.length;
+            document.getElementById('teamCount').textContent = TEAM.length;
+            document.getElementById('infoYear').textContent = currentYear;
         }
 
         function formatDateTimeFR(date) {
-            const options = { 
-                day: '2-digit', 
-                month: 'short', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
+            const options = { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' };
             return date.toLocaleDateString('fr-FR', options);
         }
 
         function exportCSV() {
+            const totalWeeks = getISOWeeksInYear(currentYear);
             let csv = 'Semaine,Date Début,Date Fin,Membre 1,Membre 2,Backup,Statut\n';
-            
-            for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
+
+            for (let week = 1; week <= totalWeeks; week++) {
+                const weekKey = formatWeekKey(currentYear, week);
                 const weekDates = getWeekDates(currentYear, week);
                 const assignment = assignments[weekKey];
-                const hasConflict = conflicts.some(c => c.week === week);
-                
+                const hasConflict = conflicts.some(c => c.year === currentYear && c.week === week);
                 const startStr = formatDateCSV(weekDates.start);
                 const endStr = formatDateCSV(weekDates.end);
-                
+
                 if (assignment) {
                     const status = hasConflict ? 'Conflit' : 'OK';
                     csv += `${week},${startStr},${endStr},${assignment.member1},${assignment.member2},${assignment.backup},${status}\n`;
@@ -1536,25 +990,20 @@
                     csv += `${week},${startStr},${endStr},-,-,-,Non assignée\n`;
                 }
             }
-            
-            // Ajouter une section pour les absences
-            csv += '\n\nABSENCES\n';
-            csv += 'Référent,Date Début,Date Fin,Jours\n';
-            
+
+            csv += '\n\nABSENCES\nRéférent,Date Début,Date Fin,Jours\n';
             Object.entries(vacations).forEach(([member, absences]) => {
-                absences.forEach(absence => {
-                    const days = Math.ceil((new Date(absence.end) - new Date(absence.start)) / (1000 * 60 * 60 * 24)) + 1;
-                    csv += `${member},${absence.start},${absence.end},${days}\n`;
+                absences.forEach(a => {
+                    const days = Math.ceil((new Date(a.end) - new Date(a.start)) / 86400000) + 1;
+                    csv += `${member},${a.start},${a.end},${days}\n`;
                 });
             });
-            
-            // Télécharger le fichier
+
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `planning_${currentYear}_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
-            
             showNotification('📊 Export CSV généré avec succès', 'success');
         }
 
@@ -1568,158 +1017,102 @@
         function handleDirectImport(input) {
             const file = input.files[0];
             if (!file) return;
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    
-                    // Validation
-                    if (!importedData.assignments || !importedData.year) {
-                        throw new Error('Format de fichier invalide');
-                    }
-                    
-                    // Afficher un résumé avant import
+                    if (!importedData.assignments || !importedData.year) throw new Error('Format de fichier invalide');
+
                     const assignmentCount = Object.keys(importedData.assignments).length;
-                    const vacationCount = importedData.vacations ? 
-                        Object.values(importedData.vacations).reduce((sum, v) => sum + v.length, 0) : 0;
-                    
+                    const vacationCount = importedData.vacations ? Object.values(importedData.vacations).reduce((sum, v) => sum + v.length, 0) : 0;
+
                     const message = `Voulez-vous importer ce planning ?\n\n` +
                         `📅 Année : ${importedData.year}\n` +
                         `📋 Assignations : ${assignmentCount} semaines\n` +
                         `🏖️ Absences : ${vacationCount} périodes\n` +
                         `👥 Équipe : ${importedData.teamNames ? importedData.teamNames.length : 'Non définie'} membres\n\n` +
                         `⚠️ Cela remplacera TOUTES les données actuelles.`;
-                    
-                    if (!confirm(message)) {
-                        input.value = ''; // Reset file input
-                        return;
-                    }
-                    
-                    // Importer les données
+
+                    if (!confirm(message)) { input.value = ''; return; }
+
+                    // Import
                     currentYear = importedData.year || currentYear;
                     assignments = importedData.assignments || {};
                     vacations = importedData.vacations || {};
                     severityConfig = importedData.severityConfig || severityConfig;
-                    
-                    if (importedData.teamNames && Array.isArray(importedData.teamNames)) {
-                        TEAM = importedData.teamNames;
-                    } else if (importedData.team && Array.isArray(importedData.team)) {
-                        TEAM = importedData.team;
-                    }
-                    
-                    // Mettre à jour l'interface
+
+                    if (Array.isArray(importedData.teamNames)) TEAM = importedData.teamNames;
+                    else if (Array.isArray(importedData.team)) TEAM = importedData.team;
+
                     document.getElementById('currentYear').textContent = currentYear;
-                    
+                    document.getElementById('infoYear').textContent = currentYear;
+                    document.getElementById('teamCount').textContent = TEAM.length;
+
                     if (severityConfig) {
                         document.getElementById('severity1').value = severityConfig.level1 || 1;
                         document.getElementById('severity2').value = severityConfig.level2 || 2;
                         document.getElementById('severity3').value = severityConfig.level3 || 3;
                     }
-                    
-                    // Sauvegarder et rafraîchir
+
                     saveData();
                     populateSelects();
                     detectConflicts();
                     updateAllDisplays();
-                    
-                    showNotification(
-                        `✅ Import réussi ! Planning ${importedData.year} chargé avec ${assignmentCount} assignations.`, 
-                        'success'
-                    );
-                    
-                    // Reset file input
+
+                    showNotification(`✅ Import réussi ! Planning ${importedData.year} chargé avec ${assignmentCount} assignations.`, 'success');
                     input.value = '';
-                    
+
                 } catch (error) {
                     console.error('Erreur d\'import:', error);
                     showNotification('❌ Erreur lors de l\'import : ' + error.message, 'error');
                     input.value = '';
                 }
             };
-            
             reader.onerror = function() {
                 showNotification('❌ Erreur de lecture du fichier', 'error');
                 input.value = '';
             };
-            
             reader.readAsText(file);
         }
 
         function autoFillWithBalance() {
-            if (!confirm('Remplir automatiquement l\'année avec une répartition équilibrée pour 9 référents?')) return;
-            
-            // Avec 9 référents et 3 postes par semaine (2 principaux + 1 backup)
-            // Sur 52 semaines : 52 * 3 = 156 positions totales
-            // 156 / 9 = 17.33 positions par personne en moyenne
-            
-            // Stratégie : rotation systématique pour équilibrer
-            // Chaque référent aura environ 11-12 semaines en principal et 5-6 en backup
-            
+            if (!confirm('Remplir automatiquement l\'année avec une répartition équilibrée pour 9 référents ?')) return;
+
             const memberAssignments = {};
-            TEAM.forEach(member => {
-                memberAssignments[member] = {
-                    principal: 0,
-                    backup: 0,
-                    lastWeek: 0
-                };
-            });
-            
-            for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
-                
-                // Trouver les membres avec le moins d'assignations qui ne sont pas trop proches
+            TEAM.forEach(m => { memberAssignments[m] = { principal:0, backup:0, lastWeek:0 }; });
+
+            const totalWeeks = getISOWeeksInYear(currentYear);
+            for (let week = 1; week <= totalWeeks; week++) {
+                const weekKey = formatWeekKey(currentYear, week);
+
                 const availableForPrincipal = [...TEAM].sort((a, b) => {
                     const scoreA = memberAssignments[a].principal * 2 + memberAssignments[a].backup;
                     const scoreB = memberAssignments[b].principal * 2 + memberAssignments[b].backup;
-                    // Éviter d'assigner quelqu'un deux semaines de suite
                     if (week - memberAssignments[a].lastWeek < 3) return 1;
                     if (week - memberAssignments[b].lastWeek < 3) return -1;
                     return scoreA - scoreB;
                 });
-                
-                // Sélectionner les deux premiers pour le rôle principal
+
                 const member1 = availableForPrincipal[0];
                 const member2 = availableForPrincipal[1];
-                
-                // Trouver le backup parmi les restants (préférence à ceux avec moins de backups)
+
                 const availableForBackup = TEAM.filter(m => m !== member1 && m !== member2)
                     .sort((a, b) => {
-                        // Prioriser ceux avec moins de backups
                         const backupDiff = memberAssignments[a].backup - memberAssignments[b].backup;
                         if (backupDiff !== 0) return backupDiff;
-                        // Puis ceux avec moins d'assignations totales
                         const totalA = memberAssignments[a].principal + memberAssignments[a].backup;
                         const totalB = memberAssignments[b].principal + memberAssignments[b].backup;
                         return totalA - totalB;
                     });
-                
+
                 const backup = availableForBackup[0];
-                
-                // Enregistrer l'assignation
-                assignments[weekKey] = {
-                    member1: member1,
-                    member2: member2,
-                    backup: backup
-                };
-                
-                // Mettre à jour les compteurs
-                memberAssignments[member1].principal++;
-                memberAssignments[member1].lastWeek = week;
-                memberAssignments[member2].principal++;
-                memberAssignments[member2].lastWeek = week;
-                memberAssignments[backup].backup++;
-                memberAssignments[backup].lastWeek = week;
+
+                assignments[weekKey] = { member1, member2, backup };
+                memberAssignments[member1].principal++; memberAssignments[member1].lastWeek = week;
+                memberAssignments[member2].principal++; memberAssignments[member2].lastWeek = week;
+                memberAssignments[backup].backup++;     memberAssignments[backup].lastWeek = week;
             }
-            
-            // Afficher un rapport de distribution
-            console.log('Distribution finale:');
-            TEAM.forEach(member => {
-                const stats = memberAssignments[member];
-                const total = stats.principal + stats.backup;
-                console.log(`${member}: ${stats.principal} principal + ${stats.backup} backup = ${total} total`);
-            });
-            
+
             saveData();
             detectConflicts();
             updateAllDisplays();
@@ -1727,33 +1120,24 @@
         }
 
         function resolveConflict(weekNum) {
-            const weekKey = `${currentYear}-W${weekNum}`;
-            const weekConflicts = conflicts.filter(c => c.week === weekNum);
+            const weekKey = formatWeekKey(currentYear, weekNum);
+            const weekConflicts = conflicts.filter(c => c.year === currentYear && c.week === weekNum);
             const conflictMembers = weekConflicts.map(c => c.member);
             const currentAssignment = assignments[weekKey];
-            
-            // Analyser les membres disponibles
+
             const available = TEAM.filter(member => {
                 if (conflictMembers.includes(member)) return false;
-                
                 if (!vacations[member]) return true;
-                
                 const weekDates = getWeekDates(currentYear, weekNum);
-                return !vacations[member].some(vac => {
-                    const vacStart = new Date(vac.start);
-                    const vacEnd = new Date(vac.end);
+                return !vacations[member].some(v => {
+                    const vacStart = new Date(v.start);
+                    const vacEnd = new Date(v.end);
                     return datesOverlap(weekDates.start, weekDates.end, vacStart, vacEnd);
                 });
             });
-            
-            // Générer plusieurs solutions possibles
+
             const solutions = generateSolutions(available, weekNum);
-            
             if (solutions.length > 0) {
-                // Choisir la meilleure solution
-                const bestSolution = solutions[0];
-                
-                // Afficher les solutions proposées
                 showSolutionModal(weekNum, solutions, conflictMembers, currentAssignment);
             } else {
                 showNotification(`❌ Aucune solution possible pour la semaine ${weekNum} (${available.length} membres disponibles)`, 'error');
@@ -1763,221 +1147,120 @@
         function generateSolutions(available, weekNum) {
             const solutions = [];
             const workloads = calculateWorkloads();
-            
-            // Trier par charge de travail croissante
             available.sort((a, b) => workloads[a].total - workloads[b].total);
-            
-            // Solution 1: Équilibrage optimal (membres avec moins de charge)
+
             if (available.length >= 3) {
-                solutions.push({
-                    type: 'Équilibrage Optimal',
-                    description: 'Sélection basée sur la charge de travail minimale',
-                    member1: available[0],
-                    member2: available[1],
-                    backup: available[2],
-                    score: 100,
-                    color: '#27ae60'
-                });
+                solutions.push({ type:'Équilibrage Optimal', description:'Sélection basée sur la charge minimale',
+                    member1: available[0], member2: available[1], backup: available[2], score:100, color:'#27ae60' });
             }
-            
-            // Solution 2: Rotation maximale (éviter les mêmes binômes)
             if (available.length >= 6) {
-                solutions.push({
-                    type: 'Rotation Maximale',
-                    description: 'Évite la répétition des mêmes binômes',
-                    member1: available[3],
-                    member2: available[4],
-                    backup: available[5],
-                    score: 85,
-                    color: '#3498db'
-                });
+                solutions.push({ type:'Rotation Maximale', description:'Évite la répétition des mêmes binômes',
+                    member1: available[3], member2: available[4], backup: available[5], score:85, color:'#3498db' });
             }
-            
-            // Solution 3: Mix expérience (si on avait des niveaux d'expérience)
             if (available.length >= 4) {
                 const shuffled = [...available].sort(() => Math.random() - 0.5);
-                solutions.push({
-                    type: 'Répartition Aléatoire',
-                    description: 'Distribution aléatoire pour varier les équipes',
-                    member1: shuffled[0],
-                    member2: shuffled[1],
-                    backup: shuffled[2],
-                    score: 70,
-                    color: '#f39c12'
-                });
+                solutions.push({ type:'Répartition Aléatoire', description:'Distribution aléatoire pour varier les équipes',
+                    member1: shuffled[0], member2: shuffled[1], backup: shuffled[2], score:70, color:'#f39c12' });
             }
-            
-            // Calculer un score pour chaque solution
+
             solutions.forEach(sol => {
-                const m1Load = workloads[sol.member1].total;
-                const m2Load = workloads[sol.member2].total;
-                const bLoad = workloads[sol.backup].total;
-                const avgLoad = (m1Load + m2Load + bLoad) / 3;
-                
-                // Ajuster le score en fonction de l'équilibre
-                sol.adjustedScore = Math.round(sol.score - (avgLoad * 2));
+                const m1 = workloads[sol.member1].total, m2 = workloads[sol.member2].total, b = workloads[sol.backup].total;
+                const avg = (m1 + m2 + b) / 3;
+                sol.adjustedScore = Math.round(sol.score - (avg * 2));
             });
-            
-            // Trier par score ajusté
+
             solutions.sort((a, b) => b.adjustedScore - a.adjustedScore);
-            
             return solutions;
         }
 
         function showSolutionModal(weekNum, solutions, conflictMembers, currentAssignment) {
-            // Créer un modal pour afficher les solutions
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.display = 'block';
             modal.innerHTML = `
-                <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+                <div class="modal-content" style="max-width: 800px;">
                     <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
-                    <div class="modal-header">
-                        <h2>🎯 Solutions Proposées - Semaine ${weekNum}</h2>
+                    <div class="modal-header"><h2>🎯 Solutions Proposées - Semaine ${weekNum}</h2></div>
+                    <div style="background:#fff5f5; border:2px solid #e74c3c; border-radius:8px; padding:15px; margin-bottom:20px;">
+                        <h4 style="color:#c0392b; margin-bottom:10px;">⚠️ Conflit Détecté</h4>
+                        <p><strong>Membres en conflit :</strong> ${conflictMembers.map(esc).join(', ')}</p>
+                        <p><strong>Assignation actuelle :</strong> ${esc(currentAssignment.member1)} + ${esc(currentAssignment.member2)} (Backup: ${esc(currentAssignment.backup)})</p>
                     </div>
-                    
-                    <div style="background: #fff5f5; border: 2px solid #e74c3c; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                        <h4 style="color: #c0392b; margin-bottom: 10px;">⚠️ Conflit Détecté</h4>
-                        <p><strong>Membres en conflit :</strong> ${conflictMembers.join(', ')}</p>
-                        <p><strong>Assignation actuelle :</strong> ${currentAssignment.member1} + ${currentAssignment.member2} (Backup: ${currentAssignment.backup})</p>
-                    </div>
-                    
-                    <h3 style="margin-bottom: 15px;">✨ Solutions Recommandées par le Système</h3>
-                    
-                    <div style="display: grid; gap: 15px;">
+                    <h3 style="margin-bottom:15px;">✨ Solutions Recommandées par le Système</h3>
+                    <div style="display:grid; gap:15px;">
                         ${solutions.map((sol, index) => `
-                            <div style="border: 2px solid ${sol.color}; border-radius: 10px; padding: 20px; background: linear-gradient(to right, rgba(255,255,255,0.9), ${sol.color}15); cursor: pointer; transition: all 0.3s;"
-                                 onmouseover="this.style.transform='translateX(10px)'"
-                                 onmouseout="this.style.transform='translateX(0)'">
-                                
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                    <h4 style="color: ${sol.color};">
-                                        ${index === 0 ? '⭐ RECOMMANDÉ - ' : ''}${sol.type}
-                                    </h4>
-                                    <span style="background: ${sol.color}; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
-                                        Score: ${sol.adjustedScore}/100
-                                    </span>
+                            <div style="border:2px solid ${sol.color}; border-radius:10px; padding:20px; background: linear-gradient(to right, rgba(255,255,255,0.9), ${sol.color}15); cursor:pointer; transition: all .3s;"
+                                 onmouseover="this.style.transform='translateX(10px)'" onmouseout="this.style.transform='translateX(0)'">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                    <h4 style="color:${sol.color};">${index===0?'⭐ RECOMMANDÉ - ':''}${sol.type}</h4>
+                                    <span style="background:${sol.color}; color:white; padding:5px 15px; border-radius:20px; font-weight:bold;">Score: ${sol.adjustedScore}/100</span>
                                 </div>
-                                
-                                <p style="color: #666; font-style: italic; margin-bottom: 10px;">${sol.description}</p>
-                                
-                                <div style="background: white; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                                <p style="color:#666; font-style:italic; margin-bottom:10px;">${sol.description}</p>
+                                <div style="background:white; padding:10px; border-radius:5px; margin-bottom:15px;">
                                     <strong>Équipe proposée :</strong><br>
-                                    • Principal 1 : <strong>${sol.member1}</strong> (charge actuelle: ${Math.round(calculateWorkloads()[sol.member1].total)})<br>
-                                    • Principal 2 : <strong>${sol.member2}</strong> (charge actuelle: ${Math.round(calculateWorkloads()[sol.member2].total)})<br>
-                                    • Backup : <strong>${sol.backup}</strong> (charge actuelle: ${Math.round(calculateWorkloads()[sol.backup].total)})
+                                    • Principal 1 : <strong>${esc(sol.member1)}</strong><br>
+                                    • Principal 2 : <strong>${esc(sol.member2)}</strong><br>
+                                    • Backup : <strong>${esc(sol.backup)}</strong>
                                 </div>
-                                
-                                <button class="btn btn-success" style="width: 100%;" onclick="applySolution(${weekNum}, '${sol.member1}', '${sol.member2}', '${sol.backup}', this)">
-                                    ${index === 0 ? '✅ Appliquer cette solution (Recommandée)' : '✔️ Appliquer cette solution'}
-                                </button>
-                            </div>
-                        `).join('')}
+                                <button class="btn btn-success" style="width:100%;" onclick="applySolution(${weekNum}, '${sol.member1.replace(/'/g,"\\'")}', '${sol.member2.replace(/'/g,"\\'")}', '${sol.backup.replace(/'/g,"\\'")}', this)">${index===0?'✅ Appliquer cette solution (Recommandée)':'✔️ Appliquer cette solution'}</button>
+                            </div>`).join('')}
                     </div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                        <p style="color: #666; margin: 0;">
-                            <strong>💡 Conseil :</strong> Le système recommande la première solution car elle offre le meilleur équilibre de charge de travail entre les membres disponibles.
-                        </p>
+                    <div style="margin-top:20px; padding:15px; background:#f8f9fa; border-radius:8px;">
+                        <p style="color:#666; margin:0;"><strong>💡 Conseil :</strong> La première solution équilibre le mieux la charge.</p>
                     </div>
-                </div>
-            `;
-            
+                </div>`;
             document.body.appendChild(modal);
         }
 
         function applySolution(weekNum, member1, member2, backup, button) {
-            const weekKey = `${currentYear}-W${weekNum}`;
-            
-            assignments[weekKey] = {
-                member1: member1,
-                member2: member2,
-                backup: backup
-            };
-            
-            saveData();
-            detectConflicts();
-            updateAllDisplays();
-            
-            // Fermer le modal
+            const weekKey = formatWeekKey(currentYear, weekNum);
+            assignments[weekKey] = { member1, member2, backup };
+            saveData(); detectConflicts(); updateAllDisplays();
             button.closest('.modal').remove();
-            
             showNotification(`✅ Solution appliquée pour la semaine ${weekNum}`, 'success');
         }
 
         function resolveAllConflicts() {
-            const uniqueWeeks = [...new Set(conflicts.map(c => c.week))];
-            
-            if (uniqueWeeks.length === 0) {
-                showNotification('ℹ️ Aucun conflit à résoudre', 'info');
-                return;
-            }
-            
-            // Trier par gravité décroissante
+            const currentYearConflicts = conflicts.filter(c => c.year === currentYear);
+            const uniqueWeeks = [...new Set(currentYearConflicts.map(c => c.week))];
+            if (uniqueWeeks.length === 0) { showNotification('ℹ️ Aucun conflit à résoudre', 'info'); return; }
+
             uniqueWeeks.sort((a, b) => {
-                const severityA = conflicts.find(c => c.week === a).severity;
-                const severityB = conflicts.find(c => c.week === b).severity;
+                const severityA = currentYearConflicts.find(c => c.week === a).severity;
+                const severityB = currentYearConflicts.find(c => c.week === b).severity;
                 return severityB - severityA;
             });
-            
-            // Créer un rapport de résolution
-            const resolutionReport = {
-                total: uniqueWeeks.length,
-                resolved: [],
-                failed: [],
-                solutions: []
-            };
-            
+
+            const resolutionReport = { total: uniqueWeeks.length, resolved: [], failed: [], solutions: [] };
+
             uniqueWeeks.forEach(week => {
-                const weekKey = `${currentYear}-W${week}`;
-                const weekConflicts = conflicts.filter(c => c.week === week);
+                const weekKey = formatWeekKey(currentYear, week);
+                const weekConflicts = currentYearConflicts.filter(c => c.week === week);
                 const conflictMembers = weekConflicts.map(c => c.member);
-                
-                // Trouver les membres disponibles
+
                 const available = TEAM.filter(member => {
                     if (conflictMembers.includes(member)) return false;
-                    
                     if (!vacations[member]) return true;
-                    
                     const weekDates = getWeekDates(currentYear, week);
-                    return !vacations[member].some(vac => {
-                        const vacStart = new Date(vac.start);
-                        const vacEnd = new Date(vac.end);
+                    return !vacations[member].some(v => {
+                        const vacStart = new Date(v.start);
+                        const vacEnd = new Date(v.end);
                         return datesOverlap(weekDates.start, weekDates.end, vacStart, vacEnd);
                     });
                 });
-                
+
                 if (available.length >= 3) {
-                    // Générer et appliquer la meilleure solution
                     const solutions = generateSolutions(available, week);
-                    const bestSolution = solutions[0];
-                    
-                    assignments[weekKey] = {
-                        member1: bestSolution.member1,
-                        member2: bestSolution.member2,
-                        backup: bestSolution.backup
-                    };
-                    
+                    const best = solutions[0];
+                    assignments[weekKey] = { member1: best.member1, member2: best.member2, backup: best.backup };
                     resolutionReport.resolved.push(week);
-                    resolutionReport.solutions.push({
-                        week: week,
-                        solution: bestSolution,
-                        conflictMembers: conflictMembers
-                    });
+                    resolutionReport.solutions.push({ week, solution: best, conflictMembers });
                 } else {
-                    resolutionReport.failed.push({
-                        week: week,
-                        reason: `Seulement ${available.length} membres disponibles`,
-                        conflictMembers: conflictMembers
-                    });
+                    resolutionReport.failed.push({ week, reason: `Seulement ${available.length} membres disponibles`, conflictMembers });
                 }
             });
-            
-            saveData();
-            detectConflicts();
-            updateAllDisplays();
-            
-            // Afficher le rapport de résolution
+
+            saveData(); detectConflicts(); updateAllDisplays();
             showResolutionReport(resolutionReport);
         }
 
@@ -1986,89 +1269,57 @@
             modal.className = 'modal';
             modal.style.display = 'block';
             modal.innerHTML = `
-                <div class="modal-content" style="max-width: 900px; max-height: 80vh; overflow-y: auto;">
+                <div class="modal-content" style="max-width:900px;">
                     <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
-                    <div class="modal-header">
-                        <h2>📊 Rapport de Résolution Automatique</h2>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
-                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-                            <div style="font-size: 32px; font-weight: bold; color: #2c3e50;">${report.total}</div>
-                            <div style="color: #666;">Conflits Totaux</div>
+                    <div class="modal-header"><h2>📊 Rapport de Résolution Automatique</h2></div>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin-bottom:20px;">
+                        <div style="background:#f8f9fa; padding:20px; border-radius:10px; text-align:center;">
+                            <div style="font-size:32px; font-weight:bold; color:#2c3e50;">${report.total}</div><div style="color:#666;">Conflits Totaux</div>
                         </div>
-                        <div style="background: #d4edda; padding: 20px; border-radius: 10px; text-align: center;">
-                            <div style="font-size: 32px; font-weight: bold; color: #27ae60;">${report.resolved.length}</div>
-                            <div style="color: #666;">Résolus</div>
+                        <div style="background:#d4edda; padding:20px; border-radius:10px; text-align:center;">
+                            <div style="font-size:32px; font-weight:bold; color:#27ae60;">${report.resolved.length}</div><div style="color:#666;">Résolus</div>
                         </div>
-                        <div style="background: #f8d7da; padding: 20px; border-radius: 10px; text-align: center;">
-                            <div style="font-size: 32px; font-weight: bold; color: #e74c3c;">${report.failed.length}</div>
-                            <div style="color: #666;">Non Résolus</div>
+                        <div style="background:#f8d7da; padding:20px; border-radius:10px; text-align:center;">
+                            <div style="font-size:32px; font-weight:bold; color:#e74c3c;">${report.failed.length}</div><div style="color:#666;">Non Résolus</div>
                         </div>
                     </div>
-                    
-                    ${report.resolved.length > 0 ? `
-                        <h3 style="color: #27ae60; margin-bottom: 15px;">✅ Conflits Résolus (${report.resolved.length})</h3>
-                        <div style="display: grid; gap: 10px; margin-bottom: 20px;">
+                    ${report.resolved.length>0?`
+                        <h3 style="color:#27ae60; margin-bottom:15px;">✅ Conflits Résolus (${report.resolved.length})</h3>
+                        <div style="display:grid; gap:10px; margin-bottom:20px;">
                             ${report.solutions.map(sol => `
-                                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #27ae60;">
+                                <div style="background:#d4edda; padding:15px; border-radius:8px; border-left:4px solid #27ae60;">
                                     <strong>Semaine ${sol.week}</strong><br>
-                                    <span style="color: #666;">Conflits précédents : ${sol.conflictMembers.join(', ')}</span><br>
-                                    <span style="color: #155724;">
-                                        <strong>Solution appliquée (${sol.solution.type}) :</strong><br>
-                                        ${sol.solution.member1} + ${sol.solution.member2} (Backup: ${sol.solution.backup})
-                                    </span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                    
-                    ${report.failed.length > 0 ? `
-                        <h3 style="color: #e74c3c; margin-bottom: 15px;">❌ Conflits Non Résolus (${report.failed.length})</h3>
-                        <div style="display: grid; gap: 10px; margin-bottom: 20px;">
+                                    <span style="color:#666;">Conflits précédents : ${sol.conflictMembers.map(esc).join(', ')}</span><br>
+                                    <span style="color:#155724;"><strong>Solution appliquée (${sol.solution.type}) :</strong> ${esc(sol.solution.member1)} + ${esc(sol.solution.member2)} (Backup: ${esc(sol.solution.backup)})</span>
+                                </div>`).join('')}
+                        </div>`:''}
+                    ${report.failed.length>0?`
+                        <h3 style="color:#e74c3c; margin-bottom:15px;">❌ Conflits Non Résolus (${report.failed.length})</h3>
+                        <div style="display:grid; gap:10px; margin-bottom:20px;">
                             ${report.failed.map(fail => `
-                                <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                                <div style="background:#f8d7da; padding:15px; border-radius:8px; border-left:4px solid #e74c3c;">
                                     <strong>Semaine ${fail.week}</strong><br>
-                                    <span style="color: #666;">Membres en conflit : ${fail.conflictMembers.join(', ')}</span><br>
-                                    <span style="color: #721c24;">Raison : ${fail.reason}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                    
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px;">
-                        <p style="margin: 0;">
-                            <strong>📈 Résumé :</strong> Le système a résolu automatiquement 
-                            <strong>${Math.round((report.resolved.length / report.total) * 100)}%</strong> des conflits 
-                            en utilisant l'algorithme d'équilibrage optimal de charge de travail.
-                        </p>
+                                    <span style="color:#666;">Membres en conflit : ${fail.conflictMembers.map(esc).join(', ')}</span><br>
+                                    <span style="color:#721c24;">Raison : ${esc(fail.reason)}</span>
+                                </div>`).join('')}
+                        </div>`:''}
+                    <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:20px;">
+                        <p style="margin:0;"><strong>📈 Résumé :</strong> Le système a résolu automatiquement <strong>${Math.round((report.resolved.length / report.total) * 100)}%</strong> des conflits.</p>
                     </div>
-                    
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="this.parentElement.parentElement.remove()">
-                        Fermer le rapport
-                    </button>
-                </div>
-            `;
-            
+                    <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="this.closest('.modal').remove()">Fermer le rapport</button>
+                </div>`;
             document.body.appendChild(modal);
         }
 
         function deleteVacation(member, start, end) {
-            if (!confirm('Supprimer cette absence?')) return;
-            
-            vacations[member] = vacations[member].filter(v => 
-                !(v.start === start && v.end === end)
-            );
-            
-            saveData();
-            detectConflicts();
-            updateAllDisplays();
+            if (!confirm('Supprimer cette absence ?')) return;
+            vacations[member] = (vacations[member] || []).filter(v => !(v.start === start && v.end === end));
+            saveData(); detectConflicts(); updateAllDisplays();
             showNotification('✅ Absence supprimée', 'success');
         }
 
         function exportCalendars() {
             let exportCount = 0;
-            
             TEAM.forEach(member => {
                 let icsContent = 'BEGIN:VCALENDAR\r\n';
                 icsContent += 'VERSION:2.0\r\n';
@@ -2076,36 +1327,21 @@
                 icsContent += 'CALSCALE:GREGORIAN\r\n';
                 icsContent += 'METHOD:PUBLISH\r\n';
                 icsContent += `X-WR-CALNAME:Planning ${member} - ${currentYear}\r\n`;
-                icsContent += `X-WR-TIMEZONE:Europe/Paris\r\n`;
-                
-                // Parcourir toutes les semaines de l'année
+                icsContent += `X-WR-TIMEZONE:Europe/Zurich\r\n`;
+
                 Object.entries(assignments).forEach(([weekKey, assignment]) => {
                     if (!weekKey.startsWith(`${currentYear}-W`)) return;
-                    
                     const weekNum = parseInt(weekKey.split('-W')[1]);
                     const weekDates = getWeekDates(currentYear, weekNum);
-                    
-                    // Déterminer le rôle du membre
                     let role = null;
-                    let eventColor = '';
-                    
-                    if (assignment.member1 === member || assignment.member2 === member) {
-                        role = 'Référent Principal';
-                        eventColor = 'GREEN';
-                    } else if (assignment.backup === member) {
-                        role = 'Backup';
-                        eventColor = 'ORANGE';
-                    }
-                    
+                    if (assignment.member1 === member || assignment.member2 === member) role = 'Référent Principal';
+                    else if (assignment.backup === member) role = 'Backup';
                     if (role) {
-                        // Créer l'événement
                         const uid = `${weekKey}-${member.replace(/\s+/g, '_')}@planningpro`;
                         const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                        
-                        // Dates au format iCalendar (YYYYMMDD)
                         const startDate = formatDateICS(weekDates.start);
-                        const endDate = formatDateICS(new Date(weekDates.end.getTime() + 86400000)); // +1 jour pour inclure le dimanche
-                        
+                        const endDate = formatDateICS(new Date(weekDates.end.getTime() + 86400000));
+
                         icsContent += 'BEGIN:VEVENT\r\n';
                         icsContent += `UID:${uid}\r\n`;
                         icsContent += `DTSTAMP:${stamp}\r\n`;
@@ -2117,58 +1353,35 @@
                         icsContent += `Backup: ${assignment.backup}\\n`;
                         icsContent += `Rôle: ${role}\r\n`;
                         icsContent += `CATEGORIES:${role}\r\n`;
-                        icsContent += `X-APPLE-TRAVEL-ADVISORY-BEHAVIOR:AUTOMATIC\r\n`;
-                        
-                        // Ajouter une alarme 1 jour avant
-                        icsContent += 'BEGIN:VALARM\r\n';
-                        icsContent += 'TRIGGER:-P1D\r\n';
-                        icsContent += 'ACTION:DISPLAY\r\n';
-                        icsContent += `DESCRIPTION:Rappel: ${role} demain (Semaine ${weekNum})\r\n`;
-                        icsContent += 'END:VALARM\r\n';
-                        
-                        icsContent += 'END:VEVENT\r\n';
+                        icsContent += 'BEGIN:VALARM\r\nTRIGGER:-P1D\r\nACTION:DISPLAY\r\n';
+                        icsContent += `DESCRIPTION:Rappel: ${role} demain (Semaine ${weekNum})\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
                     }
                 });
-                
-                // Ajouter les périodes d'absence comme événements
+
                 if (vacations[member]) {
                     vacations[member].forEach((vacation, index) => {
                         const uid = `vacation-${member.replace(/\s+/g, '_')}-${index}@planningpro`;
                         const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                        
                         const startDate = formatDateICS(new Date(vacation.start));
                         const endDate = formatDateICS(new Date(new Date(vacation.end).getTime() + 86400000));
-                        
                         icsContent += 'BEGIN:VEVENT\r\n';
-                        icsContent += `UID:${uid}\r\n`;
-                        icsContent += `DTSTAMP:${stamp}\r\n`;
-                        icsContent += `DTSTART;VALUE=DATE:${startDate}\r\n`;
-                        icsContent += `DTEND;VALUE=DATE:${endDate}\r\n`;
-                        icsContent += `SUMMARY:🏖️ Absence - ${member}\r\n`;
-                        icsContent += `DESCRIPTION:Période d'absence\r\n`;
-                        icsContent += `CATEGORIES:ABSENCE\r\n`;
-                        icsContent += 'END:VEVENT\r\n';
+                        icsContent += `UID:${uid}\r\nDTSTAMP:${stamp}\r\nDTSTART;VALUE=DATE:${startDate}\r\nDTEND;VALUE=DATE:${endDate}\r\n`;
+                        icsContent += `SUMMARY:🏖️ Absence - ${member}\r\nDESCRIPTION:Période d'absence\r\nCATEGORIES:ABSENCE\r\nEND:VEVENT\r\n`;
                     });
                 }
-                
                 icsContent += 'END:VCALENDAR';
-                
-                // Créer et télécharger le fichier
+
                 const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 const fileName = `planning_${member.replace(/\s+/g, '_')}_${currentYear}.ics`;
                 link.download = fileName;
-                
-                // Petit délai entre chaque téléchargement pour éviter les blocages
+
                 setTimeout(() => {
                     link.click();
                     exportCount++;
-                    
                     if (exportCount === TEAM.length) {
-                        setTimeout(() => {
-                            showNotification(`📅 ${exportCount} calendriers exportés avec succès !`, 'success');
-                        }, 500);
+                        setTimeout(() => { showNotification(`📅 ${exportCount} calendriers exportés avec succès !`, 'success'); }, 500);
                     }
                 }, exportCount * 100);
             });
@@ -2181,97 +1394,61 @@
             return `${year}${month}${day}`;
         }
 
-        function showImportModal() {
-            document.getElementById('importModal').style.display = 'block';
-        }
+        function showImportModal() { document.getElementById('importModal').style.display = 'block'; }
 
         function handleImport(event) {
             event.preventDefault();
-            
             const fileInput = document.getElementById('importFile');
             const file = fileInput.files[0];
-            
-            if (!file) {
-                showNotification('❌ Veuillez sélectionner un fichier', 'error');
-                return;
-            }
-            
+            if (!file) { showNotification('❌ Veuillez sélectionner un fichier', 'error'); return; }
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    
-                    // Validation basique
-                    if (!importedData.assignments || !importedData.year) {
-                        throw new Error('Format de fichier invalide');
-                    }
-                    
-                    // Confirmation finale
-                    if (!confirm(`Importer le planning de l'année ${importedData.year} ?\n\nCela remplacera TOUTES les données actuelles.`)) {
-                        return;
-                    }
-                    
-                    // Importer les données
+                    if (!importedData.assignments || !importedData.year) throw new Error('Format de fichier invalide');
+
+                    if (!confirm(`Importer le planning de l'année ${importedData.year} ?\n\nCela remplacera TOUTES les données actuelles.`)) return;
+
                     currentYear = importedData.year || currentYear;
                     assignments = importedData.assignments || {};
                     vacations = importedData.vacations || {};
                     severityConfig = importedData.severityConfig || severityConfig;
-                    
-                    // Importer les noms d'équipe si présents
-                    if (importedData.teamNames && Array.isArray(importedData.teamNames)) {
-                        TEAM = importedData.teamNames;
-                    } else if (importedData.team && Array.isArray(importedData.team)) {
-                        TEAM = importedData.team;
-                    }
-                    
-                    // Mettre à jour l'année affichée
+
+                    if (Array.isArray(importedData.teamNames)) TEAM = importedData.teamNames;
+                    else if (Array.isArray(importedData.team)) TEAM = importedData.team;
+
                     document.getElementById('currentYear').textContent = currentYear;
-                    
-                    // Mettre à jour la configuration
+                    document.getElementById('infoYear').textContent = currentYear;
+                    document.getElementById('teamCount').textContent = TEAM.length;
+
                     if (severityConfig) {
                         document.getElementById('severity1').value = severityConfig.level1 || 1;
                         document.getElementById('severity2').value = severityConfig.level2 || 2;
                         document.getElementById('severity3').value = severityConfig.level3 || 3;
                     }
-                    
-                    // Sauvegarder et rafraîchir
-                    saveData();
-                    populateSelects();
-                    detectConflicts();
-                    updateAllDisplays();
-                    closeModal('importModal');
-                    
-                    // Afficher les statistiques d'import
+
+                    saveData(); populateSelects(); detectConflicts(); updateAllDisplays(); closeModal('importModal');
+
                     const assignmentCount = Object.keys(assignments).length;
                     const vacationCount = Object.values(vacations).reduce((sum, v) => sum + v.length, 0);
-                    
-                    showNotification(
-                        `✅ Import réussi ! ${assignmentCount} assignations et ${vacationCount} absences importées pour ${currentYear}`, 
-                        'success'
-                    );
-                    
+                    showNotification(`✅ Import réussi ! ${assignmentCount} assignations et ${vacationCount} absences importées pour ${currentYear}`, 'success');
+
                 } catch (error) {
                     console.error('Erreur d\'import:', error);
                     showNotification('❌ Erreur lors de l\'import : ' + error.message, 'error');
                 }
             };
-            
-            reader.onerror = function() {
-                showNotification('❌ Erreur de lecture du fichier', 'error');
-            };
-            
+            reader.onerror = function() { showNotification('❌ Erreur de lecture du fichier', 'error'); };
             reader.readAsText(file);
         }
 
         function exportAll() {
             const data = {
-                version: '3.1',
+                version: '3.2',
                 exportDate: new Date().toISOString(),
                 year: currentYear,
-                assignments: assignments,
-                vacations: vacations,
-                severityConfig: severityConfig,
-                teamNames: TEAM,
+                assignments, vacations, severityConfig, teamNames: TEAM,
                 metrics: {
                     coverageRate: document.getElementById('coverageRate').textContent,
                     conflictCount: document.getElementById('conflictCount').textContent,
@@ -2280,39 +1457,26 @@
                     avgWorkload: document.getElementById('avgWorkload').textContent,
                     criticalWeeks: document.getElementById('criticalWeeks').textContent
                 },
-                conflicts: conflicts
+                conflicts
             };
-            
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `planning_${currentYear}_${new Date().toISOString().split('T')[0]}.json`;
             link.click();
-            
             showNotification('💾 Export JSON généré avec succès', 'success');
         }
 
-        // Fonctions utilitaires
+        // Dates & semaines
         function getWeekDates(year, weekNum) {
             const jan1 = new Date(year, 0, 1);
             const jan1Day = jan1.getDay() || 7;
-            
             let firstThursday = new Date(year, 0, 1);
-            if (jan1Day <= 4) {
-                firstThursday.setDate(jan1.getDate() + (4 - jan1Day));
-            } else {
-                firstThursday.setDate(jan1.getDate() + (11 - jan1Day));
-            }
-            
-            const firstMonday = new Date(firstThursday);
-            firstMonday.setDate(firstThursday.getDate() - 3);
-            
-            const weekStart = new Date(firstMonday);
-            weekStart.setDate(firstMonday.getDate() + (weekNum - 1) * 7);
-            
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            
+            if (jan1Day <= 4) firstThursday.setDate(jan1.getDate() + (4 - jan1Day));
+            else firstThursday.setDate(jan1.getDate() + (11 - jan1Day));
+            const firstMonday = new Date(firstThursday); firstMonday.setDate(firstThursday.getDate() - 3);
+            const weekStart = new Date(firstMonday); weekStart.setDate(firstMonday.getDate() + (weekNum - 1) * 7);
+            const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
             return { start: weekStart, end: weekEnd };
         }
 
@@ -2320,20 +1484,12 @@
             const weeks = [];
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
-            
             let current = new Date(firstDay);
-            
             while (current <= lastDay) {
                 const weekNum = getWeekNumber(current);
-                if (!weeks.find(w => w.number === weekNum)) {
-                    weeks.push({
-                        number: weekNum,
-                        start: new Date(current)
-                    });
-                }
+                if (!weeks.find(w => w.number === weekNum)) weeks.push({ number: weekNum, start: new Date(current) });
                 current.setDate(current.getDate() + 7);
             }
-            
             return weeks;
         }
 
@@ -2345,212 +1501,158 @@
             return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
         }
 
-        function datesOverlap(start1, end1, start2, end2) {
-            return start1 <= end2 && end1 >= start2;
-        }
-
-        function formatDateFR(date) {
-            const options = { day: '2-digit', month: 'short' };
-            return date.toLocaleDateString('fr-FR', options);
-        }
+        function datesOverlap(start1, end1, start2, end2) { return start1 <= end2 && end1 >= start2; }
+        function formatDateFR(date) { const o = { day:'2-digit', month:'short' }; return date.toLocaleDateString('fr-FR', o); }
 
         function changeYear(delta) {
             currentYear += delta;
             document.getElementById('currentYear').textContent = currentYear;
-            loadData();
+            document.getElementById('infoYear').textContent = currentYear;
+            // Ne pas réécraser depuis storage, juste rafraîchir
             detectConflicts();
             updateAllDisplays();
         }
 
         function populateSelects() {
-            const selects = ['member1', 'member2', 'backup', 'vacationMember'];
+            const selects = ['member1','member2','backup','vacationMember'];
             selects.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
                     select.innerHTML = '<option value="">Sélectionner</option>';
-                    TEAM.forEach(member => {
-                        select.innerHTML += `<option value="${member}">${member}</option>`;
-                    });
+                    TEAM.forEach(member => { select.innerHTML += `<option value="${esc(member)}">${esc(member)}</option>`; });
                 }
             });
         }
 
         function showAssignModal() {
-            document.getElementById('assignModal').style.display = 'block';
+            const modal = document.getElementById('assignModal');
+            // Ajouter bouton supprimer si absent
+            const form = modal.querySelector('form');
+            let delBtn = document.getElementById('deleteAssignmentBtn');
+            if (!delBtn) {
+                delBtn = document.createElement('button');
+                delBtn.id = 'deleteAssignmentBtn';
+                delBtn.type = 'button';
+                delBtn.className = 'btn btn-danger';
+                delBtn.style = 'width:100%;margin-top:10px';
+                delBtn.textContent = '🗑️ Supprimer cette assignation';
+                delBtn.onclick = () => {
+                    const weekValue = document.getElementById('weekInput').value;
+                    if (assignments[weekValue] && confirm('Supprimer cette assignation ?')) {
+                        delete assignments[weekValue];
+                        saveData(); detectConflicts(); updateAllDisplays(); closeModal('assignModal');
+                        showNotification('🗑️ Assignation supprimée', 'warning');
+                    }
+                };
+                form.appendChild(delBtn);
+            }
+            modal.style.display = 'block';
         }
 
-        function showVacationModal() {
-            document.getElementById('vacationModal').style.display = 'block';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+        function showVacationModal() { document.getElementById('vacationModal').style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function editWeek(weekNum) {
-            const weekKey = `${currentYear}-W${weekNum.toString().padStart(2, '0')}`;
+            const weekKey = formatWeekKey(currentYear, weekNum);
             document.getElementById('weekInput').value = weekKey;
-            
-            const assignment = assignments[weekKey];
-            if (assignment) {
-                document.getElementById('member1').value = assignment.member1;
-                document.getElementById('member2').value = assignment.member2;
-                document.getElementById('backup').value = assignment.backup;
-            } else {
-                document.getElementById('member1').value = '';
-                document.getElementById('member2').value = '';
-                document.getElementById('backup').value = '';
-            }
-            
+            const a = assignments[weekKey];
+            document.getElementById('member1').value = a ? a.member1 : '';
+            document.getElementById('member2').value = a ? a.member2 : '';
+            document.getElementById('backup').value = a ? a.backup : '';
             showAssignModal();
         }
 
         function saveAssignment(event) {
             event.preventDefault();
-            
             const weekValue = document.getElementById('weekInput').value;
             const member1 = document.getElementById('member1').value;
             const member2 = document.getElementById('member2').value;
-            const backup = document.getElementById('backup').value;
-            
+            const backup  = document.getElementById('backup').value;
+
             if (member1 === member2 || member1 === backup || member2 === backup) {
-                showNotification('❌ Les membres doivent être différents', 'error');
-                return;
+                showNotification('❌ Les membres doivent être différents', 'error'); return;
             }
-            
             assignments[weekValue] = { member1, member2, backup };
-            
-            saveData();
-            closeModal('assignModal');
-            detectConflicts();
-            updateAllDisplays();
+            saveData(); closeModal('assignModal'); detectConflicts(); updateAllDisplays();
             showNotification('✅ Assignation enregistrée', 'success');
         }
 
         function saveVacation(event) {
             event.preventDefault();
-            
             const member = document.getElementById('vacationMember').value;
             const start = document.getElementById('vacationStart').value;
-            const end = document.getElementById('vacationEnd').value;
-            
-            if (new Date(end) < new Date(start)) {
-                showNotification('❌ Date de fin invalide', 'error');
-                return;
-            }
-            
-            if (!vacations[member]) {
-                vacations[member] = [];
-            }
-            
+            const end   = document.getElementById('vacationEnd').value;
+
+            if (new Date(end) < new Date(start)) { showNotification('❌ Date de fin invalide', 'error'); return; }
+            if (!vacations[member]) vacations[member] = [];
             vacations[member].push({ start, end });
-            
-            const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)) + 1;
-            
-            saveData();
-            closeModal('vacationModal');
-            detectConflicts();
-            updateAllDisplays();
+            const days = Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;
+
+            saveData(); closeModal('vacationModal'); detectConflicts(); updateAllDisplays();
             showNotification(`✅ ${days} jours d'absence enregistrés pour ${member}`, 'success');
         }
 
         function showTeamEditModal() {
             const modal = document.getElementById('teamEditModal');
             const list = document.getElementById('teamEditList');
-            
-            // S'assurer que TEAM a bien 9 membres
-            while (TEAM.length < 9) {
-                TEAM.push(`Référent ${TEAM.length + 1}`);
-            }
-            while (TEAM.length > 9) {
-                TEAM.pop();
-            }
-            
+            while (TEAM.length < 9) TEAM.push(`Référent ${TEAM.length + 1}`);
+            while (TEAM.length > 9) TEAM.pop();
+
             list.innerHTML = TEAM.map((member, index) => `
-                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: white; border-radius: 8px; border: 1px solid #ddd;">
-                    <span style="font-weight: bold; color: #666; width: 30px;">${index + 1}.</span>
-                    <input type="text" 
-                           id="teamMember${index}" 
-                           value="${member}" 
-                           required
-                           style="flex: 1; padding: 10px; border: 2px solid #ecf0f1; border-radius: 8px; font-size: 16px;"
+                <div style="display:flex; align-items:center; gap:10px; padding:10px; background:white; border-radius:8px; border:1px solid #ddd;">
+                    <span style="font-weight:bold; color:#666; width:30px;">${index + 1}.</span>
+                    <input type="text" id="teamMember${index}" value="${esc(member)}" required
+                           style="flex:1; padding:10px; border:2px solid #ecf0f1; border-radius:8px; font-size:16px;"
                            placeholder="Nom du référent ${index + 1}">
-                </div>
-            `).join('');
-            
+                </div>`).join('');
             modal.style.display = 'block';
         }
 
         function saveTeamNames(event) {
             event.preventDefault();
-            
             const oldNames = [...TEAM];
             const newNames = [];
             const nameMapping = {};
-            
-            // Collecter les nouveaux noms
+
             for (let i = 0; i < TEAM.length; i++) {
                 const newName = document.getElementById(`teamMember${i}`).value.trim();
-                if (!newName) {
-                    showNotification('❌ Tous les noms doivent être remplis', 'error');
-                    return;
-                }
+                if (!newName) { showNotification('❌ Tous les noms doivent être remplis', 'error'); return; }
                 newNames.push(newName);
                 nameMapping[oldNames[i]] = newName;
             }
-            
-            // Vérifier les doublons
             const uniqueNames = new Set(newNames);
-            if (uniqueNames.size !== newNames.length) {
-                showNotification('❌ Les noms doivent être uniques', 'error');
-                return;
-            }
-            
-            // Mettre à jour l'équipe
+            if (uniqueNames.size !== newNames.length) { showNotification('❌ Les noms doivent être uniques', 'error'); return; }
+
             TEAM = newNames;
-            
-            // Migrer les assignments
+
             const newAssignments = {};
             Object.entries(assignments).forEach(([key, value]) => {
                 newAssignments[key] = {
                     member1: nameMapping[value.member1] || value.member1,
                     member2: nameMapping[value.member2] || value.member2,
-                    backup: nameMapping[value.backup] || value.backup
+                    backup:  nameMapping[value.backup]  || value.backup
                 };
             });
             assignments = newAssignments;
-            
-            // Migrer les vacations
+
             const newVacations = {};
             Object.entries(vacations).forEach(([oldName, vacationList]) => {
                 const newName = nameMapping[oldName] || oldName;
                 newVacations[newName] = vacationList;
             });
             vacations = newVacations;
-            
-            // Sauvegarder et mettre à jour
-            saveData();
-            populateSelects();
-            detectConflicts();
-            updateAllDisplays();
-            closeModal('teamEditModal');
-            
+
+            saveData(); populateSelects(); detectConflicts(); updateAllDisplays(); closeModal('teamEditModal');
             showNotification('✅ Noms de l\'équipe mis à jour avec succès', 'success');
         }
 
         function resetTeamNames() {
-            if (!confirm('Réinitialiser tous les noms par défaut (Référent 1, Référent 2, etc.) ?')) return;
-            
-            const defaultNames = [
-                'Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5',
-                'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9'
-            ];
-            
+            if (!confirm('Réinitialiser tous les noms par défaut ?')) return;
+            const defaultNames = ['Référent 1','Référent 2','Référent 3','Référent 4','Référent 5','Référent 6','Référent 7','Référent 8','Référent 9'];
             for (let i = 0; i < defaultNames.length; i++) {
                 const input = document.getElementById(`teamMember${i}`);
                 if (input) input.value = defaultNames[i];
             }
-            
             showNotification('🔄 Noms réinitialisés (cliquez sur Enregistrer pour appliquer)', 'info');
         }
 
@@ -2558,17 +1660,12 @@
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type} show`;
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 4000);
+            setTimeout(() => { notification.classList.remove('show'); }, 4000);
         }
 
         // Fermer les modals en cliquant dehors
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
+            if (event.target.classList.contains('modal')) { event.target.style.display = 'none'; }
         };
     </script>
 </body>
