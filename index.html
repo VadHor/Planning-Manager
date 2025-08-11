@@ -954,7 +954,7 @@
                     TEAM = data.teamNames;
                     // S'assurer qu'on a exactement 9 membres
                     while (TEAM.length < 9) {
-                        TEAM.push(`Référent ${TEAM.length + 1}`);
+                        TEAM.push(Référent ${TEAM.length + 1});
                     }
                     while (TEAM.length > 9) {
                         TEAM.pop();
@@ -1124,7 +1124,7 @@
         function updateStats() {
             const totalWeeks = 52;
             const assignedWeeks = Object.keys(assignments).filter(key => 
-                key.startsWith(`${currentYear}-W`)
+                key.startsWith(${currentYear}-W)
             ).length;
             
             const totalAbsences = Object.values(vacations).reduce((sum, v) => sum + v.length, 0);
@@ -1141,12 +1141,12 @@
             // Taux de couverture
             const totalWeeks = 52;
             const assignedWeeks = Object.keys(assignments).filter(key => 
-                key.startsWith(`${currentYear}-W`)
+                key.startsWith(${currentYear}-W)
             ).length;
             const coverageRate = Math.round((assignedWeeks / totalWeeks) * 100);
             
             document.getElementById('coverageRate').textContent = coverageRate + '%';
-            document.getElementById('coverageTrend').textContent = `${assignedWeeks}/${totalWeeks} semaines`;
+            document.getElementById('coverageTrend').textContent = ${assignedWeeks}/${totalWeeks} semaines;
             
             // Conflits
             const uniqueConflictWeeks = [...new Set(conflicts.map(c => c.week))];
@@ -1160,8 +1160,8 @@
             ).length;
             
             document.getElementById('conflictTrend').textContent = 
-                severity3Count > 0 ? `${severity3Count} critiques` : 
-                severity2Count > 0 ? `${severity2Count} majeurs` : 
+                severity3Count > 0 ? ${severity3Count} critiques : 
+                severity2Count > 0 ? ${severity2Count} majeurs : 
                 'Aucun critique';
             
             // Modifier la couleur de la carte
@@ -1187,7 +1187,7 @@
             });
             const absenceRate = Math.round((totalAbsenceDays / (365 * TEAM.length)) * 100);
             document.getElementById('absenceRate').textContent = absenceRate + '%';
-            document.getElementById('absenceTrend').textContent = `${totalAbsenceDays} jours total`;
+            document.getElementById('absenceTrend').textContent = ${totalAbsenceDays} jours total;
             
             // Score d'équilibre
             const workloads = calculateWorkloads();
@@ -1239,12 +1239,12 @@
             container.innerHTML = '';
             
             if (conflicts.length === 0) {
-                container.innerHTML = `
+                container.innerHTML = 
                     <div style="text-align: center; padding: 40px; color: #27ae60;">
                         <h3>✅ Aucun conflit détecté</h3>
                         <p>Le planning est optimal</p>
                     </div>
-                `;
+                ;
                 return;
             }
             
@@ -1275,22 +1275,22 @@
                 else if (severity === 2) severityBadge = '<span class="severity-badge severity-2">Gravité 2</span>';
                 else severityBadge = '<span class="severity-badge severity-3">GRAVITÉ 3</span>';
                 
-                conflictDiv.innerHTML = `
+                conflictDiv.innerHTML = 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3 style="color: #c0392b;">Semaine ${week}</h3>
                         ${severityBadge}
                     </div>
                     <p style="margin-bottom: 10px;"><strong>${totalAbsent} membre(s) absent(s)</strong></p>
                     <ul style="margin-bottom: 15px;">
-                        ${weekConflicts.map(c => `
+                        ${weekConflicts.map(c => 
                             <li>${c.member} (${c.role}) - ${formatDateFR(new Date(c.vacationStart))} au ${formatDateFR(new Date(c.vacationEnd))}</li>
-                        `).join('')}
+                        ).join('')}
                     </ul>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-danger" onclick="resolveConflict(${week})">🔧 Résoudre</button>
                         <button class="btn btn-primary" onclick="editWeek(${week})">✏️ Modifier</button>
                     </div>
-                `;
+                ;
                 
                 container.appendChild(conflictDiv);
             });
@@ -1324,20 +1324,20 @@
                 monthCard.style.cssText = 'background: #f8f9fa; border: 1px solid #ecf0f1; border-radius: 10px; padding: 15px;';
                 
                 const weeks = getWeeksInMonth(currentYear, index);
-                const monthAssignments = weeks.filter(w => assignments[`${currentYear}-W${w.number}`]).length;
+                const monthAssignments = weeks.filter(w => assignments[${currentYear}-W${w.number}]).length;
                 const monthConflicts = weeks.filter(w => conflicts.some(c => c.week === w.number)).length;
                 
-                monthCard.innerHTML = `
+                monthCard.innerHTML = 
                     <h4 style="color: #2c3e50; margin-bottom: 10px;">${month}</h4>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                         <span>Couverture: ${monthAssignments}/${weeks.length}</span>
                         <span style="color: ${monthConflicts > 0 ? '#e74c3c' : '#27ae60'};">
-                            ${monthConflicts > 0 ? `⚠️ ${monthConflicts} conflits` : '✅ OK'}
+                            ${monthConflicts > 0 ? ⚠️ ${monthConflicts} conflits : '✅ OK'}
                         </span>
                     </div>
                     <div style="display: flex; gap: 5px; flex-wrap: wrap;">
                         ${weeks.map(w => {
-                            const hasAssignment = assignments[`${currentYear}-W${w.number}`];
+                            const hasAssignment = assignments[${currentYear}-W${w.number}];
                             const hasConflict = conflicts.some(c => c.week === w.number);
                             const severity = hasConflict ? conflicts.find(c => c.week === w.number).severity : 0;
                             
@@ -1348,10 +1348,10 @@
                                 color = '#27ae60';
                             }
                             
-                            return `<div style="width: 30px; height: 30px; background: ${color}; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; cursor: pointer;" onclick="editWeek(${w.number})" title="Semaine ${w.number}">${w.number}</div>`;
+                            return <div style="width: 30px; height: 30px; background: ${color}; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; cursor: pointer;" onclick="editWeek(${w.number})" title="Semaine ${w.number}">${w.number}</div>;
                         }).join('')}
                     </div>
-                `;
+                ;
                 
                 monthsGrid.appendChild(monthCard);
             });
@@ -1386,7 +1386,7 @@
                     const weekRow = document.createElement('div');
                     weekRow.className = 'week-row';
                     
-                    const weekKey = `${currentYear}-W${week.number}`;
+                    const weekKey = ${currentYear}-W${week.number};
                     const assignment = assignments[weekKey];
                     const weekConflicts = conflicts.filter(c => c.week === week.number);
                     
@@ -1396,11 +1396,11 @@
                         weekRow.classList.add('assigned');
                     }
                     
-                    weekRow.innerHTML = `
+                    weekRow.innerHTML = 
                         <span style="font-weight: bold;">S${week.number}</span>
-                        <span>${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}</span>
+                        <span>${assignment ? ${assignment.member1} + ${assignment.member2} : 'Non assignée'}</span>
                         ${weekConflicts.length > 0 ? '<span style="color: #e74c3c;">⚠️</span>' : ''}
-                    `;
+                    ;
                     
                     weekRow.onclick = () => editWeek(week.number);
                     weeksContainer.appendChild(weekRow);
@@ -1427,20 +1427,20 @@
                     return sum + Math.ceil((new Date(vac.end) - new Date(vac.start)) / (1000 * 60 * 60 * 24)) + 1;
                 }, 0);
                 
-                card.innerHTML = `
+                card.innerHTML = 
                     <h4 style="color: #2c3e50; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db;">
                         ${member} (${totalDays} jours)
                     </h4>
                     ${memberVacations.length === 0 ? 
                         '<p style="color: #666; font-style: italic;">Aucune absence</p>' :
-                        memberVacations.map(vac => `
+                        memberVacations.map(vac => 
                             <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
                                 <span>${formatDateFR(new Date(vac.start))} - ${formatDateFR(new Date(vac.end))}</span>
                                 <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="deleteVacation('${member}', '${vac.start}', '${vac.end}')">🗑️</button>
                             </div>
-                        `).join('')
+                        ).join('')
                     }
-                `;
+                ;
                 
                 container.appendChild(card);
             });
@@ -1465,14 +1465,14 @@
                 const balanceScore = Math.round(Math.abs(workload.total - avgWorkload) * 10) / 10;
                 
                 const row = document.createElement('tr');
-                row.innerHTML = `
+                row.innerHTML = 
                     <td><strong>${member}</strong></td>
                     <td>${workload.principal}</td>
                     <td>${workload.backup}</td>
                     <td>${absenceDays}</td>
                     <td>${chargePercent}%</td>
                     <td>${balanceScore}</td>
-                `;
+                ;
                 
                 tbody.appendChild(row);
             });
@@ -1524,7 +1524,7 @@
             let csv = 'Semaine,Date Début,Date Fin,Membre 1,Membre 2,Backup,Statut\n';
             
             for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
+                const weekKey = ${currentYear}-W${week};
                 const weekDates = getWeekDates(currentYear, week);
                 const assignment = assignments[weekKey];
                 const hasConflict = conflicts.some(c => c.week === week);
@@ -1534,9 +1534,9 @@
                 
                 if (assignment) {
                     const status = hasConflict ? 'Conflit' : 'OK';
-                    csv += `${week},${startStr},${endStr},${assignment.member1},${assignment.member2},${assignment.backup},${status}\n`;
+                    csv += ${week},${startStr},${endStr},${assignment.member1},${assignment.member2},${assignment.backup},${status}\n;
                 } else {
-                    csv += `${week},${startStr},${endStr},-,-,-,Non assignée\n`;
+                    csv += ${week},${startStr},${endStr},-,-,-,Non assignée\n;
                 }
             }
             
@@ -1547,7 +1547,7 @@
             Object.entries(vacations).forEach(([member, absences]) => {
                 absences.forEach(absence => {
                     const days = Math.ceil((new Date(absence.end) - new Date(absence.start)) / (1000 * 60 * 60 * 24)) + 1;
-                    csv += `${member},${absence.start},${absence.end},${days}\n`;
+                    csv += ${member},${absence.start},${absence.end},${days}\n;
                 });
             });
             
@@ -1555,7 +1555,7 @@
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `planning_${currentYear}_${new Date().toISOString().split('T')[0]}.csv`;
+            link.download = planning_${currentYear}_${new Date().toISOString().split('T')[0]}.csv;
             link.click();
             
             showNotification('📊 Export CSV généré avec succès', 'success');
@@ -1565,7 +1565,7 @@
             const y = date.getFullYear();
             const m = String(date.getMonth() + 1).padStart(2, '0');
             const d = String(date.getDate()).padStart(2, '0');
-            return `${d}/${m}/${y}`;
+            return ${d}/${m}/${y};
         }
 
         function handleDirectImport(input) {
@@ -1587,12 +1587,12 @@
                     const vacationCount = importedData.vacations ? 
                         Object.values(importedData.vacations).reduce((sum, v) => sum + v.length, 0) : 0;
                     
-                    const message = `Voulez-vous importer ce planning ?\n\n` +
-                        `📅 Année : ${importedData.year}\n` +
-                        `📋 Assignations : ${assignmentCount} semaines\n` +
-                        `🏖️ Absences : ${vacationCount} périodes\n` +
-                        `👥 Équipe : ${importedData.teamNames ? importedData.teamNames.length : 'Non définie'} membres\n\n` +
-                        `⚠️ Cela remplacera TOUTES les données actuelles.`;
+                    const message = Voulez-vous importer ce planning ?\n\n +
+                        📅 Année : ${importedData.year}\n +
+                        📋 Assignations : ${assignmentCount} semaines\n +
+                        🏖️ Absences : ${vacationCount} périodes\n +
+                        👥 Équipe : ${importedData.teamNames ? importedData.teamNames.length : 'Non définie'} membres\n\n +
+                        ⚠️ Cela remplacera TOUTES les données actuelles.;
                     
                     if (!confirm(message)) {
                         input.value = ''; // Reset file input
@@ -1629,7 +1629,7 @@
                     updateAllDisplays();
                     
                     showNotification(
-                        `✅ Import réussi ! Planning ${importedData.year} chargé avec ${assignmentCount} assignations.`, 
+                        ✅ Import réussi ! Planning ${importedData.year} chargé avec ${assignmentCount} assignations., 
                         'success'
                     );
                     
@@ -1671,7 +1671,7 @@
             });
             
             for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
+                const weekKey = ${currentYear}-W${week};
                 
                 // Trouver les membres avec le moins d'assignations qui ne sont pas trop proches
                 const availableForPrincipal = [...TEAM].sort((a, b) => {
@@ -1724,7 +1724,7 @@
         }
 
         function resolveConflict(weekNum) {
-            const weekKey = `${currentYear}-W${weekNum}`;
+            const weekKey = ${currentYear}-W${weekNum};
             const weekConflicts = conflicts.filter(c => c.week === weekNum);
             const conflictMembers = weekConflicts.map(c => c.member);
             const currentAssignment = assignments[weekKey];
@@ -1750,7 +1750,7 @@
                 // Afficher les solutions proposées
                 showSolutionModal(weekNum, solutions, conflictMembers, currentAssignment);
             } else {
-                showNotification(`❌ Aucune solution possible pour la semaine ${weekNum} (${available.length} membres disponibles)`, 'error');
+                showNotification(❌ Aucune solution possible pour la semaine ${weekNum} (${available.length} membres disponibles), 'error');
             }
         }
 
@@ -1822,7 +1822,7 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.display = 'block';
-            modal.innerHTML = `
+            modal.innerHTML = 
                 <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
                     <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
                     <div class="modal-header">
@@ -1838,7 +1838,7 @@
                     <h3 style="margin-bottom: 15px;">✨ Solutions Recommandées par le Système</h3>
                     
                     <div style="display: grid; gap: 15px;">
-                        ${solutions.map((sol, index) => `
+                        ${solutions.map((sol, index) => 
                             <div style="border: 2px solid ${sol.color}; border-radius: 10px; padding: 20px; background: linear-gradient(to right, rgba(255,255,255,0.9), ${sol.color}15); cursor: pointer; transition: all 0.3s;" 
                                  onmouseover="this.style.transform='translateX(10px)'" 
                                  onmouseout="this.style.transform='translateX(0)'">
@@ -1865,7 +1865,7 @@
                                     ${index === 0 ? '✅ Appliquer cette solution (Recommandée)' : '✔️ Appliquer cette solution'}
                                 </button>
                             </div>
-                        `).join('')}
+                        ).join('')}
                     </div>
                     
                     <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
@@ -1874,13 +1874,13 @@
                         </p>
                     </div>
                 </div>
-            `;
+            ;
             
             document.body.appendChild(modal);
         }
 
         function applySolution(weekNum, member1, member2, backup, button) {
-            const weekKey = `${currentYear}-W${weekNum}`;
+            const weekKey = ${currentYear}-W${weekNum};
             assignments[weekKey] = {
                 member1: member1,
                 member2: member2,
@@ -1894,7 +1894,7 @@
             // Fermer le modal
             button.closest('.modal').remove();
             
-            showNotification(`✅ Solution appliquée pour la semaine ${weekNum}`, 'success');
+            showNotification(✅ Solution appliquée pour la semaine ${weekNum}, 'success');
         }
 
         function resolveAllConflicts() {
@@ -1921,7 +1921,7 @@
             };
             
             uniqueWeeks.forEach(week => {
-                const weekKey = `${currentYear}-W${week}`;
+                const weekKey = ${currentYear}-W${week};
                 const weekConflicts = conflicts.filter(c => c.week === week);
                 const conflictMembers = weekConflicts.map(c => c.member);
                 
@@ -1959,7 +1959,7 @@
                 } else {
                     resolutionReport.failed.push({
                         week: week,
-                        reason: `Seulement ${available.length} membres disponibles`,
+                        reason: Seulement ${available.length} membres disponibles,
                         conflictMembers: conflictMembers
                     });
                 }
@@ -1977,7 +1977,7 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.display = 'block';
-            modal.innerHTML = `
+            modal.innerHTML = 
                 <div class="modal-content" style="max-width: 900px; max-height: 80vh; overflow-y: auto;">
                     <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
                     <div class="modal-header">
@@ -1999,10 +1999,10 @@
                         </div>
                     </div>
                     
-                    ${report.resolved.length > 0 ? `
+                    ${report.resolved.length > 0 ? 
                         <h3 style="color: #27ae60; margin-bottom: 15px;">✅ Conflits Résolus (${report.resolved.length})</h3>
                         <div style="display: grid; gap: 10px; margin-bottom: 20px;">
-                            ${report.solutions.map(sol => `
+                            ${report.solutions.map(sol => 
                                 <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #27ae60;">
                                     <strong>Semaine ${sol.week}</strong><br>
                                     <span style="color: #666;">Conflits précédents : ${sol.conflictMembers.join(', ')}</span><br>
@@ -2011,22 +2011,22 @@
                                         ${sol.solution.member1} + ${sol.solution.member2} (Backup: ${sol.solution.backup})
                                     </span>
                                 </div>
-                            `).join('')}
+                            ).join('')}
                         </div>
-                    ` : ''}
+                     : ''}
                     
-                    ${report.failed.length > 0 ? `
+                    ${report.failed.length > 0 ? 
                         <h3 style="color: #e74c3c; margin-bottom: 15px;">❌ Conflits Non Résolus (${report.failed.length})</h3>
                         <div style="display: grid; gap: 10px; margin-bottom: 20px;">
-                            ${report.failed.map(fail => `
+                            ${report.failed.map(fail => 
                                 <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #e74c3c;">
                                     <strong>Semaine ${fail.week}</strong><br>
                                     <span style="color: #666;">Membres en conflit : ${fail.conflictMembers.join(', ')}</span><br>
                                     <span style="color: #721c24;">Raison : ${fail.reason}</span>
                                 </div>
-                            `).join('')}
+                            ).join('')}
                         </div>
-                    ` : ''}
+                     : ''}
                     
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px;">
                         <p style="margin: 0;">
@@ -2040,7 +2040,7 @@
                         Fermer le rapport
                     </button>
                 </div>
-            `;
+            ;
             document.body.appendChild(modal);
         }
 
@@ -2066,12 +2066,12 @@
                 icsContent += 'PRODID:-//Planning Manager Pro//FR\r\n';
                 icsContent += 'CALSCALE:GREGORIAN\r\n';
                 icsContent += 'METHOD:PUBLISH\r\n';
-                icsContent += `X-WR-CALNAME:Planning ${member} - ${currentYear}\r\n`;
-                icsContent += `X-WR-TIMEZONE:Europe/Paris\r\n`;
+                icsContent += X-WR-CALNAME:Planning ${member} - ${currentYear}\r\n;
+                icsContent += X-WR-TIMEZONE:Europe/Paris\r\n;
                 
                 // Parcourir toutes les semaines de l'année
                 Object.entries(assignments).forEach(([weekKey, assignment]) => {
-                    if (!weekKey.startsWith(`${currentYear}-W`)) return;
+                    if (!weekKey.startsWith(${currentYear}-W)) return;
                     
                     const weekNum = parseInt(weekKey.split('-W')[1]);
                     const weekDates = getWeekDates(currentYear, weekNum);
@@ -2086,7 +2086,7 @@
                     }
                     
                     if (role) {
-                        const uid = `${weekKey}-${member.replace(/\s+/g, '_')}@planningpro`;
+                        const uid = ${weekKey}-${member.replace(/\s+/g, '_')}@planningpro;
                         const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
                         
                         // Dates au format iCalendar (YYYYMMDD)
@@ -2094,22 +2094,22 @@
                         const endDate = formatDateICS(new Date(weekDates.end.getTime() + 86400000));
                         
                         icsContent += 'BEGIN:VEVENT\r\n';
-                        icsContent += `UID:${uid}\r\n`;
-                        icsContent += `DTSTAMP:${stamp}\r\n`;
-                        icsContent += `DTSTART;VALUE=DATE:${startDate}\r\n`;
-                        icsContent += `DTEND;VALUE=DATE:${endDate}\r\n`;
-                        icsContent += `SUMMARY:${role} - Semaine ${weekNum}\r\n`;
-                        icsContent += `DESCRIPTION:Semaine ${weekNum} (${formatDateFR(weekDates.start)} au ${formatDateFR(weekDates.end)})\\n`;
-                        icsContent += `Équipe: ${assignment.member1} + ${assignment.member2}\\n`;
-                        icsContent += `Backup: ${assignment.backup}\\n`;
-                        icsContent += `Rôle: ${role}\r\n`;
-                        icsContent += `CATEGORIES:${role}\r\n`;
+                        icsContent += UID:${uid}\r\n;
+                        icsContent += DTSTAMP:${stamp}\r\n;
+                        icsContent += DTSTART;VALUE=DATE:${startDate}\r\n;
+                        icsContent += DTEND;VALUE=DATE:${endDate}\r\n;
+                        icsContent += SUMMARY:${role} - Semaine ${weekNum}\r\n;
+                        icsContent += DESCRIPTION:Semaine ${weekNum} (${formatDateFR(weekDates.start)} au ${formatDateFR(weekDates.end)})\\n;
+                        icsContent += Équipe: ${assignment.member1} + ${assignment.member2}\\n;
+                        icsContent += Backup: ${assignment.backup}\\n;
+                        icsContent += Rôle: ${role}\r\n;
+                        icsContent += CATEGORIES:${role}\r\n;
                         
                         // Ajouter une alarme 1 jour avant
                         icsContent += 'BEGIN:VALARM\r\n';
                         icsContent += 'TRIGGER:-P1D\r\n';
                         icsContent += 'ACTION:DISPLAY\r\n';
-                        icsContent += `DESCRIPTION:Rappel: ${role} demain (Semaine ${weekNum})\r\n`;
+                        icsContent += DESCRIPTION:Rappel: ${role} demain (Semaine ${weekNum})\r\n;
                         icsContent += 'END:VALARM\r\n';
                         
                         icsContent += 'END:VEVENT\r\n';
@@ -2119,20 +2119,20 @@
                 // Ajouter les périodes d'absence comme événements
                 if (vacations[member]) {
                     vacations[member].forEach((vacation, index) => {
-                        const uid = `vacation-${member.replace(/\s+/g, '_')}-${index}@planningpro`;
+                        const uid = vacation-${member.replace(/\s+/g, '_')}-${index}@planningpro;
                         const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
                         
                         const startDate = formatDateICS(new Date(vacation.start));
                         const endDate = formatDateICS(new Date(new Date(vacation.end).getTime() + 86400000));
                         
                         icsContent += 'BEGIN:VEVENT\r\n';
-                        icsContent += `UID:${uid}\r\n`;
-                        icsContent += `DTSTAMP:${stamp}\r\n`;
-                        icsContent += `DTSTART;VALUE=DATE:${startDate}\r\n`;
-                        icsContent += `DTEND;VALUE=DATE:${endDate}\r\n`;
-                        icsContent += `SUMMARY:🏖️ Absence - ${member}\r\n`;
-                        icsContent += `DESCRIPTION:Période d'absence\r\n`;
-                        icsContent += `CATEGORIES:ABSENCE\r\n`;
+                        icsContent += UID:${uid}\r\n;
+                        icsContent += DTSTAMP:${stamp}\r\n;
+                        icsContent += DTSTART;VALUE=DATE:${startDate}\r\n;
+                        icsContent += DTEND;VALUE=DATE:${endDate}\r\n;
+                        icsContent += SUMMARY:🏖️ Absence - ${member}\r\n;
+                        icsContent += DESCRIPTION:Période d'absence\r\n;
+                        icsContent += CATEGORIES:ABSENCE\r\n;
                         icsContent += 'END:VEVENT\r\n';
                     });
                 }
@@ -2142,7 +2142,7 @@
                 const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                const fileName = `planning_${member.replace(/\s+/g, '_')}_${currentYear}.ics`;
+                const fileName = planning_${member.replace(/\s+/g, '_')}_${currentYear}.ics;
                 link.download = fileName;
                 
                 setTimeout(() => {
@@ -2151,7 +2151,7 @@
                     
                     if (exportCount === TEAM.length) {
                         setTimeout(() => {
-                            showNotification(`📅 ${exportCount} calendriers exportés avec succès !`, 'success');
+                            showNotification(📅 ${exportCount} calendriers exportés avec succès !, 'success');
                         }, 500);
                     }
                 }, exportCount * 100);
@@ -2162,7 +2162,7 @@
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            return `${year}${month}${day}`;
+            return ${year}${month}${day};
         }
 
         function showImportModal() {
@@ -2191,7 +2191,7 @@
                     }
                     
                     // Confirmation finale
-                    if (!confirm(`Importer le planning de l'année ${importedData.year} ?\n\nCela remplacera TOUTES les données actuelles.`)) {
+                    if (!confirm(Importer le planning de l'année ${importedData.year} ?\n\nCela remplacera TOUTES les données actuelles.)) {
                         return;
                     }
                     
@@ -2232,7 +2232,7 @@
                     const vacationCount = Object.values(vacations).reduce((sum, v) => sum + v.length, 0);
                     
                     showNotification(
-                        `✅ Import réussi ! ${assignmentCount} assignations et ${vacationCount} absences importées pour ${currentYear}`, 
+                        ✅ Import réussi ! ${assignmentCount} assignations et ${vacationCount} absences importées pour ${currentYear}, 
                         'success'
                     );
                     
@@ -2272,7 +2272,7 @@
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `planning_${currentYear}_${new Date().toISOString().split('T')[0]}.json`;
+            link.download = planning_${currentYear}_${new Date().toISOString().split('T')[0]}.json;
             link.click();
             
             showNotification('💾 Export JSON généré avec succès', 'success');
@@ -2355,7 +2355,7 @@
                 if (select) {
                     select.innerHTML = '<option value="">Sélectionner</option>';
                     TEAM.forEach(member => {
-                        select.innerHTML += `<option value="${member}">${member}</option>`;
+                        select.innerHTML += <option value="${member}">${member}</option>;
                     });
                 }
             });
@@ -2374,7 +2374,7 @@
         }
 
         function editWeek(weekNum) {
-            const weekKey = `${currentYear}-W${weekNum.toString().padStart(2, '0')}`;
+            const weekKey = ${currentYear}-W${weekNum.toString().padStart(2, '0')};
             document.getElementById('weekInput').value = weekKey;
             
             const assignment = assignments[weekKey];
@@ -2437,7 +2437,7 @@
             closeModal('vacationModal');
             detectConflicts();
             updateAllDisplays();
-            showNotification(`✅ ${days} jours d'absence enregistrés pour ${member}`, 'success');
+            showNotification(✅ ${days} jours d'absence enregistrés pour ${member}, 'success');
         }
 
         function showTeamEditModal() {
@@ -2446,13 +2446,13 @@
             
             // S'assurer que TEAM a bien 9 membres
             while (TEAM.length < 9) {
-                TEAM.push(`Référent ${TEAM.length + 1}`);
+                TEAM.push(Référent ${TEAM.length + 1});
             }
             while (TEAM.length > 9) {
                 TEAM.pop();
             }
             
-            list.innerHTML = TEAM.map((member, index) => `
+            list.innerHTML = TEAM.map((member, index) => 
                 <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: white; border-radius: 8px; border: 1px solid #ddd;">
                     <span style="font-weight: bold; color: #666; width: 30px;">${index + 1}.</span>
                     <input type="text" 
@@ -2462,7 +2462,7 @@
                            style="flex: 1; padding: 10px; border: 2px solid #ecf0f1; border-radius: 8px; font-size: 16px;"
                            placeholder="Nom du référent ${index + 1}">
                 </div>
-            `).join('');
+            ).join('');
             
             modal.style.display = 'block';
         }
@@ -2476,7 +2476,7 @@
             
             // Collecter les nouveaux noms
             for (let i = 0; i < TEAM.length; i++) {
-                const newName = document.getElementById(`teamMember${i}`).value.trim();
+                const newName = document.getElementById(teamMember${i}).value.trim();
                 if (!newName) {
                     showNotification('❌ Tous les noms doivent être remplis', 'error');
                     return;
@@ -2533,7 +2533,7 @@
             ];
             
             for (let i = 0; i < defaultNames.length; i++) {
-                const input = document.getElementById(`teamMember${i}`);
+                const input = document.getElementById(teamMember${i});
                 if (input) input.value = defaultNames[i];
             }
             
@@ -2543,7 +2543,7 @@
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
-            notification.className = `notification ${type} show`;
+            notification.className = notification ${type} show;
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 4000);
