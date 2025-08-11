@@ -1,365 +1,293 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Planning Manager – Piquet / Backup (v1.1)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning Manager Pro</title>
 <style>
-  :root{
-    --bg:#0f172a; --card:#111827; --muted:#1f2937; --text:#e5e7eb;
-    --accent:#6366f1; --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
-    --grid:#1e293b; --grid-2:#0b1224; --green:#22c55e; --indigo:#6366f1;
-  }
-  *{box-sizing:border-box}
-  body{margin:0; background:#0b1024; font-family:system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif; color:var(--text); padding:20px; min-height:100vh}
-  .container{max-width:1280px; margin:0 auto}
-  .header{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border:1px solid #2a2f45; border-radius:14px; background:#0e1530}
-  .header h1{margin:0; font-size:18px}
-  .row{display:grid; gap:16px}
-  @media(min-width:1100px){.row{grid-template-columns:1.2fr 1fr}}
-  .card{margin-top:16px; padding:14px; border:1px solid #2a2f45; border-radius:14px; background:#0e1530}
-  h2{margin:0 0 10px 0; font-size:15px}
-  label{display:block; font-size:13px; margin:6px 0}
-  input,select,button{border-radius:10px; border:1px solid #2a2f45; background:#0b1224; color:var(--text); padding:9px 11px; font-size:14px; outline:none}
-  input:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(99,102,241,.15)}
-  .inline{display:flex; gap:10px; align-items:end; flex-wrap:wrap}
-  .table-wrap{overflow:auto; border-radius:12px; border:1px solid #2a2f45}
-  table{width:100%; border-collapse:collapse}
-  th,td{padding:9px 10px; border-bottom:1px solid #243; text-align:left; font-size:13px}
-  th{background:#0b1224; position:sticky; top:0; z-index:1}
-  tr:hover td{background:#0e162e}
-  .btn{cursor:pointer; transition:transform .06s ease}
-  .btn:hover{transform:translateY(-1px)}
-  .btn-primary{background:var(--accent); border-color:transparent}
-  .btn-warn{background:var(--warn); border-color:transparent}
-  .btn-danger{background:var(--danger); border-color:transparent}
-  .btn-muted{background:#0b1224}
-  .badge{padding:3px 8px; border-radius:999px; font-size:12px; border:1px solid #2a2f45}
-  .role-p{background:rgba(99,102,241,.2); border-color:rgba(99,102,241,.4)}
-  .role-b{background:rgba(16,185,129,.2); border-color:rgba(16,185,129,.35)}
-  .chip{padding:2px 8px; border-radius:6px; font-size:12px; border:1px solid #2a2f45}
-  .chip.ok{background:rgba(16,185,129,.15); border-color:rgba(16,185,129,.35)}
-  .chip.warn{background:rgba(245,158,11,.15); border-color:rgba(245,158,11,.35)}
-  .chip.danger{background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.35)}
-  .kpi{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
-  .box{background:#0b1224; border:1px solid #2a2f45; border-radius:12px; padding:10px}
-  .box h3{margin:0; font-size:12px; opacity:.8}
-  .box .val{font-size:18px; margin-top:6px}
-  .sep{height:1px; background:#2a2f45; margin:12px 0}
-  .toast{position:fixed; right:16px; bottom:16px; background:#0b1224; border:1px solid #2a2f45; padding:10px 12px; border-radius:10px; display:none}
-  /* GANTT */
-  .gantt-wrap{border:1px solid #2a2f45; border-radius:12px; overflow:auto; background:var(--grid-2)}
-  .gantt{min-width:900px; border-collapse:separate; border-spacing:0}
-  .gantt th, .gantt td{white-space:nowrap; border-right:1px solid #1f2c45; border-bottom:1px solid #1f2c45; padding:6px 8px}
-  .gantt thead th{position:sticky; top:0; background:#0b1224}
-  .gantt .member{position:sticky; left:0; z-index:2; background:#0b1224}
-  .cell{width:28px; text-align:center; font-size:12px}
-  .c-p{background:rgba(99,102,241,.45)}
-  .c-b{background:rgba(34,197,94,.45)}
-  .c-warn{outline:2px solid var(--warn)}
-  .c-danger{outline:2px solid var(--danger)}
-  .filters{display:flex; flex-wrap:wrap; gap:10px}
+    :root {
+        --bg-color: #ffffff;
+        --text-color: #222222;
+        --primary-color: #3498db;
+        --piquet-color: #2ecc71;
+        --backup-color: #f1c40f;
+        --conflit-color: #e74c3c;
+    }
+    body.dark {
+        --bg-color: #1e1e1e;
+        --text-color: #f1f1f1;
+    }
+    body {
+        background: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    button {
+        margin: 5px;
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 5px;
+    }
+    button:hover {
+        opacity: 0.8;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 10px auto;
+        width: 95%;
+    }
+    th, td {
+        border: 1px solid #ccc;
+        padding: 4px;
+        text-align: center;
+    }
+    th {
+        background: var(--primary-color);
+        color: white;
+    }
+    .gant-cell.piquet { background: var(--piquet-color); }
+    .gant-cell.backup { background: var(--backup-color); }
+    .gant-cell.conflit { background: var(--conflit-color); }
+    .controls {
+        text-align: center;
+        margin-bottom: 15px;
+    }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h1>Planning Manager — Piquet / Backup <small style="opacity:.7">v1.1</small></h1>
-    <div class="inline">
-      <button class="btn btn-warn" id="btn-resolve">Résoudre les conflits</button>
-      <button class="btn btn-primary" id="btn-ics-global">Export ICS (global)</button>
-      <button class="btn btn-muted" id="btn-ics-member">ICS par membre</button>
-      <button class="btn btn-danger" id="btn-reset">Reboot</button>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="card">
-      <h2>Équipe & Absences</h2>
-      <div class="inline">
-        <div>
-          <label>Membre</label>
-          <input id="memberName" placeholder="Nom et prénom"/>
-        </div>
-        <button class="btn btn-primary" id="btn-add-member">+ Ajouter membre</button>
-      </div>
-
-      <div class="inline" style="margin-top:10px">
-        <div>
-          <label>Membre</label>
-          <select id="vacMember"></select>
-        </div>
-        <div>
-          <label>Début</label>
-          <input type="date" id="vacStart"/>
-        </div>
-        <div>
-          <label>Fin</label>
-          <input type="date" id="vacEnd"/>
-        </div>
-        <button class="btn btn-muted" id="btn-add-vac">+ Ajouter absence</button>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>Membre</th><th>Absences (périodes)</th><th>Jours absence</th><th>Actions</th>
-          </tr></thead>
-          <tbody id="teamVacBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Affectations par semaine</h2>
-      <div class="inline">
-        <div>
-          <label>Semaine (1–52)</label>
-          <input id="weekNum" type="number" min="1" max="52" placeholder="ex. 34"/>
-        </div>
-        <div>
-          <label>Membre</label>
-          <select id="assignMember"></select>
-        </div>
-        <div>
-          <label>Rôle</label>
-          <select id="assignRole">
-            <option value="principal">Piquet</option>
-            <option value="backup">Backup</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" id="btn-add-assign">+ Ajouter</button>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="filters">
-        <div>
-          <label>Filtrer par membre</label>
-          <input id="filterMember" placeholder="Tapez un nom"/>
-        </div>
-        <div>
-          <label>Filtrer par semaine</label>
-          <input id="filterWeek" type="number" min="1" max="52" placeholder="ex. 32"/>
-        </div>
-        <div>
-          <label>Statut</label>
-          <select id="filterStatus">
-            <option value="">Tous</option>
-            <option value="ok">OK</option>
-            <option value="warn">Incomplet</option>
-            <option value="danger">Conflit</option>
-          </select>
-        </div>
-        <div>
-          <label>&nbsp;</label>
-          <button class="btn btn-muted" id="btn-clear-filters">Effacer filtres</button>
-        </div>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>Semaine</th><th>Membre</th><th>Rôle</th><th>Conflit</th><th>Actions</th>
-          </tr></thead>
-          <tbody id="assignBody"></tbody>
-        </table>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="inline">
-        <div>
-          <label>Dupliquer Semaine (source)</label>
-          <input id="dupSource" type="number" min="1" max="52" placeholder="ex. 32"/>
-        </div>
-        <div>
-          <label>Vers Semaine (cible)</label>
-          <input id="dupTarget" type="number" min="1" max="52" placeholder="ex. 33"/>
-        </div>
-        <button class="btn btn-warn" id="btn-duplicate">Dupliquer intelligemment</button>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Vue Mini‑Gantt (52 semaines)</h2>
-    <div class="gantt-wrap">
-      <table class="gantt" id="ganttTable"></table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Métriques</h2>
-    <div class="kpi">
-      <div class="box"><h3>Affectations</h3><div class="val" id="kpi-total">0</div></div>
-      <div class="box"><h3>Semaines couvertes</h3><div class="val" id="kpi-covered">0</div></div>
-      <div class="box"><h3>Conflits</h3><div class="val" id="kpi-conflicts">0</div></div>
-      <div class="box"><h3>Moy. charge</h3><div class="val" id="kpi-avg">0</div></div>
-    </div>
-
-    <div class="sep"></div>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>Membre</th><th>Piquet</th><th>Backup</th><th>Jours absence</th><th>Charge %</th><th>Écart moy.</th>
-        </tr></thead>
-        <tbody id="teamTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+<h1>Planning Manager Pro</h1>
+<div class="controls">
+    <button onclick="assignerAuto()">Assignation auto</button>
+    <button onclick="resoudreConflits()">Résoudre conflits</button>
+    <button onclick="exportICS()">Export ICS</button>
+    <button onclick="exportICSAdvanced()">Export ICS avancé</button>
+    <button onclick="dupliquerSemaine()">Duplication intelligente</button>
+    <button onclick="toggleTheme()">Mode clair / sombre</button>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="controls">
+    <label>Filtrer par référent :
+        <select id="filterRef" onchange="applyFilters()">
+            <option value="">Tous</option>
+        </select>
+    </label>
+    <label>Filtrer par rôle :
+        <select id="filterRole" onchange="applyFilters()">
+            <option value="">Tous</option>
+            <option value="PIQUET">PIQUET</option>
+            <option value="BACKUP">BACKUP</option>
+            <option value="CONFLIT">CONFLIT</option>
+            <option value="ABS">ABS</option>
+        </select>
+    </label>
+</div>
+
+<div id="planningTableContainer"></div>
+<h2 style="text-align:center">Mini-Gantt</h2>
+<div id="gantContainer"></div>
 
 <script>
-/* ====================== PERSISTENCE ====================== */
-const STORAGE_KEY = 'planning-app-v1-1';
-let STATE = { team: [], vacations: {}, assignments: [], createdAt: new Date().toISOString() };
+/* ======== Données initiales ======== */
+let referents = [
+    { nom: "Alice", role: {}, absences: [] },
+    { nom: "Bob", role: {}, absences: [] },
+    { nom: "Charlie", role: {}, absences: [] }
+];
+let semaines = Array.from({ length: 52 }, (_, i) => i + 1);
 
-function loadState(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){
-      const p = JSON.parse(raw);
-      STATE.team = p.team || [];
-      STATE.vacations = p.vacations || {};
-      STATE.assignments = p.assignments || [];
-    }
-  }catch(e){ console.warn(e) }
-}
-function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); showToast('💾 Sauvegardé'); }catch(e){} }
-function mutate(fn){ fn(); renderAll(); saveState(); }
-
-/* ======================== HELPERS ======================== */
-const q = s => document.querySelector(s);
-const ce = t => document.createElement(t);
-function fmtDate(d){ const x = new Date(d); return isNaN(+x)?'':x.toLocaleDateString('fr-CH'); }
-function daysBetween(a,b){ const d1 = new Date(a), d2 = new Date(b); if(isNaN(+d1)||isNaN(+d2)) return 0; const ms = d2 - d1; return ms<0?0:Math.ceil(ms/86400000)+1; }
-function weeksCovered(list){ return new Set(list.map(a=>a.week)).size; }
-function calcWorkloads(){ const m = {}; STATE.team.forEach(x=> m[x] = {principal:0, backup:0, total:0}); STATE.assignments.forEach(a=>{ if(!m[a.member]) return; if(a.role==='principal') m[a.member].principal++; if(a.role==='backup') m[a.member].backup++; }); Object.values(m).forEach(w=> w.total = w.principal + 0.5*w.backup); return m; }
-function averageTotal(wl){ const v = Object.values(wl).map(w=>w.total); return v.length? v.reduce((a,b)=>a+b,0)/v.length : 0; }
-function showToast(msg, ms=1400){ const t=q('#toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none', ms); }
-
-/* Absences & conflits */
-function weekStartDate(year, week){ const simple = new Date(Date.UTC(year,0,1 + (week-1)*7)); const dow = simple.getUTCDay(); const start = new Date(simple); if(dow<=4) start.setUTCDate(simple.getUTCDate()-dow+1); else start.setUTCDate(simple.getUTCDate()+8-dow); return start; }
-function memberIsAbsent(member, week){ const year = new Date().getFullYear(); const monday = weekStartDate(year, week); const sunday = new Date(monday.getTime()+6*24*3600*1000); const list = STATE.vacations[member]||[]; return list.some(v=>{ const s = new Date(v.start), e = new Date(v.end); return !(e < monday || s > sunday); }); }
-function conflictLevelForWeek(week){ const items = STATE.assignments.filter(a=>a.week===week); const p = items.filter(a=>a.role==='principal').length; const b = items.filter(a=>a.role==='backup').length; if(p>1 || b>1) return 'danger'; if(p!==1 || b!==1) return 'warn'; return 'ok'; }
-function conflictLabel(level){ if(level==='ok') return '<span class="chip ok">OK</span>'; if(level==='warn') return '<span class="chip warn">Incomplet</span>'; return '<span class="chip danger">Conflit</span>'; }
-
-/* ====================== RENDER TEAM ====================== */
-function renderTeamSelectors(){ const vacSel = q('#vacMember'), assignSel = q('#assignMember'); vacSel.innerHTML=''; assignSel.innerHTML=''; STATE.team.forEach(m=>{ let o1=ce('option'); o1.value=o1.textContent=m; vacSel.appendChild(o1); let o2=ce('option'); o2.value=o2.textContent=m; assignSel.appendChild(o2); }); }
-function calcAbsenceDays(member){ const l = STATE.vacations[member]||[]; return l.reduce((s,v)=> s + daysBetween(v.start, v.end), 0); }
-function renderTeamVacTable(){ const tb=q('#teamVacBody'); tb.innerHTML=''; STATE.team.forEach(m=>{ const vacList=(STATE.vacations[m]||[]).map(v=>`${fmtDate(v.start)} → ${fmtDate(v.end)}`).join(' • ')||'—'; const days = calcAbsenceDays(m); const tr=ce('tr'); tr.innerHTML=`<td><strong>${m}</strong></td><td>${vacList}</td><td>${days}</td><td><button class="btn btn-danger" data-del-member="${m}">Supprimer</button></td>`; tb.appendChild(tr); }); tb.querySelectorAll('[data-del-member]').forEach(b=>{ b.addEventListener('click', e=>{ const m=e.currentTarget.getAttribute('data-del-member'); if(!confirm(`Supprimer ${m} et ses données ?`)) return; mutate(()=>{ STATE.team=STATE.team.filter(x=>x!==m); delete STATE.vacations[m]; STATE.assignments=STATE.assignments.filter(a=>a.member!==m); }); }); }); }
-
-/* ==================== RENDER ASSIGNMENTS ==================== */
-let FILTERS = { member:'', week:'', status:'' };
-function getFilteredAssignments(){ return [...STATE.assignments].filter(a=>{ if(FILTERS.member){ const s = FILTERS.member.trim().toLowerCase(); if(!a.member.toLowerCase().includes(s)) return false; } if(FILTERS.week){ if(+FILTERS.week !== +a.week) return false; } if(FILTERS.status){ if(conflictLevelForWeek(a.week)!==FILTERS.status) return false; } return true; }).sort((a,b)=> a.week-b.week || a.role.localeCompare(b.role)); }
-function renderAssignTable(){ const tb=q('#assignBody'); tb.innerHTML=''; const rows = getFilteredAssignments(); rows.forEach(a=>{ const tr=ce('tr'); tr.innerHTML = `<td>Sem. ${a.week}</td><td>${a.member}</td><td><span class="badge ${a.role==='principal'?'role-p':'role-b'}">${a.role==='principal'?'Piquet':'Backup'}</span></td><td>${conflictLabel(conflictLevelForWeek(a.week))}</td><td><button class="btn btn-danger" data-del-assign="${a.week}|${a.member}|${a.role}">Supprimer</button></td>`; tb.appendChild(tr); }); tb.querySelectorAll('[data-del-assign]').forEach(b=>{ b.addEventListener('click', e=>{ const [w,m,r] = e.currentTarget.getAttribute('data-del-assign').split('|'); mutate(()=>{ STATE.assignments = STATE.assignments.filter(x=> !(x.week==+w && x.member===m && x.role===r)); }); }); }); }
-
-/* ========================= MINI‑GANTT ========================= */
-function renderGantt(){
-  const t = q('#ganttTable');
-  t.innerHTML='';
-  // header 1: semaines 1..52
-  const thead = ce('thead');
-  const trh = ce('tr');
-  const th0 = ce('th'); th0.className='member'; th0.textContent='Membre'; trh.appendChild(th0);
-  for(let w=1; w<=52; w++){ const th=ce('th'); th.className='cell'; th.textContent=w; trh.appendChild(th); }
-  thead.appendChild(trh); t.appendChild(thead);
-
-  const tbody = ce('tbody');
-  const wl = calcWorkloads(); // (peut servir plus tard)
-
-  STATE.team.forEach(m=>{
-    const tr = ce('tr');
-    const tdName = ce('td'); tdName.className='member'; tdName.textContent=m; tr.appendChild(tdName);
-    for(let w=1; w<=52; w++){
-      const td = ce('td'); td.className='cell';
-      const hasP = STATE.assignments.some(a=>a.week===w && a.member===m && a.role==='principal');
-      const hasB = STATE.assignments.some(a=>a.week===w && a.member===m && a.role==='backup');
-      if(hasP) td.classList.add('c-p');
-      if(hasB) td.classList.add('c-b');
-      const lvl = conflictLevelForWeek(w);
-      if(lvl==='warn') td.classList.add('c-warn');
-      if(lvl==='danger') td.classList.add('c-danger');
-      td.title = `S${w} – ${m}${hasP?' [Piquet]':''}${hasB?' [Backup]':''}`;
-      tr.appendChild(td);
-    }
-    tbody.appendChild(tr);
-  });
-  t.appendChild(tbody);
+/* ======== Création du tableau principal ======== */
+function renderPlanning() {
+    let html = "<table><thead><tr><th>Semaine</th>";
+    referents.forEach(r => html += `<th>${r.nom}</th>`);
+    html += "</tr></thead><tbody>";
+    semaines.forEach(semaine => {
+        html += `<tr><td>${semaine}</td>`;
+        referents.forEach((r, idx) => {
+            let role = r.absences.includes(semaine) ? "ABS" : (r.role[semaine] || "");
+            html += `<td contenteditable="true" oninput="updateRole(${idx},${semaine},this.innerText)">${role}</td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+    document.getElementById("planningTableContainer").innerHTML = html;
+    renderGantt();
+    populateFilterRef();
 }
 
-/* =========== METRICS (updateTeamTable – bug corrigé) =========== */
-function updateTeamTable(){ const tbody = document.getElementById('teamTableBody'); if(!tbody) return; tbody.innerHTML=''; const wl=calcWorkloads(); const avg=averageTotal(wl); STATE.team.forEach(m=>{ const w = wl[m]||{principal:0, backup:0, total:0}; const abs = calcAbsenceDays(m); const charge = Math.max(0, Math.min(100, Math.round((w.total/52)*100))); const balance = Math.round(Math.abs(w.total-avg)*10)/10; const tr=document.createElement('tr'); tr.innerHTML = `<td><strong>${m}</strong></td><td>${w.principal}</td><td>${w.backup}</td><td>${abs}</td><td>${charge}%</td><td>${balance}</td>`; tbody.appendChild(tr); }); q('#kpi-total').textContent = STATE.assignments.length; q('#kpi-covered').textContent = weeksCovered(STATE.assignments); const conflicts = new Set(); STATE.assignments.forEach(a=>{ const lvl = conflictLevelForWeek(a.week); if(lvl!=='ok') conflicts.add(a.week); }); q('#kpi-conflicts').textContent = conflicts.size; q('#kpi-avg').textContent = Math.round(avg*10)/10; }
-function renderAll(){ renderTeamSelectors(); renderTeamVacTable(); renderAssignTable(); renderGantt(); updateTeamTable(); }
-
-/* ========================= ACTIONS ========================= */
-function addMember(name){ name=(name||'').trim(); if(!name) return showToast('Nom requis'); if(STATE.team.includes(name)) return showToast('Membre déjà présent'); mutate(()=>{ STATE.team.push(name); STATE.vacations[name]=STATE.vacations[name]||[]; }); }
-function addVacation(member, start, end){ if(!member) return showToast('Choisir un membre'); if(!start||!end) return showToast('Dates requises'); if(new Date(end)<new Date(start)) return showToast('Fin avant début'); mutate(()=>{ STATE.vacations[member]=STATE.vacations[member]||[]; STATE.vacations[member].push({start,end}); }); }
-function addAssignment(week, member, role){ week=+week; if(!(week>=1 && week<=52)) return showToast('Semaine 1..52'); if(!member) return showToast('Choisir un membre'); if(!STATE.team.includes(member)) return showToast('Membre inconnu'); if(role!=='principal'&&role!=='backup') return showToast('Rôle invalide'); const weekItems=STATE.assignments.filter(a=>a.week===week); if(role==='principal' && weekItems.some(a=>a.role==='principal')){ if(!confirm('Déjà un Piquet cette semaine. Remplacer ?')) return; mutate(()=>{ STATE.assignments=STATE.assignments.filter(a=> !(a.week===week && a.role==='principal')); STATE.assignments.push({week,member,role}); }); return; } if(role==='backup' && weekItems.some(a=>a.role==='backup')){ if(!confirm('Déjà un Backup cette semaine. Remplacer ?')) return; mutate(()=>{ STATE.assignments=STATE.assignments.filter(a=> !(a.week===week && a.role==='backup')); STATE.assignments.push({week,member,role}); }); return; } mutate(()=> STATE.assignments.push({week,member,role})); }
-
-/* ===================== RÉSOLVEUR CONFLITS ===================== */
-function pickBestCandidate(week, excluded=new Set()){ const wl=calcWorkloads(); return STATE.team.filter(m=>!excluded.has(m)).filter(m=>!STATE.assignments.some(a=>a.week===week && a.member===m)).filter(m=>!memberIsAbsent(m,week)).sort((a,b)=> (wl[a]?.total||0)-(wl[b]?.total||0))[0]||null; }
-function resolveConflicts(){ const weeks=[...new Set(STATE.assignments.map(a=>a.week))].sort((a,b)=>a-b); mutate(()=>{ for(const w of weeks){ ['principal','backup'].forEach(role=>{ const items=STATE.assignments.filter(a=>a.week===w && a.role===role); if(items.length>1){ const keep=items[0]; STATE.assignments=STATE.assignments.filter(a=> !(a.week===w && a.role===role && a!==keep)); } }); const cur=STATE.assignments.filter(a=>a.week===w); const hasP=cur.some(a=>a.role==='principal'); const hasB=cur.some(a=>a.role==='backup'); if(!hasP){ const excl=new Set(cur.map(x=>x.member)); const c=pickBestCandidate(w,excl); if(c) STATE.assignments.push({week:w,member:c,role:'principal'}); } if(!hasB){ const excl=new Set(STATE.assignments.filter(a=>a.week===w).map(x=>x.member)); const c=pickBestCandidate(w,excl); if(c) STATE.assignments.push({week:w,member:c,role:'backup'}); } } }); showToast('🔧 Conflits traités'); }
-
-/* ========================= DUPLICATION ========================= */
-function duplicateWeekSmart(srcWeek, dstWeek){ srcWeek=+srcWeek; dstWeek=+dstWeek; if(!(srcWeek>=1&&srcWeek<=52&&dstWeek>=1&&dstWeek<=52)) return showToast('Semaines 1..52'); if(srcWeek===dstWeek) return showToast('Source = Cible'); const src = STATE.assignments.filter(a=>a.week===srcWeek); if(!src.length) return showToast('Aucune affectation à copier'); mutate(()=>{ // on enlève la cible existante après confirmation si nécessaire
-  const exist = STATE.assignments.filter(a=>a.week===dstWeek);
-  if(exist.length && !confirm('Remplacer les affectations existantes de la semaine cible ?')) return;
-  STATE.assignments = STATE.assignments.filter(a=>a.week!==dstWeek);
-  for(const a of src){ const m=a.member, role=a.role; // si absent ou déjà pris à la cible, on tente un candidat
-    if(memberIsAbsent(m,dstWeek) || STATE.assignments.some(x=>x.week===dstWeek && x.role===role)){
-      const excl=new Set(STATE.assignments.filter(x=>x.week===dstWeek).map(x=>x.member)); const c=pickBestCandidate(dstWeek,excl); if(c) STATE.assignments.push({week:dstWeek, member:c, role});
-    }else{ STATE.assignments.push({week:dstWeek, member:m, role}); }
-  }
-}); }
-
-/* ========================= EXPORT ICS ========================= */
-function yyyymmddUTC(d){ const y=d.getUTCFullYear(), m=String(d.getUTCMonth()+1).padStart(2,'0'), day=String(d.getUTCDate()).padStart(2,'0'); return `${y}${m}${day}`; }
-function icsEscape(t=''){ return t.replace(/([,;])/g,'\\$1').replace(/\n/g,'\\n'); }
-function makeUID(){ return (Date.now().toString(36)+Math.random().toString(36).slice(2)).toUpperCase(); }
-function buildICSEvent({summary, dateStartUTC, description=''}){ const dtStart=yyyymmddUTC(dateStartUTC); const dtEnd=yyyymmddUTC(new Date(dateStartUTC.getTime()+24*3600*1000)); const now=new Date(); const stamp=yyyymmddUTC(now)+'T'+String(now.getUTCHours()).padStart(2,'0')+String(now.getUTCMinutes()).padStart(2,'0')+'00Z'; const uid=makeUID()+'@planning-app'; return ['BEGIN:VEVENT',`UID:${uid}`,`DTSTAMP:${stamp}`,`SUMMARY:${icsEscape(summary)}`,`DTSTART;VALUE=DATE:${dtStart}`,`DTEND;VALUE=DATE:${dtEnd}`, description?`DESCRIPTION:${icsEscape(description)}`:null,'END:VEVENT'].filter(Boolean).join('\r\n'); }
-function generateICS(member=null){ const year=new Date().getFullYear(); const header=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Planning Manager//FR','CALSCALE:GREGORIAN','METHOD:PUBLISH']; const rows=[...STATE.assignments].filter(a=>member? a.member===member : true).sort((a,b)=> a.week-b.week || a.role.localeCompare(b.role)); const body=[]; for(const a of rows){ const d0=weekStartDate(year,a.week); const title=(a.role==='principal'?'Piquet':'Backup')+' - '+a.member; const desc=`Semaine ${a.week} (${year}).`; body.push(buildICSEvent({summary:title, dateStartUTC:d0, description:desc})); } return header.concat(body).concat(['END:VCALENDAR']).join('\r\n'); }
-function downloadICS(filename, content){ const blob=new Blob([content], {type:'text/calendar;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }
-
-/* ========================= BIND & BOOT ========================= */
-function bindUI(){
-  q('#btn-add-member').addEventListener('click', ()=>{ const name=q('#memberName').value; q('#memberName').value=''; addMember(name); });
-  q('#memberName').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); q('#btn-add-member').click(); } });
-  q('#btn-add-vac').addEventListener('click', ()=>{ addVacation(q('#vacMember').value, q('#vacStart').value, q('#vacEnd').value); q('#vacStart').value=''; q('#vacEnd').value=''; });
-  q('#btn-add-assign').addEventListener('click', ()=>{ addAssignment(q('#weekNum').value, q('#assignMember').value, q('#assignRole').value); q('#weekNum').value=''; });
-
-  // Filtres
-  q('#filterMember').addEventListener('input', e=>{ FILTERS.member=e.target.value; renderAssignTable(); renderGantt(); });
-  q('#filterWeek').addEventListener('input', e=>{ FILTERS.week=e.target.value; renderAssignTable(); });
-  q('#filterStatus').addEventListener('change', e=>{ FILTERS.status=e.target.value; renderAssignTable(); renderGantt(); });
-  q('#btn-clear-filters').addEventListener('click', ()=>{ FILTERS={member:'',week:'',status:''}; q('#filterMember').value=''; q('#filterWeek').value=''; q('#filterStatus').value=''; renderAssignTable(); renderGantt(); });
-
-  // Duplication
-  q('#btn-duplicate').addEventListener('click', ()=>{ duplicateWeekSmart(q('#dupSource').value, q('#dupTarget').value); });
-
-  // Résolution & exports
-  q('#btn-resolve').addEventListener('click', ()=>{ if(!STATE.team.length) return showToast('Ajoute des membres d’abord'); if(!STATE.assignments.length) return showToast('Aucune affectation'); if(!confirm('Lancer le résolveur ?')) return; resolveConflicts(); });
-  q('#btn-ics-global').addEventListener('click', ()=>{ const ics=generateICS(); downloadICS(`planning_global_${new Date().toISOString().slice(0,10)}.ics`, ics); });
-  q('#btn-ics-member').addEventListener('click', ()=>{ const m=prompt('Nom exact du membre :'); if(!m) return; if(!STATE.team.includes(m)) return showToast('Membre inconnu'); const ics=generateICS(m); const safe=m.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''); downloadICS(`planning_${safe}_${new Date().toISOString().slice(0,10)}.ics`, ics); });
-  q('#btn-reset').addEventListener('click', ()=>{ if(!confirm('Tout effacer ?')) return; mutate(()=>{ STATE={team:[],vacations:{},assignments:[],createdAt:new Date().toISOString()}; }); });
+/* ======== Mise à jour rôle ======== */
+function updateRole(idx, semaine, role) {
+    referents[idx].role[semaine] = role.toUpperCase();
+    renderGantt();
 }
 
-function firstBootIfEmpty(){ if(STATE.team.length===0 && STATE.assignments.length===0){ STATE.team=['Alice Martin','Bob Dupont','Carla Rossi']; STATE.vacations={'Alice Martin':[], 'Bob Dupont':[], 'Carla Rossi':[]}; STATE.assignments=[ {week:32, member:'Alice Martin', role:'principal'}, {week:32, member:'Bob Dupont', role:'backup'}, {week:33, member:'Carla Rossi', role:'principal'} ]; } }
+/* ======== Mini-Gantt ======== */
+function renderGantt() {
+    let html = "<table><thead><tr><th>Nom</th>";
+    semaines.forEach(s => html += `<th>${s}</th>`);
+    html += "</tr></thead><tbody>";
+    referents.forEach(r => {
+        html += `<tr><td>${r.nom}</td>`;
+        semaines.forEach(s => {
+            let role = r.role[s] || "";
+            let classe = "";
+            if (role === "PIQUET") classe = "piquet";
+            else if (role === "BACKUP") classe = "backup";
+            else if (role === "CONFLIT") classe = "conflit";
+            html += `<td class="gant-cell ${classe}"></td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+    document.getElementById("gantContainer").innerHTML = html;
+}
 
-loadState();
-firstBootIfEmpty();
-bindUI();
-renderAll();
-saveState();
+/* ======== Assignation automatique ======== */
+function assignerAuto() {
+    semaines.forEach(s => {
+        let dispo = referents.filter(r => !(r.absences.includes(s)));
+        if (dispo.length >= 2) {
+            dispo[0].role[s] = "PIQUET";
+            dispo[1].role[s] = "BACKUP";
+        } else if (dispo.length === 1) {
+            dispo[0].role[s] = "PIQUET";
+        }
+    });
+    renderPlanning();
+}
+
+/* ======== Résolution de conflits ======== */
+function resoudreConflits() {
+    semaines.forEach(s => {
+        let roles = referents.map(r => r.role[s] || "");
+        let counts = {};
+        roles.forEach(r => { if (r) counts[r] = (counts[r] || 0) + 1; });
+        for (let role in counts) {
+            if (counts[role] > 1) {
+                let refs = referents.filter(r => r.role[s] === role);
+                refs.forEach((r, idx) => {
+                    if (idx > 0) r.role[s] = "CONFLIT";
+                });
+            }
+        }
+    });
+    renderPlanning();
+}
+
+/* ======== Export ICS simple ======== */
+function exportICS() {
+    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\n";
+    referents.forEach(r => {
+        for (let s in r.role) {
+            let dateDebut = weekToDate(parseInt(s));
+            let dateFin = new Date(dateDebut);
+            dateFin.setDate(dateFin.getDate() + 7);
+            ics += "BEGIN:VEVENT\n";
+            ics += `SUMMARY:${r.nom} - ${r.role[s]}\n`;
+            ics += `DTSTART;VALUE=DATE:${formatDateICS(dateDebut)}\n`;
+            ics += `DTEND;VALUE=DATE:${formatDateICS(dateFin)}\n`;
+            ics += "END:VEVENT\n";
+        }
+    });
+    ics += "END:VCALENDAR";
+    downloadFile("planning.ics", ics);
+}
+
+/* ======== Export ICS avancé ======== */
+function exportICSAdvanced() {
+    let debut = parseInt(prompt("Semaine de début :", 1));
+    let fin = parseInt(prompt("Semaine de fin :", 52));
+    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\n";
+    referents.forEach(r => {
+        for (let s in r.role) {
+            let sn = parseInt(s);
+            if (sn >= debut && sn <= fin) {
+                let dateDebut = weekToDate(sn);
+                let dateFin = new Date(dateDebut);
+                dateFin.setDate(dateFin.getDate() + 7);
+                ics += "BEGIN:VEVENT\n";
+                ics += `SUMMARY:${r.nom} - ${r.role[s]}\n`;
+                ics += `DTSTART;VALUE=DATE:${formatDateICS(dateDebut)}\n`;
+                ics += `DTEND;VALUE=DATE:${formatDateICS(dateFin)}\n`;
+                ics += "END:VEVENT\n";
+            }
+        }
+    });
+    ics += "END:VCALENDAR";
+    downloadFile("planning_avance.ics", ics);
+}
+
+/* ======== Duplication intelligente ======== */
+function dupliquerSemaine() {
+    let source = parseInt(prompt("Semaine à copier :"));
+    let cible = parseInt(prompt("Semaine de destination :"));
+    referents.forEach(r => {
+        if (!r.absences.includes(cible)) {
+            r.role[cible] = r.role[source] || "";
+        }
+    });
+    renderPlanning();
+}
+
+/* ======== Filtres ======== */
+function populateFilterRef() {
+    let select = document.getElementById("filterRef");
+    select.innerHTML = "<option value=''>Tous</option>";
+    referents.forEach((r, idx) => {
+        select.innerHTML += `<option value="${idx}">${r.nom}</option>`;
+    });
+}
+function applyFilters() {
+    let refVal = document.getElementById("filterRef").value;
+    let roleVal = document.getElementById("filterRole").value;
+    let rows = document.querySelectorAll("#planningTableContainer table tbody tr");
+    rows.forEach((row, rIdx) => {
+        let semaine = semaines[rIdx];
+        let show = true;
+        if (refVal) {
+            let cell = row.children[parseInt(refVal)+1];
+            if (!cell.innerText.includes(roleVal) && roleVal) show = false;
+        } else if (roleVal) {
+            show = Array.from(row.children).some(c => c.innerText.includes(roleVal));
+        }
+        row.style.display = show ? "" : "none";
+    });
+}
+
+/* ======== Thème clair/sombre ======== */
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+}
+
+/* ======== Utilitaires ======== */
+function weekToDate(week) {
+    let d = new Date(new Date().getFullYear(), 0, 1);
+    let day = d.getDay();
+    let diff = (week - 1) * 7 - day + 1;
+    d.setDate(d.getDate() + diff);
+    return d;
+}
+function formatDateICS(date) {
+    return date.toISOString().split("T")[0].replace(/-/g, "");
+}
+function downloadFile(filename, content) {
+    let blob = new Blob([content], { type: "text/calendar" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+}
+
+/* ======== Initialisation ======== */
+renderPlanning();
 </script>
 </body>
 </html>
