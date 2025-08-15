@@ -364,6 +364,7 @@
             <button class="btn btn-primary" onclick="showAssignModal()">➕ Assigner Semaine</button>
             <button class="btn btn-warning" onclick="showVacationModal()">🏖️ Ajouter Absence</button>
             <button class="btn btn-info" onclick="exportAll()">💾 Export JSON</button>
+            <button class="btn btn-success" onclick="showImportModal()">📂 Import JSON</button>
             <button class="btn btn-info" onclick="exportCalendars()">📅 Export Calendriers</button>
             <button class="btn btn-dark" onclick="showTeamEditModal()">👥 Éditer Équipe</button>
             <button class="btn btn-info" onclick="showPartnershipAnalysis()">📊 Analyser Binômes</button>
@@ -581,6 +582,40 @@
         </div>
     </div>
 
+    <div class="modal" id="importModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('importModal')">&times;</span>
+            <h2>📂 Importer des Données JSON</h2>
+            
+            <div style="background: #e8f5e9; border: 2px solid #27ae60; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <h4 style="color: #27ae60; margin-bottom: 10px;">💡 Instructions</h4>
+                <ul style="color: #2c3e50; margin: 0; padding-left: 20px;">
+                    <li>Sélectionnez un fichier JSON exporté précédemment</li>
+                    <li>Toutes les données actuelles seront remplacées</li>
+                    <li>Une sauvegarde automatique sera créée avant l'import</li>
+                </ul>
+            </div>
+            
+            <form onsubmit="importData(event)">
+                <div class="form-group">
+                    <label>Fichier JSON</label>
+                    <input type="file" id="jsonFileInput" accept=".json" required
+                           style="width: 100%; padding: 10px; border: 2px solid #ecf0f1; border-radius: 8px;">
+                </div>
+                
+                <div id="importPreview" style="display: none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;">📋 Aperçu des données</h4>
+                    <div id="importSummary"></div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-warning" onclick="createBackup()">💾 Créer Sauvegarde</button>
+                    <button type="submit" class="btn btn-success" id="importBtn" disabled>📂 Importer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="notification" id="notification"></div>
 
     <script>
@@ -592,9 +627,251 @@
         let conflicts = [];
         let predefinedPairs = [];
 
+        // Fonction pour calculer le numéro de semaine ISO d'une date
+        function getISOWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // Fonction pour obtenir toutes les semaines d'un mois donné
+        function getWeeksInMonth(year, month) {
+            const weeks = [];
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Trouver le premier lundi du mois (ou le lundi de la semaine qui contient le 1er)
+            let currentDate = new Date(firstDay);
+            
+            // Reculer au lundi de la semaine qui contient le 1er du mois
+            while (currentDate.getDay() !== 1) {
+                currentDate.setDate(currentDate.getDate() - 1);
+            }
+            
+            // Collecter toutes les semaines qui touchent ce mois
+            while (currentDate <= lastDay || (currentDate.getMonth() === month && currentDate.getDate() <= 7)) {
+                const weekNum = getISOWeekNumber(currentDate);
+                
+                // Vérifier si cette semaine touche le mois en cours
+                const weekStart = new Date(currentDate);
+                const weekEnd = new Date(currentDate);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                if ((weekStart.getMonth() === month || weekEnd.getMonth() === month) ||
+                    (weekStart < firstDay && weekEnd >= firstDay) ||
+                    (weekStart <= lastDay && weekEnd > lastDay)) {
+                    
+                    if (!weeks.includes(weekNum) && weekNum >= 1 && weekNum <= 53) {
+                        weeks.push(weekNum);
+                    }
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 7);
+            }
+            
+            return weeks.sort((a, b) => a - b);
+        }
+
+        // Fonction pour obtenir les dates de début et fin d'une semaine
+        function getWeekDates(year, weekNum) {
+            const jan4 = new Date(year, 0, 4);
+            const jan4Day = jan4.getDay() || 7;
+            const firstMonday = new Date(jan4);
+            firstMonday.setDate(jan4.getDate() - jan4Day + 1);
+            
+            const weekStart = new Date(firstMonday);
+            weekStart.setDate(firstMonday.getDate() + (weekNum - 1) * 7);
+            
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            return { start: weekStart, end: weekEnd };
+        }
+
+        function showImportModal() {
+            document.getElementById('importModal').style.display = 'block';
+            document.getElementById('jsonFileInput').value = '';
+            document.getElementById('importPreview').style.display = 'none';
+            document.getElementById('importBtn').disabled = true;
+        }
+
+        function createBackup() {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const backupData = {
+                version: '3.1-backup',
+                backupDate: new Date().toISOString(),
+                year: currentYear,
+                assignments: assignments,
+                vacations: vacations,
+                teamNames: TEAM,
+                predefinedPairs: predefinedPairs
+            };
+            
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `backup_planning_${timestamp}.json`;
+            link.click();
+            
+            showNotification('💾 Sauvegarde créée avec succès', 'success');
+        }
+
+        // Gestionnaire pour le changement de fichier
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Application initialisée avec correction des semaines');
+            loadData();
+            populateSelects();
+            updateAllDisplays();
+            
+            // Ajouter l'événement pour l'input file
+            const fileInput = document.getElementById('jsonFileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', handleFileSelect);
+            }
+        });
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                document.getElementById('importPreview').style.display = 'none';
+                document.getElementById('importBtn').disabled = true;
+                return;
+            }
+            
+            if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+                showNotification('❌ Veuillez sélectionner un fichier JSON valide', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    validateAndPreviewImport(data);
+                } catch (error) {
+                    showNotification('❌ Fichier JSON invalide: ' + error.message, 'error');
+                    document.getElementById('importPreview').style.display = 'none';
+                    document.getElementById('importBtn').disabled = true;
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function validateAndPreviewImport(data) {
+            const preview = document.getElementById('importPreview');
+            const summary = document.getElementById('importSummary');
+            const importBtn = document.getElementById('importBtn');
+            
+            // Validation basique
+            if (!data || typeof data !== 'object') {
+                showNotification('❌ Structure de données invalide', 'error');
+                preview.style.display = 'none';
+                importBtn.disabled = true;
+                return;
+            }
+            
+            // Extraire les informations
+            const year = data.year || 'Non spécifiée';
+            const teamNames = data.teamNames || [];
+            const assignmentsCount = Object.keys(data.assignments || {}).length;
+            const vacationsCount = Object.values(data.vacations || {}).reduce((sum, v) => sum + v.length, 0);
+            const predefinedPairsCount = (data.predefinedPairs || []).length;
+            const exportDate = data.exportDate || data.lastModified || 'Inconnue';
+            
+            // Afficher l'aperçu
+            summary.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong>📅 Année:</strong> ${year}<br>
+                        <strong>👥 Équipe:</strong> ${teamNames.length} membres<br>
+                        <strong>📝 Assignations:</strong> ${assignmentsCount} semaines
+                    </div>
+                    <div>
+                        <strong>🏖️ Absences:</strong> ${vacationsCount} périodes<br>
+                        <strong>🎯 Binômes:</strong> ${predefinedPairsCount} prédéfinis<br>
+                        <strong>📊 Export:</strong> ${new Date(exportDate).toLocaleDateString()}
+                    </div>
+                </div>
+                
+                ${teamNames.length > 0 ? `
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <strong>👥 Membres de l'équipe:</strong><br>
+                        <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                            ${teamNames.map(name => `<span style="background: #3498db; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px;">${name}</span>`).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+            
+            preview.style.display = 'block';
+            importBtn.disabled = false;
+            
+            // Stocker les données pour l'import
+            window.pendingImportData = data;
+        }
+
+        function importData(event) {
+            event.preventDefault();
+            
+            if (!window.pendingImportData) {
+                showNotification('❌ Aucune donnée à importer', 'error');
+                return;
+            }
+            
+            if (!confirm('⚠️ ATTENTION: Cette action remplacera toutes les données actuelles.\n\nContinuer l\'import?')) {
+                return;
+            }
+            
+            const data = window.pendingImportData;
+            
+            try {
+                // Importer les données
+                if (data.teamNames && Array.isArray(data.teamNames)) {
+                    TEAM = data.teamNames;
+                }
+                
+                if (data.year) {
+                    currentYear = data.year;
+                    document.getElementById('currentYear').textContent = currentYear;
+                }
+                
+                assignments = data.assignments || {};
+                vacations = data.vacations || {};
+                predefinedPairs = data.predefinedPairs || [];
+                
+                // Sauvegarder et mettre à jour
+                saveData();
+                populateSelects();
+                updateAllDisplays();
+                
+                closeModal('importModal');
+                
+                // Afficher un rapport d'import
+                const assignmentsCount = Object.keys(assignments).length;
+                const vacationsCount = Object.values(vacations).reduce((sum, v) => sum + v.length, 0);
+                
+                showNotification('✅ Import réussi !', 'success');
+                
+                setTimeout(() => {
+                    alert(`📂 Import terminé avec succès !\n\n` +
+                          `📅 Année: ${currentYear}\n` +
+                          `👥 Équipe: ${TEAM.length} membres\n` +
+                          `📝 Assignations: ${assignmentsCount} semaines\n` +
+                          `🏖️ Absences: ${vacationsCount} périodes\n` +
+                          `🎯 Binômes: ${predefinedPairs.length} prédéfinis`);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'import:', error);
+                showNotification('❌ Erreur lors de l\'import: ' + error.message, 'error');
+            }
+        }
+
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Application initialisée');
+            console.log('Application initialisée avec correction des semaines');
             loadData();
             populateSelects();
             updateAllDisplays();
@@ -625,7 +902,6 @@
                 assignments: assignments,
                 vacations: vacations,
                 teamNames: TEAM,
-                predefinedPairs: predefinedPairs,
                 predefinedPairs: predefinedPairs,
                 lastModified: new Date().toISOString()
             };
@@ -708,7 +984,7 @@
             container.innerHTML = '';
             const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
             
-            months.forEach((month, index) => {
+            months.forEach((month, monthIndex) => {
                 const monthBlock = document.createElement('div');
                 monthBlock.className = 'month-block';
                 
@@ -720,29 +996,33 @@
                 const weeksContainer = document.createElement('div');
                 weeksContainer.className = 'weeks-container';
                 
-                // Générer 4-5 semaines par mois
-                for (let week = 1; week <= 5; week++) {
-                    const weekNum = (index * 4) + week;
-                    if (weekNum > 52) break;
-                    
+                // Obtenir les vraies semaines de ce mois
+                const weeksInMonth = getWeeksInMonth(currentYear, monthIndex);
+                
+                weeksInMonth.forEach(weekNum => {
                     const weekRow = document.createElement('div');
                     weekRow.className = 'week-row';
                     
-                    const weekKey = `${currentYear}-W${weekNum}`;
+                    const weekKey = `${currentYear}-W${weekNum.toString().padStart(2, '0')}`;
                     const assignment = assignments[weekKey];
                     
                     if (assignment) {
                         weekRow.classList.add('assigned');
                     }
                     
+                    // Obtenir les dates de la semaine pour affichage
+                    const weekDates = getWeekDates(currentYear, weekNum);
+                    const startDate = weekDates.start.getDate();
+                    const endDate = weekDates.end.getDate();
+                    
                     weekRow.innerHTML = `
-                        <span style="font-weight: bold;">S${weekNum}</span>
+                        <span style="font-weight: bold;">S${weekNum} (${startDate}-${endDate})</span>
                         <span>${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}</span>
                     `;
                     
                     weekRow.onclick = () => editWeek(weekNum);
                     weeksContainer.appendChild(weekRow);
-                }
+                });
                 
                 monthBlock.appendChild(weeksContainer);
                 container.appendChild(monthBlock);
@@ -1071,7 +1351,7 @@
             });
             
             for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
+                const weekKey = `${currentYear}-W${week.toString().padStart(2, '0')}`;
                 
                 // Trouver le binôme le moins utilisé dont les membres sont disponibles
                 let bestPairIndex = -1;
@@ -1158,7 +1438,7 @@
             }
             
             for (let week = 1; week <= 52; week++) {
-                const weekKey = `${currentYear}-W${week}`;
+                const weekKey = `${currentYear}-W${week.toString().padStart(2, '0')}`;
                 
                 // Filtrer les membres disponibles (pas assignés la semaine précédente)
                 const availableMembers = [...TEAM].filter(member => {
@@ -1416,9 +1696,22 @@
                     
                     if (role) {
                         const uid = `${weekKey}-${member.replace(/\s+/g, '_')}@planningpro`;
+                        const weekDates = getWeekDates(currentYear, weekNum);
+                        
+                        // Formatter les dates pour ICS (YYYYMMDD)
+                        const formatDateForICS = (date) => {
+                            return date.getFullYear().toString() + 
+                                   (date.getMonth() + 1).toString().padStart(2, '0') + 
+                                   date.getDate().toString().padStart(2, '0');
+                        };
+                        
+                        const startDate = formatDateForICS(weekDates.start);
+                        const endDate = formatDateForICS(new Date(weekDates.end.getTime() + 24 * 60 * 60 * 1000)); // +1 jour pour exclusif
                         
                         icsContent += 'BEGIN:VEVENT\r\n';
                         icsContent += `UID:${uid}\r\n`;
+                        icsContent += `DTSTART;VALUE=DATE:${startDate}\r\n`;
+                        icsContent += `DTEND;VALUE=DATE:${endDate}\r\n`;
                         icsContent += `SUMMARY:${role} - Semaine ${weekNum}\r\n`;
                         icsContent += `DESCRIPTION:Équipe: ${assignment.member1} + ${assignment.member2}, Backup: ${assignment.backup}\r\n`;
                         icsContent += 'END:VEVENT\r\n';
@@ -1450,6 +1743,7 @@
                 assignments = {};
                 vacations = {};
                 conflicts = [];
+                predefinedPairs = [];
                 saveData();
                 updateAllDisplays();
                 showNotification('🔄 Système réinitialisé', 'warning');
@@ -1481,3 +1775,4 @@
     </script>
 </body>
 </html>
+            
