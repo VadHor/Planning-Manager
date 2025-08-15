@@ -360,6 +360,7 @@
         <!-- Toolbar -->
         <div class="toolbar">
             <button class="btn btn-success" onclick="autoFillWithBalance()">⚡ Remplissage Intelligent</button>
+            <button class="btn btn-success" onclick="fillWithPredefinedPairs()">🎯 Remplir avec Binômes</button>
             <button class="btn btn-primary" onclick="showAssignModal()">➕ Assigner Semaine</button>
             <button class="btn btn-warning" onclick="showVacationModal()">🏖️ Ajouter Absence</button>
             <button class="btn btn-info" onclick="exportAll()">💾 Export JSON</button>
@@ -377,6 +378,7 @@
                 <button class="tab-btn" onclick="switchTab('absences')">🏖️ Absences</button>
                 <button class="tab-btn" onclick="switchTab('conflicts')">⚠️ Conflits</button>
                 <button class="tab-btn" onclick="switchTab('team')">👥 Équipe</button>
+                <button class="tab-btn" onclick="switchTab('binomes')">🎯 Config Binômes</button>
                 <button class="tab-btn" onclick="switchTab('partnerships')">🤝 Analyse Binômes</button>
             </div>
 
@@ -430,6 +432,48 @@
                     </thead>
                     <tbody id="teamTableBody"></tbody>
                 </table>
+            </div>
+
+            <!-- Config Binômes Tab -->
+            <div id="binomesTab" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">🎯 Configuration des Binômes Prédéfinis</h2>
+                
+                <div style="background: #e8f5e9; border: 2px solid #27ae60; border-radius: 10px; padding: 20px; margin-bottom: 30px;">
+                    <h4 style="color: #27ae60; margin-bottom: 10px;">💡 Comment ça fonctionne ?</h4>
+                    <p style="color: #2c3e50; margin: 0;">
+                        Définissez vos binômes préférés ci-dessous, puis utilisez le bouton <strong>"🎯 Remplir avec Binômes"</strong> 
+                        dans la barre d'outils. L'algorithme fera tourner intelligemment vos binômes sur l'année entière 
+                        en évitant les répétitions et en équilibrant les charges.
+                    </p>
+                </div>
+
+                <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #2c3e50; margin: 0;">📝 Vos Binômes Prédéfinis</h3>
+                        <button class="btn btn-primary" onclick="addPredefinedPair()">+ Ajouter un Binôme</button>
+                    </div>
+                    
+                    <div id="predefinedPairsList" style="display: grid; gap: 15px;">
+                        <!-- Généré dynamiquement -->
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button class="btn btn-warning" onclick="resetPredefinedPairs()">🔄 Binômes par Défaut</button>
+                            <button class="btn btn-success" onclick="savePredefinedPairs()">✅ Sauvegarder Configuration</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-top: 30px;">
+                    <h4 style="color: #856404; margin-bottom: 15px;">⚙️ Conseils d'optimisation</h4>
+                    <ul style="color: #856404; margin: 0; padding-left: 20px;">
+                        <li><strong>Équilibre :</strong> Essayez de créer des binômes avec des niveaux d'expérience complémentaires</li>
+                        <li><strong>Diversité :</strong> L'algorithme fera tourner vos binômes automatiquement</li>
+                        <li><strong>Backup :</strong> Les backups seront assignés automatiquement parmi les membres libres</li>
+                        <li><strong>Flexibilité :</strong> Vous pouvez toujours modifier manuellement après le remplissage</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Partnership Analysis Tab -->
@@ -546,6 +590,7 @@
         let assignments = {};
         let vacations = {};
         let conflicts = [];
+        let predefinedPairs = [];
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
@@ -564,6 +609,7 @@
                     if (data.teamNames) TEAM = data.teamNames;
                     assignments = data.assignments || {};
                     vacations = data.vacations || {};
+                    predefinedPairs = data.predefinedPairs || [];
                     currentYear = data.year || currentYear;
                     console.log('Données chargées:', data);
                 } catch (e) {
@@ -579,6 +625,8 @@
                 assignments: assignments,
                 vacations: vacations,
                 teamNames: TEAM,
+                predefinedPairs: predefinedPairs,
+                predefinedPairs: predefinedPairs,
                 lastModified: new Date().toISOString()
             };
             localStorage.setItem('planningData', JSON.stringify(data));
@@ -600,6 +648,8 @@
             // Mettre à jour le contenu si nécessaire
             if (tabName === 'partnerships') {
                 updatePartnershipAnalysis();
+            } else if (tabName === 'binomes') {
+                updatePredefinedPairsList();
             }
         }
 
@@ -902,7 +952,189 @@
                 }).join('') + '</div>';
         }
 
-        // Remplissage automatique avec rotation intelligente
+        // Gestion des binômes prédéfinis
+        function updatePredefinedPairsList() {
+            const container = document.getElementById('predefinedPairsList');
+            if (!container) return;
+            
+            // Initialiser avec des binômes par défaut si vide
+            if (predefinedPairs.length === 0) {
+                resetPredefinedPairs();
+                return;
+            }
+            
+            container.innerHTML = predefinedPairs.map((pair, index) => `
+                <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
+                    <span style="font-weight: bold; color: #666; width: 80px;">Binôme ${index + 1}:</span>
+                    
+                    <select id="pair${index}_member1" style="flex: 1; padding: 8px; border: 2px solid #ecf0f1; border-radius: 5px;">
+                        <option value="">Membre 1</option>
+                        ${TEAM.map(member => `<option value="${member}" ${pair.member1 === member ? 'selected' : ''}>${member}</option>`).join('')}
+                    </select>
+                    
+                    <span style="font-weight: bold; color: #3498db;">+</span>
+                    
+                    <select id="pair${index}_member2" style="flex: 1; padding: 8px; border: 2px solid #ecf0f1; border-radius: 5px;">
+                        <option value="">Membre 2</option>
+                        ${TEAM.map(member => `<option value="${member}" ${pair.member2 === member ? 'selected' : ''}>${member}</option>`).join('')}
+                    </select>
+                    
+                    <button class="btn btn-danger" style="padding: 8px 12px; font-size: 12px;" onclick="removePredefinedPair(${index})">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        function addPredefinedPair() {
+            predefinedPairs.push({ member1: '', member2: '' });
+            updatePredefinedPairsList();
+            showNotification('➕ Nouveau binôme ajouté', 'info');
+        }
+
+        function removePredefinedPair(index) {
+            if (predefinedPairs.length <= 1) {
+                showNotification('❌ Vous devez garder au moins un binôme', 'error');
+                return;
+            }
+            
+            predefinedPairs.splice(index, 1);
+            updatePredefinedPairsList();
+            showNotification('🗑️ Binôme supprimé', 'warning');
+        }
+
+        function resetPredefinedPairs() {
+            // Créer des binômes par défaut intelligents
+            predefinedPairs = [
+                { member1: TEAM[0], member2: TEAM[1] },
+                { member1: TEAM[2], member2: TEAM[3] },
+                { member1: TEAM[4], member2: TEAM[5] },
+                { member1: TEAM[6], member2: TEAM[7] }
+            ];
+            updatePredefinedPairsList();
+            showNotification('🔄 Binômes par défaut créés', 'info');
+        }
+
+        function savePredefinedPairs() {
+            const newPairs = [];
+            
+            for (let i = 0; i < predefinedPairs.length; i++) {
+                const member1 = document.getElementById(`pair${i}_member1`).value;
+                const member2 = document.getElementById(`pair${i}_member2`).value;
+                
+                if (!member1 || !member2) {
+                    showNotification(`❌ Binôme ${i + 1}: Veuillez sélectionner les deux membres`, 'error');
+                    return;
+                }
+                
+                if (member1 === member2) {
+                    showNotification(`❌ Binôme ${i + 1}: Les membres doivent être différents`, 'error');
+                    return;
+                }
+                
+                // Vérifier les doublons
+                const pairKey = [member1, member2].sort().join('|');
+                if (newPairs.some(p => [p.member1, p.member2].sort().join('|') === pairKey)) {
+                    showNotification(`❌ Binôme ${i + 1}: Ce binôme existe déjà`, 'error');
+                    return;
+                }
+                
+                newPairs.push({ member1, member2 });
+            }
+            
+            predefinedPairs = newPairs;
+            saveData();
+            showNotification('✅ Configuration des binômes sauvegardée !', 'success');
+        }
+
+        // Remplissage avec binômes prédéfinis
+        function fillWithPredefinedPairs() {
+            if (predefinedPairs.length === 0) {
+                showNotification('❌ Veuillez d\'abord configurer vos binômes dans l\'onglet "Config Binômes"', 'error');
+                return;
+            }
+            
+            // Validation des binômes
+            for (let pair of predefinedPairs) {
+                if (!pair.member1 || !pair.member2 || pair.member1 === pair.member2) {
+                    showNotification('❌ Certains binômes sont mal configurés. Vérifiez l\'onglet "Config Binômes"', 'error');
+                    return;
+                }
+            }
+            
+            if (!confirm(`Remplir l'année avec vos ${predefinedPairs.length} binômes prédéfinis ?\n\nCela utilisera une rotation intelligente de vos binômes.`)) return;
+            
+            const pairUsageCount = new Array(predefinedPairs.length).fill(0);
+            const memberLastWeek = {};
+            
+            // Initialiser le suivi des dernières semaines
+            TEAM.forEach(member => {
+                memberLastWeek[member] = 0;
+            });
+            
+            for (let week = 1; week <= 52; week++) {
+                const weekKey = `${currentYear}-W${week}`;
+                
+                // Trouver le binôme le moins utilisé dont les membres sont disponibles
+                let bestPairIndex = -1;
+                let minUsage = Infinity;
+                
+                for (let i = 0; i < predefinedPairs.length; i++) {
+                    const pair = predefinedPairs[i];
+                    const member1LastWeek = memberLastWeek[pair.member1] || 0;
+                    const member2LastWeek = memberLastWeek[pair.member2] || 0;
+                    
+                    // Éviter d'assigner quelqu'un deux semaines de suite
+                    if (week - member1LastWeek >= 2 && week - member2LastWeek >= 2) {
+                        if (pairUsageCount[i] < minUsage) {
+                            minUsage = pairUsageCount[i];
+                            bestPairIndex = i;
+                        }
+                    }
+                }
+                
+                // Si aucun binôme n'est disponible, prendre le moins utilisé quand même
+                if (bestPairIndex === -1) {
+                    bestPairIndex = pairUsageCount.indexOf(Math.min(...pairUsageCount));
+                }
+                
+                const selectedPair = predefinedPairs[bestPairIndex];
+                
+                // Sélectionner le backup parmi les membres non utilisés cette semaine
+                const usedMembers = [selectedPair.member1, selectedPair.member2];
+                const availableForBackup = TEAM.filter(member => !usedMembers.includes(member))
+                    .sort((a, b) => (memberLastWeek[a] || 0) - (memberLastWeek[b] || 0));
+                
+                const backup = availableForBackup[0];
+                
+                // Enregistrer l'assignation
+                assignments[weekKey] = {
+                    member1: selectedPair.member1,
+                    member2: selectedPair.member2,
+                    backup: backup
+                };
+                
+                // Mettre à jour les compteurs
+                pairUsageCount[bestPairIndex]++;
+                memberLastWeek[selectedPair.member1] = week;
+                memberLastWeek[selectedPair.member2] = week;
+                memberLastWeek[backup] = week;
+            }
+            
+            saveData();
+            updateAllDisplays();
+            
+            // Afficher un rapport
+            const report = predefinedPairs.map((pair, index) => 
+                `${pair.member1} + ${pair.member2}: ${pairUsageCount[index]} fois`
+            ).join('\n');
+            
+            showNotification('✅ Planning rempli avec vos binômes prédéfinis !', 'success');
+            
+            setTimeout(() => {
+                alert(`🎯 Rapport de répartition:\n\n${report}\n\nTotal: 52 semaines assignées`);
+            }, 1000);
+        }
+
+        // Remplissage automatique avec rotation intelligente (fonction originale)
         function autoFillWithBalance() {
             if (!confirm('Remplir automatiquement l\'année avec une rotation intelligente des binômes?')) return;
             
@@ -1118,6 +1350,7 @@
             TEAM = newNames;
             saveData();
             populateSelects();
+            updatePredefinedPairsList(); // Mettre à jour les binômes aussi
             updateAllDisplays();
             closeModal('teamEditModal');
             showNotification('✅ Noms de l\'équipe mis à jour', 'success');
