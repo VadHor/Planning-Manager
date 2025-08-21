@@ -1014,6 +1014,42 @@
                 return;
             }
             
+            // Vérifier les conflits de vacances avant d'assigner
+            const weekDates = getWeekDates(currentYear, parseInt(weekNumber));
+            const membersToCheck = [member1, member2, backup];
+            const vacationConflicts = [];
+            
+            membersToCheck.forEach(member => {
+                const memberVacations = vacations[member] || [];
+                memberVacations.forEach(vacation => {
+                    const vacationStart = new Date(vacation.start);
+                    const vacationEnd = new Date(vacation.end);
+                    
+                    if (isDateOverlap(weekDates.start, weekDates.end, vacationStart, vacationEnd)) {
+                        const role = member === backup ? 'Backup' : 'Référent Principal';
+                        vacationConflicts.push({
+                            member: member,
+                            role: role,
+                            vacation: vacation
+                        });
+                    }
+                });
+            });
+            
+            // Alerter l'utilisateur s'il y a des conflits de vacances
+            if (vacationConflicts.length > 0) {
+                let conflictMessage = `⚠️ ATTENTION - Conflits détectés pour la semaine ${weekNumber}:\n\n`;
+                vacationConflicts.forEach(conflict => {
+                    conflictMessage += `• ${conflict.member} (${conflict.role}) est en vacances du ${formatDateFR(conflict.vacation.start)} au ${formatDateFR(conflict.vacation.end)}\n`;
+                });
+                conflictMessage += '\nVoulez-vous quand même assigner cette équipe ?';
+                
+                if (!confirm(conflictMessage)) {
+                    showNotification('❌ Assignation annulée en raison des conflits', 'warning');
+                    return;
+                }
+            }
+            
             // Assigner l'équipe à cette semaine
             assignments[weekKey] = {
                 member1: member1,
@@ -1024,14 +1060,18 @@
             saveData();
             updateAllDisplays();
             
-            showNotification(`✅ Équipe assignée à la semaine ${weekNumber}`, 'success');
+            if (vacationConflicts.length > 0) {
+                showNotification(`⚠️ Équipe assignée avec ${vacationConflicts.length} conflit(s) - Vérifiez l'onglet Conflits`, 'warning');
+            } else {
+                showNotification(`✅ Équipe assignée à la semaine ${weekNumber}`, 'success');
+            }
         }
 
         // ===== FIN DRAG AND DROP =====
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Application initialisée avec drag and drop');
+            console.log('Application initialisée avec drag and drop et détection de conflits');
             loadData();
             populateSelects();
             updateAllDisplays();
@@ -1042,6 +1082,9 @@
             if (fileInput) {
                 fileInput.addEventListener('change', handleFileSelect);
             }
+            
+            // Test de la détection de conflits au démarrage
+            console.log('Test détection conflits:', conflicts.length);
         });
 
         // Toutes vos fonctions existantes (je les garde intactes)
@@ -1308,8 +1351,157 @@
 
         function detectConflicts() {
             conflicts = [];
-            // Logique de détection des conflits simplifiée
+            
+            console.log('=== DÉTECTION DES CONFLITS ===');
+            console.log('Assignations à vérifier:', Object.keys(assignments).length);
+            console.log('Vacances à vérifier:', Object.keys(vacations).length);
+            
+            // Parcourir toutes les assignations pour détecter les conflits
+            Object.entries(assignments).forEach(([weekKey, assignment]) => {
+                if (!weekKey.startsWith(`${currentYear}-W`)) return;
+                
+                const weekNum = parseInt(weekKey.split('-W')[1]);
+                const weekDates = getWeekDates(currentYear, weekNum);
+                
+                console.log(`Vérification semaine ${weekNum}:`, weekDates);
+                console.log(`Équipe assignée: ${assignment.member1} + ${assignment.member2}, Backup: ${assignment.backup}`);
+                
+                // Vérifier les conflits de vacances pour chaque membre de l'équipe
+                [assignment.member1, assignment.member2, assignment.backup].forEach(member => {
+                    if (!member) return;
+                    
+                    const memberVacations = vacations[member] || [];
+                    console.log(`Vacances de ${member}:`, memberVacations);
+                    
+                    memberVacations.forEach(vacation => {
+                        const vacationStart = new Date(vacation.start);
+                        const vacationEnd = new Date(vacation.end);
+                        
+                        console.log(`Test conflit: Semaine ${weekNum} (${weekDates.start.toDateString()} - ${weekDates.end.toDateString()}) vs Vacances ${member} (${vacationStart.toDateString()} - ${vacationEnd.toDateString()})`);
+                        
+                        // Vérifier si la semaine chevauche avec les vacances
+                        if (isDateOverlap(weekDates.start, weekDates.end, vacationStart, vacationEnd)) {
+                            const role = assignment.member1 === member || assignment.member2 === member ? 'Référent Principal' : 'Backup';
+                            
+                            console.log('🚨 CONFLIT DÉTECTÉ!', {
+                                member: member,
+                                role: role,
+                                semaine: weekNum,
+                                vacances: vacation
+                            });
+                            
+                            conflicts.push({
+                                type: 'vacation_conflict',
+                                weekKey: weekKey,
+                                weekNumber: weekNum,
+                                member: member,
+                                role: role,
+                                vacationStart: vacation.start,
+                                vacationEnd: vacation.end,
+                                severity: role === 'Backup' ? 'medium' : 'high',
+                                message: `${member} (${role}) est en vacances du ${formatDateFR(vacation.start)} au ${formatDateFR(vacation.end)}`
+                            });
+                        }
+                    });
+                });
+                
+                // NOUVELLE VÉRIFICATION : Conflits d'équipe incomplète
+                // Si un des membres principaux est absent, l'équipe est incomplète
+                const mainMembers = [assignment.member1, assignment.member2].filter(m => m);
+                let absentMainMembers = [];
+                
+                mainMembers.forEach(member => {
+                    const memberVacations = vacations[member] || [];
+                    memberVacations.forEach(vacation => {
+                        const vacationStart = new Date(vacation.start);
+                        const vacationEnd = new Date(vacation.end);
+                        
+                        if (isDateOverlap(weekDates.start, weekDates.end, vacationStart, vacationEnd)) {
+                            absentMainMembers.push({
+                                member: member,
+                                vacation: vacation
+                            });
+                        }
+                    });
+                });
+                
+                // Si un membre principal est absent mais pas l'autre, créer un conflit d'équipe incomplète
+                if (absentMainMembers.length === 1 && mainMembers.length === 2) {
+                    const absentMember = absentMainMembers[0];
+                    const presentMember = mainMembers.find(m => m !== absentMember.member);
+                    
+                    console.log('🚨 ÉQUIPE INCOMPLÈTE DÉTECTÉE!', {
+                        semaine: weekNum,
+                        absent: absentMember.member,
+                        present: presentMember
+                    });
+                    
+                    conflicts.push({
+                        type: 'incomplete_team',
+                        weekKey: weekKey,
+                        weekNumber: weekNum,
+                        absentMember: absentMember.member,
+                        presentMember: presentMember,
+                        backup: assignment.backup,
+                        vacationStart: absentMember.vacation.start,
+                        vacationEnd: absentMember.vacation.end,
+                        severity: 'high',
+                        message: `Équipe incomplète: ${absentMember.member} est en vacances, ${presentMember} se retrouve seul(e). Backup: ${assignment.backup || 'Non défini'}`
+                    });
+                }
+                
+                // Vérifier les doublons (même personne assignée plusieurs fois la même semaine)
+                const allMembers = [assignment.member1, assignment.member2, assignment.backup].filter(m => m);
+                const uniqueMembers = [...new Set(allMembers)];
+                
+                if (allMembers.length !== uniqueMembers.length) {
+                    const duplicates = allMembers.filter((member, index) => allMembers.indexOf(member) !== index);
+                    duplicates.forEach(member => {
+                        console.log('🚨 DOUBLON DÉTECTÉ!', {
+                            member: member,
+                            semaine: weekNum
+                        });
+                        
+                        conflicts.push({
+                            type: 'duplicate_assignment',
+                            weekKey: weekKey,
+                            weekNumber: weekNum,
+                            member: member,
+                            severity: 'high',
+                            message: `${member} est assigné plusieurs fois la même semaine`
+                        });
+                    });
+                }
+            });
+            
+            console.log('=== RÉSULTAT DÉTECTION ===');
             console.log('Conflits détectés:', conflicts.length);
+            console.log('Détails des conflits:', conflicts);
+            
+            // Afficher une notification s'il y a de nouveaux conflits
+            if (conflicts.length > 0) {
+                const highSeverityConflicts = conflicts.filter(c => c.severity === 'high').length;
+                const mediumSeverityConflicts = conflicts.filter(c => c.severity === 'medium').length;
+                
+                if (highSeverityConflicts > 0) {
+                    showNotification(`🚨 ${highSeverityConflicts} conflit(s) CRITIQUE(S) détecté(s) !`, 'error');
+                } else if (mediumSeverityConflicts > 0) {
+                    showNotification(`⚠️ ${mediumSeverityConflicts} conflit(s) détecté(s)`, 'warning');
+                }
+            }
+        }
+        
+        // Fonction utilitaire pour vérifier le chevauchement de dates
+        function isDateOverlap(start1, end1, start2, end2) {
+            const overlap = start1 <= end2 && end1 >= start2;
+            console.log(`Chevauchement test: [${start1.toDateString()} - ${end1.toDateString()}] vs [${start2.toDateString()} - ${end2.toDateString()}] = ${overlap}`);
+            return overlap;
+        }
+        
+        // Fonction utilitaire pour formater les dates en français
+        function formatDateFR(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
         }
 
         function updateYearView() {
@@ -1342,14 +1534,43 @@
                     const weekKey = `${currentYear}-W${weekNum.toString().padStart(2, '0')}`;
                     const assignment = assignments[weekKey];
                     
+                    // Vérifier s'il y a des conflits pour cette semaine
+                    const weekConflicts = conflicts.filter(c => c.weekNumber === weekNum);
+                    
                     if (assignment) {
                         weekRow.classList.add('assigned');
+                    }
+                    
+                    // Ajouter la classe conflit si nécessaire
+                    if (weekConflicts.length > 0) {
+                        weekRow.classList.add('conflict');
+                        // Ajouter une bordure rouge pour les conflits critiques
+                        const highSeverityConflicts = weekConflicts.filter(c => c.severity === 'high');
+                        if (highSeverityConflicts.length > 0) {
+                            weekRow.style.borderLeft = '4px solid #e74c3c';
+                            weekRow.style.background = '#ffebee';
+                        } else {
+                            weekRow.style.borderLeft = '4px solid #f39c12';
+                            weekRow.style.background = '#fff3cd';
+                        }
                     }
                     
                     // Obtenir les dates de la semaine pour affichage
                     const weekDates = getWeekDates(currentYear, weekNum);
                     const startDate = weekDates.start.getDate();
                     const endDate = weekDates.end.getDate();
+                    
+                    // Créer l'affichage des conflits
+                    let conflictDisplay = '';
+                    if (weekConflicts.length > 0) {
+                        conflictDisplay = `
+                            <div style="margin-top: 3px; padding: 3px; background: rgba(231, 76, 60, 0.1); border-radius: 3px;">
+                                <span style="color: #e74c3c; font-size: 10px; font-weight: bold;">
+                                    ⚠️ ${weekConflicts.length} conflit(s)
+                                </span>
+                            </div>
+                        `;
+                    }
                     
                     weekRow.innerHTML = `
                         <div class="week-info">
@@ -1364,11 +1585,13 @@
                                         <span class="assignment-backup">Backup: ${assignment.backup}</span>
                                     </div>
                                 ` : '<span style="color: #999; font-size: 11px;">Non assignée</span>'}
+                                ${conflictDisplay}
                             </div>
                         </div>
                         <div class="week-actions">
-                            <button class="week-edit-btn" onclick="editWeek(${weekNum})">✏️</button>
-                            ${assignment ? `<button class="week-delete-btn" onclick="deleteWeekAssignment('${weekKey}')">🗑️</button>` : ''}
+                            <button class="week-edit-btn" onclick="editWeek(${weekNum})" title="Éditer cette semaine">✏️</button>
+                            ${assignment ? `<button class="week-delete-btn" onclick="deleteWeekAssignment('${weekKey}')" title="Supprimer cette assignation">🗑️</button>` : ''}
+                            ${weekConflicts.length > 0 ? `<button class="week-edit-btn" onclick="showConflictDetails(${weekNum})" style="background: #e74c3c;" title="Voir les conflits">⚠️</button>` : ''}
                         </div>
                     `;
                     
@@ -1462,8 +1685,172 @@
                     </div>
                 `;
             } else {
-                container.innerHTML = '<p>Conflits détectés à résoudre.</p>';
+                // Grouper les conflits par type
+                const vacationConflicts = conflicts.filter(c => c.type === 'vacation_conflict');
+                const incompleteTeamConflicts = conflicts.filter(c => c.type === 'incomplete_team');
+                const duplicateConflicts = conflicts.filter(c => c.type === 'duplicate_assignment');
+                
+                let conflictHTML = `
+                    <div style="background: #ffebee; border: 2px solid #e74c3c; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                        <h3 style="color: #c62828; margin-bottom: 15px;">⚠️ ${conflicts.length} Conflit(s) Détecté(s)</h3>
+                        <p style="color: #d32f2f; margin-bottom: 20px;">Voici les problèmes qui nécessitent votre attention :</p>
+                    </div>
+                `;
+                
+                // Conflits d'équipes incomplètes (NOUVEAU)
+                if (incompleteTeamConflicts.length > 0) {
+                    conflictHTML += `
+                        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #e74c3c; margin-bottom: 15px;">👥 Équipes Incomplètes (${incompleteTeamConflicts.length})</h4>
+                            <p style="color: #666; margin-bottom: 15px;">Une personne du binôme est absente, laissant son partenaire seul(e) :</p>
+                            <div style="display: grid; gap: 10px;">
+                    `;
+                    
+                    incompleteTeamConflicts.forEach(conflict => {
+                        conflictHTML += `
+                            <div style="border-left: 4px solid #e74c3c; padding: 15px; background: #fff5f5; border-radius: 5px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <strong style="color: #2c3e50;">Semaine ${conflict.weekNumber} 🚨</strong>
+                                    <span style="background: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px;">CRITIQUE</span>
+                                </div>
+                                <div style="background: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                    <p style="margin: 0; color: #555;"><strong>Absent:</strong> ${conflict.absentMember} (${formatDateFR(conflict.vacationStart)} - ${formatDateFR(conflict.vacationEnd)})</p>
+                                    <p style="margin: 5px 0 0 0; color: #555;"><strong>Présent:</strong> ${conflict.presentMember} (seul en équipe)</p>
+                                    <p style="margin: 5px 0 0 0; color: #555;"><strong>Backup:</strong> ${conflict.backup || 'Non défini'}</p>
+                                </div>
+                                <p style="color: #d32f2f; margin: 5px 0; font-weight: bold;">⚠️ ${conflict.presentMember} devra assurer seul(e) ou avec le backup</p>
+                                <div style="margin-top: 10px;">
+                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;" 
+                                            onclick="editWeek(${conflict.weekNumber})">✏️ Réassigner</button>
+                                    <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" 
+                                            onclick="deleteWeekAssignment('${conflict.weekKey}')">🗑️ Supprimer</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    conflictHTML += '</div></div>';
+                }
+                
+                if (vacationConflicts.length > 0) {
+                    conflictHTML += `
+                        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #e74c3c; margin-bottom: 15px;">🏖️ Conflits de Vacances Directs (${vacationConflicts.length})</h4>
+                            <div style="display: grid; gap: 10px;">
+                    `;
+                    
+                    vacationConflicts.forEach(conflict => {
+                        const severityColor = conflict.severity === 'high' ? '#e74c3c' : '#f39c12';
+                        const severityIcon = conflict.severity === 'high' ? '🚨' : '⚠️';
+                        
+                        conflictHTML += `
+                            <div style="border-left: 4px solid ${severityColor}; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <strong style="color: #2c3e50;">Semaine ${conflict.weekNumber} ${severityIcon}</strong>
+                                    <span style="background: ${severityColor}; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px;">
+                                        ${conflict.severity === 'high' ? 'CRITIQUE' : 'ATTENTION'}
+                                    </span>
+                                </div>
+                                <p style="color: #555; margin: 5px 0;">${conflict.message}</p>
+                                <div style="margin-top: 10px;">
+                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;" 
+                                            onclick="editWeek(${conflict.weekNumber})">✏️ Modifier</button>
+                                    <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" 
+                                            onclick="deleteWeekAssignment('${conflict.weekKey}')">🗑️ Supprimer</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    conflictHTML += '</div></div>';
+                }
+                
+                if (duplicateConflicts.length > 0) {
+                    conflictHTML += `
+                        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #e74c3c; margin-bottom: 15px;">👥 Assignations Multiples (${duplicateConflicts.length})</h4>
+                            <div style="display: grid; gap: 10px;">
+                    `;
+                    
+                    duplicateConflicts.forEach(conflict => {
+                        conflictHTML += `
+                            <div style="border-left: 4px solid #e74c3c; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <strong style="color: #2c3e50;">Semaine ${conflict.weekNumber} 🚨</strong>
+                                    <span style="background: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px;">CRITIQUE</span>
+                                </div>
+                                <p style="color: #555; margin: 5px 0;">${conflict.message}</p>
+                                <div style="margin-top: 10px;">
+                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;" 
+                                            onclick="editWeek(${conflict.weekNumber})">✏️ Corriger</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    conflictHTML += '</div></div>';
+                }
+                
+                // Ajouter des actions rapides
+                conflictHTML += `
+                    <div style="background: #e8f4fd; border: 2px solid #3498db; border-radius: 10px; padding: 20px; margin-top: 20px;">
+                        <h4 style="color: #2980b9; margin-bottom: 15px;">🛠️ Actions Rapides</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                            <button class="btn btn-warning" onclick="autoResolveVacationConflicts()">🏖️ Résoudre Conflits Vacances</button>
+                            <button class="btn btn-info" onclick="switchTab('absences')">📝 Gérer les Absences</button>
+                            <button class="btn btn-success" onclick="autoFillWithBalance()">⚡ Regénérer Planning</button>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = conflictHTML;
             }
+        }
+        
+        // Fonction pour afficher les détails d'un conflit spécifique
+        function showConflictDetails(weekNumber) {
+            const weekConflicts = conflicts.filter(c => c.weekNumber === weekNumber);
+            if (weekConflicts.length === 0) return;
+            
+            let message = `Conflits pour la semaine ${weekNumber}:\n\n`;
+            weekConflicts.forEach(conflict => {
+                message += `• ${conflict.message}\n`;
+            });
+            
+            message += '\nVoulez-vous modifier cette semaine ?';
+            
+            if (confirm(message)) {
+                editWeek(weekNumber);
+            }
+        }
+        
+        // Fonction pour résoudre automatiquement les conflits de vacances
+        function autoResolveVacationConflicts() {
+            const vacationConflicts = conflicts.filter(c => c.type === 'vacation_conflict');
+            
+            if (vacationConflicts.length === 0) {
+                showNotification('✅ Aucun conflit de vacances à résoudre', 'info');
+                return;
+            }
+            
+            if (!confirm(`Résoudre automatiquement ${vacationConflicts.length} conflit(s) de vacances ?\n\nCela supprimera les assignations problématiques.`)) {
+                return;
+            }
+            
+            let resolvedCount = 0;
+            
+            vacationConflicts.forEach(conflict => {
+                // Supprimer l'assignation qui pose problème
+                if (assignments[conflict.weekKey]) {
+                    delete assignments[conflict.weekKey];
+                    resolvedCount++;
+                }
+            });
+            
+            saveData();
+            updateAllDisplays();
+            
+            showNotification(`✅ ${resolvedCount} conflit(s) de vacances résolu(s)`, 'success');
         }
 
         // Analyse des binômes
@@ -1948,11 +2335,21 @@
             
             assignments[weekValue] = { member1, member2, backup };
             
+            console.log('Nouvelle assignation:', { weekValue, member1, member2, backup });
+            console.log('Toutes les assignations:', assignments);
+            
             saveData();
             closeModal('assignModal');
             updateAllDisplays();
             generateRandomTeams(); // Regénérer les équipes dans la sidebar
             showNotification('✅ Assignation enregistrée', 'success');
+            
+            // Forcer une vérification immédiate des conflits
+            setTimeout(() => {
+                console.log('Vérification forcée des conflits après assignation...');
+                detectConflicts();
+                updateConflictDisplay();
+            }, 500);
         }
 
         function saveVacation(event) {
@@ -1970,10 +2367,20 @@
             if (!vacations[member]) vacations[member] = [];
             vacations[member].push({ start, end });
             
+            console.log('Nouvelle absence ajoutée:', { member, start, end });
+            console.log('Toutes les vacances:', vacations);
+            
             saveData();
             closeModal('vacationModal');
-            updateAllDisplays();
+            updateAllDisplays(); // Ceci va déclencher detectConflicts()
             showNotification(`✅ Absence enregistrée pour ${member}`, 'success');
+            
+            // Forcer une vérification immédiate des conflits
+            setTimeout(() => {
+                console.log('Vérification forcée des conflits après ajout absence...');
+                detectConflicts();
+                updateConflictDisplay();
+            }, 500);
         }
 
         function saveTeamNames(event) {
