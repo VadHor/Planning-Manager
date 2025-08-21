@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,7 +20,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -94,6 +95,99 @@
         .btn-info { background: #17a2b8; color: white; }
         .btn-dark { background: #34495e; color: white; }
         .btn-danger { background: #e74c3c; color: white; }
+
+        /* Layout principal avec sidebar pour drag and drop */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 800px;
+        }
+
+        /* Sidebar avec les équipes disponibles */
+        .teams-sidebar {
+            background: #f8f9fa;
+            border-right: 2px solid #ecf0f1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .teams-sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .drag-instructions {
+            background: #e8f4fd;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .drag-instructions h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .drag-instructions p {
+            color: #34495e;
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ecf0f1;
+            cursor: grab;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .team-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+
+        .team-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+            cursor: grabbing;
+            z-index: 1000;
+        }
+
+        .team-pair {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .team-member {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .team-backup {
+            background: #f39c12;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: bold;
+        }
 
         .tabs-container {
             padding: 30px;
@@ -185,12 +279,15 @@
         .week-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px;
+            align-items: center;
+            padding: 12px 8px;
             margin: 5px 0;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 0.9em;
+            min-height: 60px;
+            border: 2px solid transparent;
         }
 
         .week-row:hover {
@@ -206,6 +303,86 @@
             background: #ffebee;
             border-left: 4px solid #e74c3c;
             font-weight: bold;
+        }
+
+        /* Styles pour le drag and drop */
+        .week-row.drag-over {
+            background: #e3f2fd !important;
+            border: 2px dashed #2196f3 !important;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .week-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .week-number {
+            font-weight: bold;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+
+        .week-assignment {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .assignment-team {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .assignment-member {
+            background: #3498db;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        .assignment-backup {
+            background: #f39c12;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 8px;
+            font-size: 9px;
+        }
+
+        .week-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .week-edit-btn, .week-delete-btn {
+            padding: 3px 6px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            transition: all 0.2s;
+        }
+
+        .week-edit-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .week-delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .week-edit-btn:hover, .week-delete-btn:hover {
+            transform: scale(1.1);
         }
 
         .modal {
@@ -342,6 +519,19 @@
             justify-content: center;
             font-size: 12px;
         }
+
+        /* Style responsive pour mobile */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .teams-sidebar {
+                border-right: none;
+                border-bottom: 2px solid #ecf0f1;
+                max-height: 300px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -370,148 +560,169 @@
             <button class="btn btn-danger" onclick="confirmReboot()">🔄 REBOOT</button>
         </div>
 
-        <!-- Main Content -->
-        <div class="tabs-container">
-            <!-- Tabs Navigation -->
-            <div class="tabs-nav">
-                <button class="tab-btn active" onclick="switchTab('planning')">📅 Planning</button>
-                <button class="tab-btn" onclick="switchTab('absences')">🏖️ Absences</button>
-                <button class="tab-btn" onclick="switchTab('conflicts')">⚠️ Conflits</button>
-                <button class="tab-btn" onclick="switchTab('team')">👥 Équipe</button>
-                <button class="tab-btn" onclick="switchTab('binomes')">🎯 Config Binômes</button>
-                <button class="tab-btn" onclick="switchTab('partnerships')">🤝 Analyse Binômes</button>
-            </div>
-
-            <!-- Planning Tab -->
-            <div id="planningTab" class="tab-content active">
-                <div class="stats-bar">
-                    <div class="stat-box">
-                        <div class="stat-number" id="weeksAssigned">0</div>
-                        <div class="stat-label">Semaines Assignées</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="totalAbsences">0</div>
-                        <div class="stat-label">Périodes d'Absence</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="conflictsCount">0</div>
-                        <div class="stat-label">Conflits Actifs</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="progressPercent">0%</div>
-                        <div class="stat-label">Progression</div>
-                    </div>
-                </div>
-                <div class="calendar-year" id="yearView"></div>
-            </div>
-
-            <!-- Absences Tab -->
-            <div id="absencesTab" class="tab-content">
-                <h2 style="margin-bottom: 20px;">Gestion des Absences</h2>
-                <div id="absencesContainer"></div>
-            </div>
-
-            <!-- Conflicts Tab -->
-            <div id="conflictsTab" class="tab-content">
-                <h2 style="margin-bottom: 20px;">Centre de Résolution des Conflits</h2>
-                <div id="conflictList"></div>
-            </div>
-
-            <!-- Team Tab -->
-            <div id="teamTab" class="tab-content">
-                <h2 style="margin-bottom: 20px;">Tableau de l'Équipe</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Référent</th>
-                            <th>Semaines Principal</th>
-                            <th>Semaines Backup</th>
-                            <th>Jours Absence</th>
-                            <th>Charge (%)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="teamTableBody"></tbody>
-                </table>
-            </div>
-
-            <!-- Config Binômes Tab -->
-            <div id="binomesTab" class="tab-content">
-                <h2 style="margin-bottom: 30px; color: #2c3e50;">🎯 Configuration des Binômes Prédéfinis</h2>
+        <!-- Layout principal avec sidebar pour drag and drop -->
+        <div class="main-layout">
+            <!-- Sidebar avec les équipes disponibles -->
+            <div class="teams-sidebar">
+                <h3>🎯 Équipes Disponibles</h3>
                 
-                <div style="background: #e8f5e9; border: 2px solid #27ae60; border-radius: 10px; padding: 20px; margin-bottom: 30px;">
-                    <h4 style="color: #27ae60; margin-bottom: 10px;">💡 Comment ça fonctionne ?</h4>
-                    <p style="color: #2c3e50; margin: 0;">
-                        Définissez vos binômes préférés ci-dessous, puis utilisez le bouton <strong>"🎯 Remplir avec Binômes"</strong> 
-                        dans la barre d'outils. L'algorithme fera tourner intelligemment vos binômes sur l'année entière 
-                        en évitant les répétitions et en équilibrant les charges.
-                    </p>
+                <div class="drag-instructions">
+                    <h4>💡 Drag & Drop</h4>
+                    <p>Glissez une équipe sur une semaine pour l'assigner instantanément !</p>
+                </div>
+                
+                <div id="teamsAvailable">
+                    <!-- Généré dynamiquement -->
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; margin-top: 15px; font-size: 12px; padding: 8px;" onclick="generateRandomTeams()">
+                    🎲 Générer Équipes
+                </button>
+            </div>
+
+            <!-- Contenu principal avec onglets -->
+            <div class="tabs-container">
+                <!-- Tabs Navigation -->
+                <div class="tabs-nav">
+                    <button class="tab-btn active" onclick="switchTab('planning')">📅 Planning</button>
+                    <button class="tab-btn" onclick="switchTab('absences')">🏖️ Absences</button>
+                    <button class="tab-btn" onclick="switchTab('conflicts')">⚠️ Conflits</button>
+                    <button class="tab-btn" onclick="switchTab('team')">👥 Équipe</button>
+                    <button class="tab-btn" onclick="switchTab('binomes')">🎯 Config Binômes</button>
+                    <button class="tab-btn" onclick="switchTab('partnerships')">🤝 Analyse Binômes</button>
                 </div>
 
-                <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="color: #2c3e50; margin: 0;">📝 Vos Binômes Prédéfinis</h3>
-                        <button class="btn btn-primary" onclick="addPredefinedPair()">+ Ajouter un Binôme</button>
-                    </div>
-                    
-                    <div id="predefinedPairsList" style="display: grid; gap: 15px;">
-                        <!-- Généré dynamiquement -->
-                    </div>
-                    
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <button class="btn btn-warning" onclick="resetPredefinedPairs()">🔄 Binômes par Défaut</button>
-                            <button class="btn btn-success" onclick="savePredefinedPairs()">✅ Sauvegarder Configuration</button>
+                <!-- Planning Tab -->
+                <div id="planningTab" class="tab-content active">
+                    <div class="stats-bar">
+                        <div class="stat-box">
+                            <div class="stat-number" id="weeksAssigned">0</div>
+                            <div class="stat-label">Semaines Assignées</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="totalAbsences">0</div>
+                            <div class="stat-label">Périodes d'Absence</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="conflictsCount">0</div>
+                            <div class="stat-label">Conflits Actifs</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="progressPercent">0%</div>
+                            <div class="stat-label">Progression</div>
                         </div>
                     </div>
+                    <div class="calendar-year" id="yearView"></div>
                 </div>
 
-                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-top: 30px;">
-                    <h4 style="color: #856404; margin-bottom: 15px;">⚙️ Conseils d'optimisation</h4>
-                    <ul style="color: #856404; margin: 0; padding-left: 20px;">
-                        <li><strong>Équilibre :</strong> Essayez de créer des binômes avec des niveaux d'expérience complémentaires</li>
-                        <li><strong>Diversité :</strong> L'algorithme fera tourner vos binômes automatiquement</li>
-                        <li><strong>Backup :</strong> Les backups seront assignés automatiquement parmi les membres libres</li>
-                        <li><strong>Flexibilité :</strong> Vous pouvez toujours modifier manuellement après le remplissage</li>
-                    </ul>
+                <!-- Absences Tab -->
+                <div id="absencesTab" class="tab-content">
+                    <h2 style="margin-bottom: 20px;">Gestion des Absences</h2>
+                    <div id="absencesContainer"></div>
                 </div>
-            </div>
 
-            <!-- Partnership Analysis Tab -->
-            <div id="partnershipsTab" class="tab-content">
-                <h2 style="margin-bottom: 30px; color: #2c3e50;">🤝 Analyse des Binômes</h2>
-                
-                <div class="stats-bar">
-                    <div class="stat-box">
-                        <div class="stat-number" id="totalPartnerships">0</div>
-                        <div class="stat-label">Binômes Différents</div>
+                <!-- Conflicts Tab -->
+                <div id="conflictsTab" class="tab-content">
+                    <h2 style="margin-bottom: 20px;">Centre de Résolution des Conflits</h2>
+                    <div id="conflictList"></div>
+                </div>
+
+                <!-- Team Tab -->
+                <div id="teamTab" class="tab-content">
+                    <h2 style="margin-bottom: 20px;">Tableau de l'Équipe</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Référent</th>
+                                <th>Semaines Principal</th>
+                                <th>Semaines Backup</th>
+                                <th>Jours Absence</th>
+                                <th>Charge (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Config Binômes Tab -->
+                <div id="binomesTab" class="tab-content">
+                    <h2 style="margin-bottom: 30px; color: #2c3e50;">🎯 Configuration des Binômes Prédéfinis</h2>
+                    
+                    <div style="background: #e8f5e9; border: 2px solid #27ae60; border-radius: 10px; padding: 20px; margin-bottom: 30px;">
+                        <h4 style="color: #27ae60; margin-bottom: 10px;">💡 Comment ça fonctionne ?</h4>
+                        <p style="color: #2c3e50; margin: 0;">
+                            Définissez vos binômes préférés ci-dessous, puis utilisez le bouton <strong>"🎯 Remplir avec Binômes"</strong> 
+                            dans la barre d'outils. L'algorithme fera tourner intelligemment vos binômes sur l'année entière 
+                            en évitant les répétitions et en équilibrant les charges.
+                        </p>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="maxPartnership">0</div>
-                        <div class="stat-label">Partenariat Max</div>
+
+                    <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #2c3e50; margin: 0;">📝 Vos Binômes Prédéfinis</h3>
+                            <button class="btn btn-primary" onclick="addPredefinedPair()">+ Ajouter un Binôme</button>
+                        </div>
+                        
+                        <div id="predefinedPairsList" style="display: grid; gap: 15px;">
+                            <!-- Généré dynamiquement -->
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <button class="btn btn-warning" onclick="resetPredefinedPairs()">🔄 Binômes par Défaut</button>
+                                <button class="btn btn-success" onclick="savePredefinedPairs()">✅ Sauvegarder Configuration</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="diversityScore">0%</div>
-                        <div class="stat-label">Score Diversité</div>
+
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-top: 30px;">
+                        <h4 style="color: #856404; margin-bottom: 15px;">⚙️ Conseils d'optimisation</h4>
+                        <ul style="color: #856404; margin: 0; padding-left: 20px;">
+                            <li><strong>Équilibre :</strong> Essayez de créer des binômes avec des niveaux d'expérience complémentaires</li>
+                            <li><strong>Diversité :</strong> L'algorithme fera tourner vos binômes automatiquement</li>
+                            <li><strong>Backup :</strong> Les backups seront assignés automatiquement parmi les membres libres</li>
+                            <li><strong>Flexibilité :</strong> Vous pouvez toujours modifier manuellement après le remplissage</li>
+                        </ul>
                     </div>
                 </div>
 
-                <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 15px; color: #2c3e50;">🔥 Matrice de Collaboration</h3>
-                    <p style="color: #666; margin-bottom: 15px;">
-                        Cette matrice montre le nombre de fois où chaque paire de référents a travaillé ensemble.
-                    </p>
-                    <div id="collaborationHeatmap"></div>
-                </div>
+                <!-- Partnership Analysis Tab -->
+                <div id="partnershipsTab" class="tab-content">
+                    <h2 style="margin-bottom: 30px; color: #2c3e50;">🤝 Analyse des Binômes</h2>
+                    
+                    <div class="stats-bar">
+                        <div class="stat-box">
+                            <div class="stat-number" id="totalPartnerships">0</div>
+                            <div class="stat-label">Binômes Différents</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="maxPartnership">0</div>
+                            <div class="stat-label">Partenariat Max</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="diversityScore">0%</div>
+                            <div class="stat-label">Score Diversité</div>
+                        </div>
+                    </div>
 
-                <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 20px; color: #2c3e50;">📋 Détail des Partenariats</h3>
-                    <div id="partnershipDetails"></div>
+                    <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h3 style="margin-bottom: 15px; color: #2c3e50;">🔥 Matrice de Collaboration</h3>
+                        <p style="color: #666; margin-bottom: 15px;">
+                            Cette matrice montre le nombre de fois où chaque paire de référents a travaillé ensemble.
+                        </p>
+                        <div id="collaborationHeatmap"></div>
+                    </div>
+
+                    <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h3 style="margin-bottom: 20px; color: #2c3e50;">📋 Détail des Partenariats</h3>
+                        <div id="partnershipDetails"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- Tous vos modals existants -->
     <div class="modal" id="assignModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('assignModal')">&times;</span>
@@ -618,13 +829,16 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // Variables globales
+        // Variables globales (toutes vos variables existantes)
         let TEAM = ['Référent 1', 'Référent 2', 'Référent 3', 'Référent 4', 'Référent 5', 'Référent 6', 'Référent 7', 'Référent 8', 'Référent 9'];
         let currentYear = 2025;
         let assignments = {};
         let vacations = {};
         let conflicts = [];
         let predefinedPairs = [];
+
+        // Variables pour le drag and drop
+        let draggedTeam = null;
 
         // Fonction pour calculer le numéro de semaine ISO d'une date
         function getISOWeekNumber(date) {
@@ -689,6 +903,150 @@
             return { start: weekStart, end: weekEnd };
         }
 
+        // ===== NOUVELLES FONCTIONS DRAG AND DROP =====
+        
+        function generateRandomTeams() {
+            const availableTeams = document.getElementById('teamsAvailable');
+            availableTeams.innerHTML = '';
+            
+            // Générer 5 équipes aléatoires
+            for (let i = 0; i < 5; i++) {
+                const shuffledTeam = [...TEAM].sort(() => Math.random() - 0.5);
+                const member1 = shuffledTeam[0];
+                const member2 = shuffledTeam[1];
+                const backup = shuffledTeam[2];
+                
+                const teamCard = createTeamCard(member1, member2, backup, i);
+                availableTeams.appendChild(teamCard);
+            }
+        }
+
+        function createTeamCard(member1, member2, backup, index) {
+            const card = document.createElement('div');
+            card.className = 'team-card';
+            card.draggable = true;
+            card.dataset.member1 = member1;
+            card.dataset.member2 = member2;
+            card.dataset.backup = backup;
+            
+            card.innerHTML = `
+                <div class="team-pair">
+                    <span class="team-member">${member1}</span>
+                    <span>+</span>
+                    <span class="team-member">${member2}</span>
+                </div>
+                <div style="text-align: center; margin-top: 8px;">
+                    <span class="team-backup">Backup: ${backup}</span>
+                </div>
+            `;
+            
+            // Événements drag and drop
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragend', handleDragEnd);
+            
+            return card;
+        }
+
+        function handleDragStart(e) {
+            this.classList.add('dragging');
+            draggedTeam = {
+                member1: this.dataset.member1,
+                member2: this.dataset.member2,
+                backup: this.dataset.backup
+            };
+            
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.outerHTML);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedTeam = null;
+        }
+
+        function setupWeekDropZones() {
+            const weekRows = document.querySelectorAll('.week-row');
+            
+            weekRows.forEach(weekRow => {
+                weekRow.addEventListener('dragover', handleDragOver);
+                weekRow.addEventListener('dragenter', handleDragEnter);
+                weekRow.addEventListener('dragleave', handleDragLeave);
+                weekRow.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            if (draggedTeam) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            // Vérifier si on quitte vraiment l'élément (pas juste un enfant)
+            if (!this.contains(e.relatedTarget)) {
+                this.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (!draggedTeam) return;
+            
+            const weekNumber = this.dataset.week;
+            if (!weekNumber) return;
+            
+            const weekKey = `${currentYear}-W${weekNumber.toString().padStart(2, '0')}`;
+            
+            // Vérifier les conflits potentiels
+            const member1 = draggedTeam.member1;
+            const member2 = draggedTeam.member2;
+            const backup = draggedTeam.backup;
+            
+            if (member1 === member2 || member1 === backup || member2 === backup) {
+                showNotification('❌ Les membres doivent être différents', 'error');
+                return;
+            }
+            
+            // Assigner l'équipe à cette semaine
+            assignments[weekKey] = {
+                member1: member1,
+                member2: member2,
+                backup: backup
+            };
+            
+            saveData();
+            updateAllDisplays();
+            
+            showNotification(`✅ Équipe assignée à la semaine ${weekNumber}`, 'success');
+        }
+
+        // ===== FIN DRAG AND DROP =====
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Application initialisée avec drag and drop');
+            loadData();
+            populateSelects();
+            updateAllDisplays();
+            generateRandomTeams();
+            
+            // Ajouter l'événement pour l'input file
+            const fileInput = document.getElementById('jsonFileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', handleFileSelect);
+            }
+        });
+
+        // Toutes vos fonctions existantes (je les garde intactes)
+        
         function showImportModal() {
             document.getElementById('importModal').style.display = 'block';
             document.getElementById('jsonFileInput').value = '';
@@ -716,20 +1074,6 @@
             
             showNotification('💾 Sauvegarde créée avec succès', 'success');
         }
-
-        // Gestionnaire pour le changement de fichier
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Application initialisée avec correction des semaines');
-            loadData();
-            populateSelects();
-            updateAllDisplays();
-            
-            // Ajouter l'événement pour l'input file
-            const fileInput = document.getElementById('jsonFileInput');
-            if (fileInput) {
-                fileInput.addEventListener('change', handleFileSelect);
-            }
-        });
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
@@ -844,6 +1188,7 @@
                 saveData();
                 populateSelects();
                 updateAllDisplays();
+                generateRandomTeams(); // Regénérer les équipes dans la sidebar
                 
                 closeModal('importModal');
                 
@@ -867,14 +1212,6 @@
                 showNotification('❌ Erreur lors de l\'import: ' + error.message, 'error');
             }
         }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Application initialisée avec correction des semaines');
-            loadData();
-            populateSelects();
-            updateAllDisplays();
-        });
 
         // Gestion des données
         function loadData() {
@@ -1001,6 +1338,7 @@
                 weeksInMonth.forEach(weekNum => {
                     const weekRow = document.createElement('div');
                     weekRow.className = 'week-row';
+                    weekRow.dataset.week = weekNum; // Important pour le drag and drop
                     
                     const weekKey = `${currentYear}-W${weekNum.toString().padStart(2, '0')}`;
                     const assignment = assignments[weekKey];
@@ -1015,17 +1353,46 @@
                     const endDate = weekDates.end.getDate();
                     
                     weekRow.innerHTML = `
-                        <span style="font-weight: bold;">S${weekNum} (${startDate}-${endDate})</span>
-                        <span>${assignment ? `${assignment.member1} + ${assignment.member2}` : 'Non assignée'}</span>
+                        <div class="week-info">
+                            <div class="week-number">S${weekNum} (${startDate}-${endDate})</div>
+                            <div class="week-assignment">
+                                ${assignment ? `
+                                    <div class="assignment-team">
+                                        <span class="assignment-member">${assignment.member1}</span>
+                                        <span class="assignment-member">${assignment.member2}</span>
+                                    </div>
+                                    <div style="margin-top: 2px;">
+                                        <span class="assignment-backup">Backup: ${assignment.backup}</span>
+                                    </div>
+                                ` : '<span style="color: #999; font-size: 11px;">Non assignée</span>'}
+                            </div>
+                        </div>
+                        <div class="week-actions">
+                            <button class="week-edit-btn" onclick="editWeek(${weekNum})">✏️</button>
+                            ${assignment ? `<button class="week-delete-btn" onclick="deleteWeekAssignment('${weekKey}')">🗑️</button>` : ''}
+                        </div>
                     `;
                     
-                    weekRow.onclick = () => editWeek(weekNum);
                     weeksContainer.appendChild(weekRow);
                 });
                 
                 monthBlock.appendChild(weeksContainer);
                 container.appendChild(monthBlock);
             });
+            
+            // Réinitialiser les zones de drop après la mise à jour du DOM
+            setTimeout(() => {
+                setupWeekDropZones();
+            }, 100);
+        }
+
+        function deleteWeekAssignment(weekKey) {
+            if (confirm('Supprimer cette assignation ?')) {
+                delete assignments[weekKey];
+                saveData();
+                updateAllDisplays();
+                showNotification('🗑️ Assignation supprimée', 'warning');
+            }
         }
 
         function updateAbsencesView() {
@@ -1400,6 +1767,7 @@
             
             saveData();
             updateAllDisplays();
+            generateRandomTeams(); // Regénérer les équipes dans la sidebar
             
             // Afficher un rapport
             const report = predefinedPairs.map((pair, index) => 
@@ -1498,6 +1866,7 @@
             
             saveData();
             updateAllDisplays();
+            generateRandomTeams(); // Regénérer les équipes dans la sidebar
             showNotification('✅ Planning rempli avec rotation intelligente des binômes !', 'success');
         }
 
@@ -1583,6 +1952,7 @@
             saveData();
             closeModal('assignModal');
             updateAllDisplays();
+            generateRandomTeams(); // Regénérer les équipes dans la sidebar
             showNotification('✅ Assignation enregistrée', 'success');
         }
 
@@ -1631,6 +2001,7 @@
             populateSelects();
             updatePredefinedPairsList(); // Mettre à jour les binômes aussi
             updateAllDisplays();
+            generateRandomTeams(); // Regénérer les équipes dans la sidebar
             closeModal('teamEditModal');
             showNotification('✅ Noms de l\'équipe mis à jour', 'success');
         }
@@ -1660,7 +2031,8 @@
                 year: currentYear,
                 assignments: assignments,
                 vacations: vacations,
-                teamNames: TEAM
+                teamNames: TEAM,
+                predefinedPairs: predefinedPairs
             };
             
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1745,6 +2117,7 @@
                 predefinedPairs = [];
                 saveData();
                 updateAllDisplays();
+                generateRandomTeams(); // Regénérer les équipes dans la sidebar
                 showNotification('🔄 Système réinitialisé', 'warning');
             }
         }
@@ -1753,6 +2126,7 @@
             currentYear += delta;
             document.getElementById('currentYear').textContent = currentYear;
             updateAllDisplays();
+            generateRandomTeams(); // Regénérer les équipes dans la sidebar
             saveData();
         }
 
@@ -1774,4 +2148,3 @@
     </script>
 </body>
 </html>
-            
