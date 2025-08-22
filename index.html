@@ -1040,7 +1040,7 @@
             if (vacationConflicts.length > 0) {
                 let conflictMessage = `⚠️ ATTENTION - Conflits détectés pour la semaine ${weekNumber}:\n\n`;
                 vacationConflicts.forEach(conflict => {
-                    conflictMessage += `• ${conflict.member} (${conflict.role}) est en vacances du ${formatDateFR(conflict.vacation.start)} au ${formatDateFR(conflict.vacation.end)}\n`;
+                    conflictMessage += `• ${conflict.member} (${conflict.role}) est en vacances du ${formatDateCH(conflict.vacation.start)} au ${formatDateCH(conflict.vacation.end)}\n`;
                 });
                 conflictMessage += '\nVoulez-vous quand même assigner cette équipe ?';
                 
@@ -1176,7 +1176,7 @@
                     <div>
                         <strong>🏖️ Absences:</strong> ${vacationsCount} périodes<br>
                         <strong>🎯 Binômes:</strong> ${predefinedPairsCount} prédéfinis<br>
-                        <strong>📊 Export:</strong> ${new Date(exportDate).toLocaleDateString()}
+                        <strong>📊 Export:</strong> ${new Date(exportDate).toLocaleDateString('de-CH')}
                     </div>
                 </div>
                 
@@ -1399,7 +1399,7 @@
                                 vacationStart: vacation.start,
                                 vacationEnd: vacation.end,
                                 severity: role === 'Backup' ? 'medium' : 'high',
-                                message: `${member} (${role}) est en vacances du ${formatDateFR(vacation.start)} au ${formatDateFR(vacation.end)}`
+                                message: `${member} (${role}) est en vacances du ${formatDateCH(vacation.start)} au ${formatDateCH(vacation.end)}`
                             });
                         }
                     });
@@ -1498,10 +1498,18 @@
             return overlap;
         }
         
-        // Fonction utilitaire pour formater les dates en français
-        function formatDateFR(dateString) {
+        // Fonction utilitaire pour formater les dates au format suisse
+        function formatDateCH(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR');
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+        
+        // Fonction utilitaire pour formater une plage de dates au format suisse
+        function formatDateRangeCH(startDate, endDate) {
+            return `${formatDateCH(startDate)} - ${formatDateCH(endDate)}`;
         }
 
         function updateYearView() {
@@ -1638,7 +1646,7 @@
                         '<p style="color: #666; font-style: italic;">Aucune absence</p>' :
                         memberVacations.map(vac => `
                             <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
-                                <span>${vac.start} - ${vac.end}</span>
+                                <span>${formatDateCH(vac.start)} - ${formatDateCH(vac.end)}</span>
                                 <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="deleteVacation('${member}', '${vac.start}', '${vac.end}')">🗑️</button>
                             </div>
                         `).join('')
@@ -1714,7 +1722,7 @@
                                     <span style="background: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px;">CRITIQUE</span>
                                 </div>
                                 <div style="background: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                                    <p style="margin: 0; color: #555;"><strong>Absent:</strong> ${conflict.absentMember} (${formatDateFR(conflict.vacationStart)} - ${formatDateFR(conflict.vacationEnd)})</p>
+                                    <p style="margin: 0; color: #555;"><strong>Absent:</strong> ${conflict.absentMember} (${formatDateCH(conflict.vacationStart)} - ${formatDateCH(conflict.vacationEnd)})</p>
                                     <p style="margin: 5px 0 0 0; color: #555;"><strong>Présent:</strong> ${conflict.presentMember} (seul en équipe)</p>
                                     <p style="margin: 5px 0 0 0; color: #555;"><strong>Backup:</strong> ${conflict.backup || 'Non défini'}</p>
                                 </div>
